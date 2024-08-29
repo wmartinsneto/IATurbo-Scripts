@@ -1,0 +1,81 @@
+<?php
+/**
+ * request.php
+ * 
+ * Descrição:
+ * Este script recebe uma pergunta via POST, gera um `id` único,
+ * salva os dados recebidos na pasta `./pending` e retorna o `id` gerado.
+ * 
+ * Entrada:
+ * Espera-se que o script receba um payload JSON no seguinte formato:
+ * {
+ *   "question": "Sua pergunta aqui",
+ *   "overrideConfig": {
+ *     "sessionId": "Seu sessionId aqui"
+ *   }
+ * }
+ * 
+ * Saída:
+ * O script retornará um JSON contendo o `id` gerado para a pergunta:
+ * {
+ *   "id": "ID gerado para a pergunta"
+ * }
+ * 
+ * Logs:
+ * - As solicitações são registradas no arquivo de log `./logs/request-YYYY-MM-DD.log`.
+ * - A pasta de log será criada automaticamente, se não existir.
+ * 
+ * Exemplos de Uso:
+ * Para testar este script, você pode usar o seguinte comando cURL:
+ * 
+ * curl -X POST https://iaturbo.com.br/wp-content/uploads/scripts/flowiseai/request.php \
+ *      -H "Content-Type: application/json" \
+ *      -d '{
+ *            "question": "Qual é a previsão do tempo para amanhã?",
+ *            "overrideConfig": {
+ *              "sessionId": "sess_12345"
+ *            }
+ *          }'
+ * 
+ * Retorno esperado:
+ * {
+ *   "id": "id_2024-08-28-13-45-30_5f2f5e1b3f8a1"
+ * }
+ */
+
+$pending_dir = './pending/';
+$log_file = './logs/request-' . date('Y-m-d') . '.log';
+
+if (!is_dir($pending_dir)) {
+    mkdir($pending_dir, 0777, true);
+}
+
+if (!is_dir(dirname($log_file))) {
+    mkdir(dirname($log_file), 0777, true);
+}
+
+// Função para registrar logs
+function log_message($message) {
+    global $log_file;
+    $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
+    file_put_contents($log_file, $log_entry, FILE_APPEND);
+}
+
+// Recebe o JSON de entrada
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (!$data) {
+    log_message("Erro: JSON de entrada inválido.");
+    die(json_encode(['error' => 'JSON de entrada inválido.']));
+}
+
+// Gera um id único
+$request_id = 'id_' . date('Y-m-d-H-i-s') . '_' . uniqid();
+
+// Salva os dados na pasta ./pending
+file_put_contents($pending_dir . $request_id . '.json', json_encode($data));
+log_message("ID gerado: $request_id - Dados salvos em ./pending/$request_id.json");
+
+// Retorna o id para que o processo possa ser monitorado
+echo json_encode(['id' => $request_id]);
+?>
