@@ -56,6 +56,20 @@ function log_message($message) {
     file_put_contents($log_file, $log_entry, FILE_APPEND);
 }
 
+// Função para capturar e logar o erro de stream
+function log_stream_error($url, $context) {
+    $error_message = '';
+    $error_message .= "Erro ao acessar a URL: $url\n";
+    $error_message .= "Opções de Contexto: " . print_r($context, true) . "\n";
+    
+    $error = error_get_last();
+    if ($error) {
+        $error_message .= "Detalhes do erro: " . $error['message'] . "\n";
+    }
+
+    log_message($error_message);
+}
+
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? null;
@@ -85,12 +99,15 @@ $options = [
         'content' => json_encode($data),
     ],
 ];
-$context  = stream_context_create($options);
-$response = file_get_contents($chatflow_url, false, $context);
+
+$context = stream_context_create($options);
+
+// Captura a resposta ou o erro detalhado
+$response = @file_get_contents($chatflow_url, false, $context);
 
 if ($response === FALSE) {
-    log_message("Falha na requisição ao FlowiseAI para id: $id");
-    die(json_encode(['error' => 'Falha na requisição ao FlowiseAI']));
+    log_stream_error($chatflow_url, $options);
+    die(json_encode(['error' => 'Falha na requisição ao FlowiseAI. Verifique os logs para mais detalhes.']));
 }
 
 // Salva a resposta na pasta ./completed
