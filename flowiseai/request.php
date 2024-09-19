@@ -10,8 +10,15 @@
  * Espera-se que o script receba um payload JSON no seguinte formato:
  * {
  *   "question": "Sua pergunta aqui",
+ *   "source": "whats, face, insta, etc",
  *   "overrideConfig": {
  *     "sessionId": "Seu sessionId aqui"
+ *   },
+ *   "userData": {
+ *     "firstName": "Nome",
+ *     "lastName": "Sobrenome",
+ *     "phoneNumber": "Telefone",
+ *     "email": "Email"
  *   }
  * }
  * 
@@ -24,23 +31,6 @@
  * Logs:
  * - As solicitações são registradas no arquivo de log `./logs/request-YYYY-MM-DD.log`.
  * - A pasta de log será criada automaticamente, se não existir.
- * 
- * Exemplos de Uso:
- * Para testar este script, você pode usar o seguinte comando cURL:
- * 
- * curl -X POST https://iaturbo.com.br/wp-content/uploads/scripts/flowiseai/request.php \
- *      -H "Content-Type: application/json" \
- *      -d '{
- *            "question": "Qual é a previsão do tempo para amanhã?",
- *            "overrideConfig": {
- *              "sessionId": "sess_12345"
- *            }
- *          }'
- * 
- * Retorno esperado:
- * {
- *   "id": "id_2024-08-28-13-45-30_5f2f5e1b3f8a1"
- * }
  */
 
 $pending_dir = './pending/';
@@ -70,7 +60,7 @@ if (!$data) {
 }
 
 // Gera um id único
-$request_id = 'id_' . date('Y-m-d-H-i-s') . '_' . uniqid();
+$request_id = 'id_' . date('Ymd_His') . '_' . uniqid();
 
 // Salva os dados na pasta ./pending
 file_put_contents($pending_dir . $request_id . '.json', json_encode($data));

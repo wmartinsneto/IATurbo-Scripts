@@ -2,44 +2,17 @@
 /**
  * run.php
  * 
- * Descrição:
  * Este script recebe um `id` (gerado pelo `request.php`), uma URL do Flowise e um token de autorização via POST,
  * carrega o arquivo correspondente na pasta `./pending`, envia a pergunta para o FlowiseAI,
- * salva a resposta na pasta `./completed` e retorna um status 200 OK.
- * 
- * Entrada:
- * Espera-se que o script receba um payload JSON no seguinte formato:
- * {
- *   "id": "ID gerado pelo request.php",
- *   "chatflow_url": "URL do Flowise",
- *   "chatflow_key": "Token de autorização"
- * }
- * 
- * Saída:
- * O script salva a resposta do FlowiseAI na pasta `./completed` com o nome do arquivo como o `id` recebido e retorna um status 200 OK.
- * 
- * Logs:
- * - As solicitações são registradas no arquivo de log `./logs/run-YYYY-MM-DD.log`.
- * - A pasta de log será criada automaticamente, se não existir.
- * 
- * Exemplos de Uso:
- * Para testar este script, você pode usar o seguinte comando cURL:
- * 
- * curl -X POST https://iaturbo.com.br/wp-content/uploads/scripts/flowiseai/run.php \
- *      -H "Content-Type: application/json" \
- *      -d '{
- *            "id": "id_2024-08-28-13-45-30_5f2f5e1b3f8a1",
- *            "chatflow_url": "https://flowiseai-railway-production-16fe.up.railway.app/api/v1/prediction/b69ccbf6-8014-4005-a024-69cf600f65ae",
- *            "chatflow_key": "P2PrI1fntoWhCWQHrE93c3nJx0ZU0P-e11KZxpyfEr8"
- *          }'
- * 
- * Retorno esperado:
- * O script salva o arquivo no diretório `./completed` e retorna 200 OK.
+ * salva a resposta na pasta `./completed`, envia as informações para o Trello e retorna um status 200 OK.
  */
 
 $pending_dir = './pending/';
 $completed_dir = './completed/';
 $log_file = './logs/run-' . date('Y-m-d') . '.log';
+
+// Inclui o script trello-message.php para enviar ao Trello
+require_once './trello-message.php';
 
 if (!is_dir($completed_dir)) {
     mkdir($completed_dir, 0777, true);
@@ -56,7 +29,7 @@ function log_message($message) {
     file_put_contents($log_file, $log_entry, FILE_APPEND);
 }
 
-// Função para capturar e logar o erro de stream
+// Função para capturar e logar erros de stream
 function log_stream_error($url, $context) {
     $error_message = '';
     $error_message .= "Erro ao acessar a URL: $url\n";
@@ -110,12 +83,44 @@ if ($response === FALSE) {
     die(json_encode(['error' => 'Falha na requisição ao FlowiseAI. Verifique os logs para mais detalhes.']));
 }
 
+// Validação da resposta do FlowiseAI
+$response_data = json_decode($response, true);
+if (!$response_data) {
+    log_message("Falha ao decodificar a resposta do FlowiseAI para id: $id");
+    die(json_encode(['error' => 'Falha ao decodificar a resposta do FlowiseAI.']));
+}
+
 // Salva a resposta na pasta ./completed
-file_put_contents($completed_dir . $id . '.json', $response);
+if (file_put_contents($completed_dir . $id . '.json', json_encode($response_data, JSON_PRETTY_PRINT)) === false) {
+    log_message("Falha ao salvar o arquivo em ./completed/$id.json.");
+    die(json_encode(['error' => 'Falha ao salvar o arquivo processado.']));
+}
+
 log_message("Processamento completo para id: $id. Resposta salva em ./completed/$id.json");
 
 // Remove o arquivo da pasta pending
-unlink($file_path);
+if (!unlink($file_path)) {
+    log_message("Falha ao remover o arquivo pendente para id: $id");
+    die(json_encode(['error' => 'Falha ao remover o arquivo pendente.']));
+}
+
+// Integração com o Trello - Chama a função `send_to_trello` para enviar a resposta ao Trello
+log_message("Iniciando envio ao Trello para id: $id.");
+
+// Substitua os parâmetros abaixo conforme sua necessidade
+send_to_trello([
+    'sessionId' => $data['overrideConfig']['sessionId'] ?? $id, // Certifique-se de que o sessionId correto está sendo usado
+    'name' => $data['userData']['firstName'] . ' ' . $data['userData']['lastName'],  // Nome real do lead
+    'message' => $data['question'] ?? 'Sem pergunta disponível', // Pergunta do lead
+    'source' => $data['source'] ?? 'Desconhecido', // Fonte da mensagem (whats, insta, etc.)
+    'userData' => $data['userData'] ?? [],  // Dados do usuário
+    'content' => "Aqui vai o conteúdo gerado para o Trello",  // Substitua pelo conteúdo real
+    'textResponse' => $response_data['text'] ?? 'Sem resposta de texto disponível', // Resposta em texto do FlowiseAI
+    'audioUrl' => $response_data['audioUrl'] ?? null, // Se houver resposta de áudio, passe a URL aqui
+    'controlData' => $response_data['controlData'] ?? [], // Informações de controle da conversa, se existirem
+]);
+
+log_message("Envio ao Trello completo para id: $id.");
 
 // Retorna 200 OK
 http_response_code(200);
