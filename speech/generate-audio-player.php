@@ -1,43 +1,10 @@
 <?php
-
-/**
- * API de Conversão de Texto para Fala (TTS) usando OpenAI
- *
- * Esta API recebe um texto, processa-o usando o serviço de Text-to-Speech da OpenAI,
- * salva o áudio gerado em um arquivo MP3 e retorna o URL do arquivo.
- *
- * ## Entrada:
- * - `input_text` (string): O texto que será convertido em áudio.
- * - `id` (string): O ID que será usado para nomear o arquivo de áudio gerado.
- *
- * ## Saída:
- * - Retorna um JSON com a URL do áudio gerado.
- *   Exemplo:
- *   ```json
- *   {
- *       "audio_url": "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_[ID].mp3"
- *   }
- *   ```
- *
- * ## Logs:
- * - `logs/success.log`: Registra logs de sucesso.
- * - `logs/error.log`: Registra logs de erros.
- *
- * ## Erros:
- * - Se a API da OpenAI falhar ou se houver algum problema na geração do áudio, 
- *   será retornado um JSON com a chave `error` e uma mensagem explicativa.
- */
-
 // Configurações
 $api_key = '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';
 $save_dir = './output/';
 $log_dir = './logs/';
 $error_log_file = $log_dir . 'error.log';
 $success_log_file = $log_dir . 'success.log';
-
-// Configurações fixas de modelo e voz
-$model = "tts-1";
-$voice = "shimmer";
 
 // Verifica se a pasta de destino e de logs existem, caso contrário, cria
 if (!is_dir($save_dir)) {
@@ -60,14 +27,15 @@ $payload = json_decode(file_get_contents('php://input'), true);
 log_message("Payload recebido: " . json_encode($payload), 'info');
 
 // Valida se todos os campos necessários estão presentes
-if (!isset($payload['input_text'], $payload['id'])) {
+if (!isset($payload['input_text'], $payload['voice'], $payload['model'])) {
     log_message("Payload inválido: " . json_encode($payload), 'error');
     die(json_encode(['error' => 'Payload inválido']));
 }
 
 // Dados do payload
 $input_text = $payload['input_text'];
-$id = $payload['id'];  // Parâmetro que será usado para nomear o arquivo
+$voice = $payload['voice'];
+$model = $payload['model'];
 
 // URL da API de Text-to-Speech da OpenAI
 $url = 'https://api.openai.com/v1/audio/speech';
@@ -100,8 +68,8 @@ if ($response === FALSE) {
 
 log_message("Resposta da API recebida", 'info');
 
-// Gera um nome para o arquivo MP3 com base no ID recebido
-$filename = 'audio_' . $id . '.mp3';
+// Gera um nome único para o arquivo MP3
+$filename = uniqid() . '.mp3';
 $file_path = $save_dir . $filename;
 
 // Salva o conteúdo do áudio como um arquivo MP3
@@ -116,8 +84,8 @@ if (!file_exists($file_path) || filesize($file_path) == 0) {
 // URL de acesso ao arquivo MP3
 $audio_url = 'https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/' . $filename;
 
-// Retorna o JSON com a URL do áudio
+// Retorna o HTML da tag de áudio
+$html_audio = '<audio controls autoplay><source src="' . $audio_url . '" type="audio/mp3"></audio>';
 log_message("Áudio gerado com sucesso: {$audio_url}", 'success');
-echo json_encode(['audio_url' => $audio_url]);
-
+echo json_encode(['html_audio' => $html_audio]);
 ?>

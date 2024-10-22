@@ -277,59 +277,9 @@ function formatTrelloContent($id, $response_data)
 
     // Informações de Controle
     if (!empty($response_data['mensagemDeControle'])) {
-        $formatted_content .= "### Informações de Controle\n";
-
-        // Temperatura do Lead
-        if (!empty($response_data['mensagemDeControle']['temperaturaDoLead'])) {
-            $formatted_content .= "**Temperatura do Lead:**\n";
-            $formatted_content .= "- Valor: " . $response_data['mensagemDeControle']['temperaturaDoLead']['valor'] . "\n";
-            $formatted_content .= "- Explicação: " . $response_data['mensagemDeControle']['temperaturaDoLead']['explicacao'] . "\n\n";
-        }
-
-        // Etapa SPIN Selling
-        if (!empty($response_data['mensagemDeControle']['etapaSpinSelling'])) {
-            $formatted_content .= "**Etapa SPIN Selling:**\n";
-            $formatted_content .= "- Nome: " . $response_data['mensagemDeControle']['etapaSpinSelling']['nome'] . "\n";
-            $formatted_content .= "- Abordagem: " . $response_data['mensagemDeControle']['etapaSpinSelling']['abordagemExplicacao'] . "\n\n";
-        }
-
-        // Análise de Copy
-        if (!empty($response_data['mensagemDeControle']['analiseCopy'])) {
-            $formatted_content .= "**Análise de Copywriting:**\n";
-            $formatted_content .= "- Texto - Retórica Aristotélica: " . $response_data['mensagemDeControle']['analiseCopy']['texto']['retoricaAristotelica'] . "\n";
-            $formatted_content .= "- Texto - Elementos Literários: " . $response_data['mensagemDeControle']['analiseCopy']['texto']['elementosLiterarios'] . "\n";
-            $formatted_content .= "- Voz - Retórica Aristotélica: " . $response_data['mensagemDeControle']['analiseCopy']['voz']['retoricaAristotelica'] . "\n";
-            $formatted_content .= "- Voz - Elementos Literários: " . $response_data['mensagemDeControle']['analiseCopy']['voz']['elementosLiterarios'] . "\n\n";
-        }
-
-        // Análise de Humanização
-        if (!empty($response_data['mensagemDeControle']['analiseHumanizacao'])) {
-            $formatted_content .= "**Análise de Humanização:**\n";
-            $formatted_content .= "- Texto: " . $response_data['mensagemDeControle']['analiseHumanizacao']['texto'] . "\n";
-            $formatted_content .= "- Voz: " . $response_data['mensagemDeControle']['analiseHumanizacao']['voz'] . "\n\n";
-        }
-
-        // Emoção Principal
-        if (!empty($response_data['mensagemDeControle']['emocaoPrincipal'])) {
-            $formatted_content .= "**Emoção Principal:** " . $response_data['mensagemDeControle']['emocaoPrincipal'] . "\n\n";
-        }
-
-        // Outras Emoções
-        if (!empty($response_data['mensagemDeControle']['outrasEmocoes'])) {
-            $formatted_content .= "**Outras Emoções:**\n";
-            foreach ($response_data['mensagemDeControle']['outrasEmocoes'] as $emocao) {
-                $formatted_content .= "- Emoção: " . $emocao['emocao'] . " (Intensidade: " . $emocao['intensidade'] . ")\n";
-            }
-            $formatted_content .= "\n";
-        }
-
-        // Sugestão para o Vendedor
-        if (!empty($response_data['mensagemDeControle']['sugestaoParaVendedor'])) {
-            $formatted_content .= "**Sugestão para o Vendedor:** " . $response_data['mensagemDeControle']['sugestaoParaVendedor'] . "\n\n";
-        }
-
+        $formatted_content .= "### Mensagem de Controle\n";
+        $formatted_content .= $response_data['mensagemDeControle'] . "\n\n";
         log_message("Mensagem de Controle formatada.");
-
     }
     log_message("formatted_content = $formatted_content");
 

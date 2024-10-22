@@ -1,0 +1,153 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Book Consultation API",
+    "version": "1.0.0",
+    "description": "API for booking consultations via the book_consultation.php script."
+  },
+  "servers": [
+    {
+      "url": "https://iaturbo.com.br/wp-content/uploads/scripts/cal"
+    }
+  ],
+  "paths": {
+    "/book_consultation.php": {
+      "post": {
+        "summary": "Book a consultation",
+        "description": "Endpoint to book a consultation by providing lead information and confirmation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "leadName": {
+                    "type": "string",
+                    "description": "The name of the lead.",
+                    "example": "João Silva"
+                  },
+                  "leadEmail": {
+                    "type": "string",
+                    "description": "The email of the lead.",
+                    "example": "joao.silva@exemplo.com"
+                  },
+                  "leadWhatsAppNumber": {
+                    "type": "string",
+                    "description": "The WhatsApp number of the lead in international format.",
+                    "example": "+55 11 94570-1184"
+                  },
+                  "startDateTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The start date and time of the event in ISO 8601 format (e.g., 2024-10-22T11:00:00-03:00).",
+                    "example": "2024-10-22T11:00:00-03:00"
+                  },
+                  "eventNotes": {
+                    "type": "string",
+                    "description": "Notes for the event. These notes should be created collaboratively by the lead and the chatbot. The chatbot can suggest topics for the meeting based on the conversation and ask the lead for any additional information that might be valuable for the meeting.",
+                    "example": "Discussão sobre estratégias de atendimento ao cliente."
+                  },
+                  "leadConfirmationPhrase": {
+                    "type": "string",
+                    "description": "The confirmation phrase from the lead. This must be captured EXACTLY AS WRITTEN BY THE LEAD, without any modifications or creativity from the chatbot.",
+                    "example": "SIM"
+                  }
+                },
+                "required": ["leadName", "leadEmail", "leadWhatsAppNumber", "startDateTime", "eventNotes", "leadConfirmationPhrase"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agendamento realizado com sucesso!"
+                    },
+                    "bookingDetails": {
+                      "type": "object",
+                      "description": "Detalhes do agendamento retornados pelo Cal.com."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or booking error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Ops! O número '+5511945701184' parece estar no formato incorreto. Por favor, insira o número de telefone no formato internacional. Comece com '+', seguido pelo código do país, código de área e o número. Exemplo: +55 11 94570-1184 (para São Paulo, Brasil). 😊"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Não autorizado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Ops ... ocorreu uma falha ao realizar o agendamento"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "Mensagem de erro detalhada"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

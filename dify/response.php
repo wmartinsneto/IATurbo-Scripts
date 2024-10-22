@@ -46,7 +46,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Decodifica o campo "thought"
-$thought_data = json_decode($completed_data['thought'], true);
+$parsed_thought = json_decode($completed_data['thought'], true);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
     log_message("Erro ao decodificar o campo thought para o id: $id");
@@ -56,7 +56,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Combina os dados do arquivo completado com os dados decodificados do campo "thought"
-$response_data = array_merge($completed_data, $thought_data);
+$response_data = array_merge($completed_data, $parsed_thought);
 
 // Remove o campo "thought" original
 unset($response_data['thought']);

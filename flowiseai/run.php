@@ -49,6 +49,9 @@ $id = $data['id'] ?? null;
 $chatflow_url = $data['chatflow_url'] ?? null;
 $chatflow_key = $data['chatflow_key'] ?? null;
 
+log_message("Requisição recebida. ID: $id, Chatflow URL: $chatflow_url");
+
+// Verifica se todos os parâmetros obrigatórios estão presentes
 if (!$id || !$chatflow_url || !$chatflow_key) {
     log_message("Parâmetros faltando. id, chatflow_url e chatflow_key são obrigatórios.");
     die(json_encode(['error' => 'Parâmetros faltando. id, chatflow_url e chatflow_key são obrigatórios.']));
@@ -63,6 +66,7 @@ if (!file_exists($file_path)) {
 
 // Lê os dados do arquivo pendente
 $data = json_decode(file_get_contents($file_path), true);
+log_message("Arquivo carregado com sucesso para id: $id. Dados: " . print_r($data, true));
 
 // Envia a pergunta para o FlowiseAI
 $options = [
@@ -83,12 +87,16 @@ if ($response === FALSE) {
     die(json_encode(['error' => 'Falha na requisição ao FlowiseAI. Verifique os logs para mais detalhes.']));
 }
 
+log_message("Resposta recebida do FlowiseAI para id: $id.");
+
 // Validação da resposta do FlowiseAI
 $response_data = json_decode($response, true);
 if (!$response_data) {
     log_message("Falha ao decodificar a resposta do FlowiseAI para id: $id");
     die(json_encode(['error' => 'Falha ao decodificar a resposta do FlowiseAI.']));
 }
+
+log_message("Resposta decodificada com sucesso para id: $id. Resposta: " . print_r($response_data, true));
 
 // Salva a resposta na pasta ./completed
 if (file_put_contents($completed_dir . $id . '.json', json_encode($response_data, JSON_PRETTY_PRINT)) === false) {
@@ -104,25 +112,81 @@ if (!unlink($file_path)) {
     die(json_encode(['error' => 'Falha ao remover o arquivo pendente.']));
 }
 
+log_message("Arquivo pendente removido com sucesso para id: $id");
+
 // Integração com o Trello - Chama a função `send_to_trello` para enviar a resposta ao Trello
-log_message("Iniciando envio ao Trello para id: $id.");
+log_message("Iniciando envio ao Trello para mensagem $id.");
 
-// Substitua os parâmetros abaixo conforme sua necessidade
-send_to_trello([
-    'sessionId' => $data['overrideConfig']['sessionId'] ?? $id, // Certifique-se de que o sessionId correto está sendo usado
-    'name' => $data['userData']['firstName'] . ' ' . $data['userData']['lastName'],  // Nome real do lead
-    'message' => $data['question'] ?? 'Sem pergunta disponível', // Pergunta do lead
-    'source' => $data['source'] ?? 'Desconhecido', // Fonte da mensagem (whats, insta, etc.)
-    'userData' => $data['userData'] ?? [],  // Dados do usuário
-    'content' => "Aqui vai o conteúdo gerado para o Trello",  // Substitua pelo conteúdo real
-    'textResponse' => $response_data['text'] ?? 'Sem resposta de texto disponível', // Resposta em texto do FlowiseAI
-    'audioUrl' => $response_data['audioUrl'] ?? null, // Se houver resposta de áudio, passe a URL aqui
-    'controlData' => $response_data['controlData'] ?? [], // Informações de controle da conversa, se existirem
-]);
+$formattedResponse = null;
+try {
 
-log_message("Envio ao Trello completo para id: $id.");
+    log_message('Decoding $response_data["text"]');
+    $decodedTextResponse = json_decode($response_data['text'], true);
 
-// Retorna 200 OK
+    log_message('Formatting decodedTextResponse');
+    $formattedResponse = formatTrelloContent($id, $decodedTextResponse);
+
+    log_message('Sending to Trello');
+    send_to_trello([
+        'leadRequestId' => $id, 
+        'leadQuestion' => $data['question'] ?? 'Sem pergunta disponível', 
+        'leadName' => $data['userData']['firstName'] . ' ' . $data['userData']['lastName'],  
+        'source' => $data['source'] ?? 'Desconhecido', 
+        'sessionId' => $data['overrideConfig']['sessionId'], 
+        'userData' => $data['userData'] ?? [],  
+        'formattedResponse' => $formattedResponse
+    ]);
+
+    log_message("Envio ao Trello completo para id: $id.");
+} catch (Exception $e) {
+    log_message("Falha ao enviar ao Trello para id: $id. Erro: " . $e->getMessage(), 'error');
+}
+
+// Integração com Slack
+log_message("Iniciando envio de notificação p/ Slack");
+try {
+    $webhookUrl = 'https://hooks.slack.com/services/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';
+
+    $slackMessage = "Lead no " . $data['source'] . "\n";
+    foreach ($data['userData'] as $key => $value) {
+        $slackMessage .= ucfirst($key) . ": $value\n";
+    }
+    $slackMessage .= "PERGUNTA:\n" . $data['question'] . "\n\n";
+    $slackMessage .= "RESPOSTA:\n" . $formattedResponse;
+
+    // Configura o payload para enviar ao Slack
+    $payload = json_encode([
+        'text' => $slackMessage
+    ]);
+
+    // Configura as opções de contexto para a requisição HTTP
+    $options = [
+        'http' => [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => $payload,
+        ]
+    ];
+
+    // Cria o contexto de stream
+    $context = stream_context_create($options);
+
+    // Envia a requisição ao Slack
+    $result = @file_get_contents($webhookUrl, false, $context);
+
+    // Verifica o resultado e retorna a resposta apropriada
+    if ($result === FALSE) {
+        echo 'Falha ao enviar a mensagem ao Slack.';
+    } else {
+        echo 'Mensagem enviada com sucesso ao Slack.';
+    }
+} catch (Exception $e) {
+    log_message("Falha ao enviar notificação no Slack. Erro: " . $e->getMessage(), 'error');
+}
+
+// Retorna 200 OK mesmo em caso de falha no Trello
 http_response_code(200);
 log_message("Resposta retornada com sucesso para id: $id.");
+
+
 ?>

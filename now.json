@@ -1,0 +1,62 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "IATurbo Date Formatter API",
+      "description": "API para formatação de data e hora para o fuso horário de São Paulo.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://iaturbo.com.br/wp-content/uploads/scripts"
+      }
+    ],
+    "paths": {
+      "/now.php": {
+        "get": {
+          "summary": "Obter data e hora formatadas para o fuso horário de São Paulo",
+          "description": "Retorna a data e hora formatadas, com o nome do dia da semana completo, no fuso horário 'America/Sao_Paulo'.",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Data e hora formatadas com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "formattedDate": {
+                        "type": "string",
+                        "example": "segunda-feira, 14 de outubro de 2024, 12:14:20"
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "example": "America/Sao_Paulo"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação inválido ou não fornecido"
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  

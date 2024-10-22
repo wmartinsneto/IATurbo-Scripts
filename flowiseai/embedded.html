@@ -1,0 +1,146 @@
+
+<flowise-fullchatbot></flowise-fullchatbot>
+
+<script type="module">
+    import Chatbot from "https://iaturbo.com.br/wp-content/uploads/flowiseai/web_1.3.7.js"
+
+    // Função para obter a localização com base no IP
+    async function getUserLocation() {
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Erro ao obter localização:', error);
+            return null;
+        }
+    }
+
+    // Função para enviar notificação ao servidor PHP
+    async function sendToTrello(message, sessionId, source, userData) {
+        const serverUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/send-to-trello-v1.php'; // URL do servidor PHP
+        const body = {
+            message: message,
+            sessionId: sessionId, // Adiciona o sessionId aqui
+            source: source,
+            userData: userData
+        };
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        };
+
+        try {
+            const response = await fetch(serverUrl, options);
+            const textResponse = await response.text();
+            console.log('Notification sent to server:', textResponse);
+        } catch (error) {
+            console.error('Error sending notification to server:', error);
+        }
+    }
+
+    let botLoading = false;
+    let lastMessage = null;
+    let messages = []; // Variável para armazenar todas as mensagens
+    const sessionId = 'sess_' + Math.random().toString(36).substr(2, 9); // Gera um sessionId único para a sessão
+    const source = 'https://iaturbo.com.br/chatbots/'; // Define a fonte da mensagem
+    let userData = {}; // Inicializa o objeto userData
+
+    // Obter a localização do usuário e armazenar em userData
+    getUserLocation().then(location => {
+        if (location) {
+            userData.city = location.city;
+            userData.region = location.region;
+            userData.country = location.country_name;
+        }
+    });
+
+    Chatbot.initFull({
+        chatflowid: "72f4b758-dea5-4781-8755-9cd64490e4da",
+        apiHost: "https://flowiseai-railway-production-16fe.up.railway.app",
+        observersConfig: {
+            // User input has changed
+            observeUserInput: (input) => {
+                if (input && input.trim().length > 0 && !messages.find(msg => msg.message === input && msg.type === 'userMessage')) {
+                    messages.push({ type: 'userMessage', message: input }); // Armazena a entrada do usuário
+                }
+            },
+            // The bot message stack has changed
+            observeMessages: (msgs) => {
+                if (msgs && msgs.length > 0) {
+                    lastMessage = msgs[msgs.length - 1];
+
+                    // Evita duplicação de mensagens
+                    const lastBotMessage = msgs.filter(msg => msg.type === 'apiMessage').pop();
+                    if (lastBotMessage && !messages.find(msg => msg.message === lastBotMessage.message && msg.type === 'apiMessage')) {
+                        messages.push(lastBotMessage); // Adiciona somente se for nova
+                    }
+                }
+            },
+            // The bot loading signal changed
+            observeLoading: (loading) => {
+                if (!loading && lastMessage && lastMessage.type === 'apiMessage') {
+                    const botResponse = lastMessage.message;
+                    const userMessage = messages.reverse().find(msg => msg.type === 'userMessage');
+                    if (userMessage) {
+                        const combinedMessage = `**Mensagem do Lead:** ${userMessage.message}\n\n**Resposta do Chatbot:** ${botResponse}`;
+                        sendToTrello(combinedMessage, sessionId, source, userData);
+                    } else {
+                        const botOnlyMessage = `**Mensagem do Chatbot:** ${botResponse}`;
+                        sendToTrello(botOnlyMessage, sessionId, source, userData);
+                    }
+                }
+                botLoading = loading;
+            }
+        },
+        theme: {
+            chatWindow: {
+                showTitle: true,
+                showAgentMessages: false,
+                title: 'Fale com a IARA ',
+                titleAvatarSrc: 'https://iaturbo.com.br/wp-content/uploads/2024/01/happy-robot-1.png',
+                welcomeMessage: 'Sabe aquela sensação de **perder um cliente** porque **ninguém respondeu a tempo**? 😥 Comigo, isso é **passado**! 😎 Prazer, sou a **IARA** e quero te mostrar como turbinar os **seus resultados** com a **minha tecnologia de ponta** 🤖🚀. <br>Vamos lá, me conta como posso te ajudar. Quanto mais detalhes, melhores ideias! 💡💬',
+                errorMessage: 'Ops... um erro aconteceu aqui',
+                backgroundColor: "#131416",
+                height: 500,
+                fontSize: 16,
+                botMessage: {
+                    backgroundColor: "black",
+                    textColor: "white",
+                    showAvatar: true,
+                    avatarSrc: "https://iaturbo.com.br/wp-content/uploads/2023/10/GuruTurboX2.gif",
+                },
+                userMessage: {
+                    backgroundColor: "black",
+                    textColor: "#43d9ea",
+                    showAvatar: true,
+                    avatarSrc: "https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/usericon.png",
+                },
+                textInput: {
+                    placeholder: 'Faça sua pergunta...',
+                    backgroundColor: 'black',
+                    textColor: '#43d9ea',
+                    sendButtonColor: '#43d9ea',
+                    maxChars: 1000,
+                    maxCharsWarningMessage: 'Você excedeu o limite de caracteres. Por favor digite perguntas com menos de 1000 caracteres.',
+                    autoFocus: true,
+                    sendMessageSound: true,
+                    receiveMessageSound: true,
+                },
+                feedback: {
+                    color: '#43d9ea',
+                },
+                footer: {
+                    textColor: '#43d9ea',
+                    text: 'Criado por',
+                    company: 'IATurbo',
+                    companyLink: 'https://iaturbo.com.br/chatbots/',
+                }
+            }
+        }
+    })
+</script>
