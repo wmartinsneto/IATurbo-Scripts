@@ -149,16 +149,15 @@ if (!$thought_found || !file_exists($completed_file_path)) {
     curl_setopt($retry_ch, CURLOPT_POSTFIELDS, $retry_payload);
     $retry_result = curl_exec($retry_ch);
     curl_close($retry_ch);
-    die($retry_result);
+    log_message("Retry result: " . $retry_result);
 }
 
 // Log the completion
 log_message("Response saved for id: $id");
 
-// Remove o arquivo da pasta pending
+// Remove o da pasta pending
 if (!unlink($file_path)) {
     log_message("Falha ao remover o arquivo pendente para id: $id");
-    die(json_encode(['error' => 'Falha ao remover o arquivo pendente.']));
 }
 
 log_message("Arquivo pendente removido com sucesso para id: $id");
@@ -188,7 +187,7 @@ try {
 
     log_message("Envio ao Trello completo para id: $id.");
 } catch (Exception $e) {
-    log_message("Falha ao enviar ao Trello para id: $id. Erro: " . $e->getMessage(), 'error');
+    log_message("Falha ao enviar ao Trello para id: $id. Erro: " . $e->getMessage());
 }
 
 // Integração com Slack
@@ -230,7 +229,7 @@ try {
         echo 'Mensagem enviada com sucesso ao Slack.';
     }
 } catch (Exception $e) {
-    log_message("Falha ao enviar notificação no Slack. Erro: " . $e->getMessage(), 'error');
+    log_message("Falha ao enviar notificação no Slack. Erro: " . $e->getMessage());
 }
 
 // Retorna 200 OK mesmo em caso de falha no Trello
