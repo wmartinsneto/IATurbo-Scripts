@@ -26,6 +26,12 @@ function displayOrcamentoData(data, precosData) {
             <p>${data.ResumoGeral.TextoResumo}</p>
         </div>`;
 
+    // Novo cabeçalho para detalhes dos itens configurados
+    const detalhesItensConfigurados = `
+        <div class="section">
+            <h3>🛠️ Detalhes dos Itens Configurados</h3>
+        </div>`;
+
     // Preparação das variáveis
     let conversaComIa = '';
     let conectado = '';
@@ -81,7 +87,7 @@ function displayOrcamentoData(data, precosData) {
     });
 
     // Combine all sections into the container
-    container.innerHTML = leadInfo + resumoGeral + conversaComIa;
+    container.innerHTML = leadInfo + resumoGeral + detalhesItensConfigurados + conversaComIa;
 
     // Add Conectado section if not empty
     if (conectado) {
