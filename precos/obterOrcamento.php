@@ -41,11 +41,35 @@ $params = array_filter($_POST, function($value) {
     return !is_null($value) && $value !== '' && $value !== 'None';
 });
 
-// Verifica se parâmetros foram enviados
-if (empty($params)) {
-    $error = ['error' => 'Nenhum parâmetro válido foi enviado.'];
+// Verifica e separa os dados do lead dos parâmetros de configuração
+$leadInfo = [
+    'nome' => $params['nome'] ?? null,
+    'email' => $params['email'] ?? null,
+    'whatsapp' => $params['whatsapp'] ?? null
+];
+unset($params['nome'], $params['email'], $params['whatsapp']); // Remove do array principal
+
+// Verifica se os parâmetros obrigatórios (nome, email, WhatsApp) estão presentes e válidos
+if (empty($leadInfo['nome']) || empty($leadInfo['email']) || empty($leadInfo['whatsapp'])) {
+    $error = ['error' => 'Nome, email e WhatsApp são obrigatórios.'];
     echo json_encode($error);
-    writeLog('Erro: Nenhum parâmetro válido foi enviado.');
+    writeLog('Erro: Nome, email e WhatsApp são obrigatórios.');
+    exit;
+}
+
+// Validação do formato de email
+if (!filter_var($leadInfo['email'], FILTER_VALIDATE_EMAIL)) {
+    $error = ['error' => 'Email inválido.'];
+    echo json_encode($error);
+    writeLog('Erro: Email inválido.');
+    exit;
+}
+
+// Validação do formato de WhatsApp (apenas números, com mínimo de 10 e máximo de 15 dígitos)
+if (!preg_match('/^\d{10,15}$/', $leadInfo['whatsapp'])) {
+    $error = ['error' => 'WhatsApp inválido. Use apenas números, com DDD, entre 10 e 15 dígitos.'];
+    echo json_encode($error);
+    writeLog('Erro: WhatsApp inválido.');
     exit;
 }
 
@@ -322,8 +346,9 @@ foreach ($validItems as $item) {
     }
 }
 
-// Monta a resposta
+// Monta a resposta incluindo as informações do lead
 $response = [
+    'LeadInfo' => $leadInfo,
     'ParametrosEntrada' => $inputParams,
     'ItensConfigurados' => $validItems,
     'ResumoGeral' => [
