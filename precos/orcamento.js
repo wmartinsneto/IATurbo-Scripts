@@ -48,14 +48,14 @@ function displayOrcamentoData(data, precosData) {
         let descricao = item.DescricaoPrincipal || 'Descrição não disponível.';
         let personalizacao = item.DescricaoPersonalizada || "Nenhuma descrição personalizada.";
         
-        if (item.Modulo === "ConversaComIA") {
+        if (item.Modulo === "ConversaComIA" && item.Categoria !== "Manutencao") {
             conversaComIa += `
                 <div class="section">
                     <h4>💬 Conversa Com IA</h4>
                     <p><strong>Descrição:</strong> ${descricao}</p>
                     <p><strong>Personalização:</strong> ${personalizacao}</p>
                     <table>
-                        <tr><td><strong>Nível:</strong></td><td>${item.Nivel || 'Padrão'}</td></tr>
+                        <tr><td><strong>Nível de Personalização:</strong></td><td>${item.Nivel} - ${item.DescricaoCustomizacao}</td></tr>
                         <tr><td><strong>Custo:</strong></td><td>R$ ${item.Custo || 'N/A'}</td></tr>
                         <tr><td><strong>Tempo de Implementação:</strong></td><td>${item.Tempo || 'N/A'} horas</td></tr>
                     </table>
@@ -108,12 +108,46 @@ function displayOrcamentoData(data, precosData) {
     }
 
     // Add Suporte e Monitoramento Contínuo section
-    container.innerHTML += `
-        <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
-        <table>
-            <thead>
-                <tr><th>Item</th><th>Descrição</th><th>Custo</th></tr>
-            </thead>
-            <tbody>${suporteMonitoramento}</tbody>
-        </table>`;
+    if (suporteMonitoramento) {
+        container.innerHTML += `
+            <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
+            <table>
+                <thead>
+                    <tr><th>Item</th><th>Descrição</th><th>Custo</th></tr>
+                </thead>
+                <tbody>${suporteMonitoramento}</tbody>
+            </table>`;
+    }
 }
+
+// Função para buscar o JSON do orçamento e exibir
+function fetchOrcamentoData(orcamentoId) {
+    const url = `https://iaturbo.com.br/wp-content/uploads/scripts/precos/orcamentos/${orcamentoId}`;
+    const precosUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/chatbots_iaturbo_precos.json';
+
+    console.log("Buscando dados do orçamento e dos preços...");
+    Promise.all([fetch(url), fetch(precosUrl)])
+        .then(responses => {
+            if (!responses[0].ok || !responses[1].ok) throw new Error('Dados não encontrados');
+            return Promise.all(responses.map(res => res.json()));
+        })
+        .then(([data, precosData]) => {
+            console.log("Dados do orçamento e preços recebidos com sucesso.");
+            displayOrcamentoData(data, precosData);
+        })
+        .catch(error => {
+            document.getElementById('orcamento-container').innerHTML = `<p>Erro: ${error.message}</p>`;
+            console.error("Erro ao buscar dados:", error);
+        });
+}
+
+// Executa as funções ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const orcamentoId = getOrcamentoIdFromUrl();
+    if (orcamentoId) {
+        fetchOrcamentoData(orcamentoId);
+    } else {
+        document.getElementById('orcamento-container').innerHTML = '<p>ID do orçamento não encontrado na URL.</p>';
+        console.warn("ID do orçamento não encontrado na URL.");
+    }
+});
