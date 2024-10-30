@@ -1,0 +1,130 @@
+openapi: 3.0.0
+info:
+  title: API de Orçamento de Chatbots IA Turbo
+  version: 1.0.0
+  description: API para gerar orçamentos de chatbots personalizados com base nas especificações fornecidas.
+servers:
+  - url: https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterOrcamento.php
+paths:
+  /obterOrcamento.php:
+    post:
+      summary: Gera um orçamento baseado nos parâmetros fornecidos.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ConversaComIA_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada do chatbot de conversa com IA.
+                ConversaComIA_CustomizacaoPrompt:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de customização do prompt do chatbot.
+                ConversaComIA_SuporteMonitoramentoContinuo:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e monitoramento contínuo para o chatbot de conversa com IA.
+                Conectado_RedesSociais_{rede}:
+                  type: string
+                  enum: [true]
+                  description: Integração com redes sociais (WhatsApp, Facebook, Instagram, Telegram).
+                Conectado_APIPublica:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Descricao:
+                        type: string
+                        description: Descrição da integração com a API pública.
+                      Nivel:
+                        type: string
+                        enum: [Basico, Padrao, Avancado]
+                        description: Nível de complexidade da integração.
+                Conectado_APISobMedida_Descricao:
+                  type: string
+                  description: Descrição da integração com API sob medida.
+                Conectado_SuporteMonitoramentoContinuo:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e monitoramento contínuo para integrações.
+                Multimidia_Audio_{funcionalidade}:
+                  type: object
+                  properties:
+                    DescricaoLead:
+                      type: string
+                      description: Descrição personalizada da funcionalidade de áudio.
+                Multimidia_Imagem_{funcionalidade}:
+                  type: object
+                  properties:
+                    DescricaoLead:
+                      type: string
+                      description: Descrição personalizada da funcionalidade de imagem.
+                Multimidia_SuporteMonitoramentoContinuo:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e monitoramento contínuo para funcionalidades multimídia.
+            encoding:
+              Conectado_APIPublica:
+                explode: true
+      responses:
+        '200':
+          description: Orçamento gerado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ParametrosEntrada:
+                    type: object
+                    description: Parâmetros recebidos pela API.
+                  ItensConfigurados:
+                    type: array
+                    description: Lista de itens configurados com seus detalhes.
+                    items:
+                      type: object
+                      properties:
+                        Item:
+                          type: string
+                          description: Identificação do item.
+                        DescricaoPrincipal:
+                          type: string
+                        DescricaoPersonalizada:
+                          type: string
+                        Nivel:
+                          type: string
+                        DescricaoCustomizacao:
+                          type: string
+                        Custo:
+                          type: number
+                        Tempo:
+                          type: number
+                        Categoria:
+                          type: string
+                        Aviso:
+                          type: string
+                  ResumoGeral:
+                    type: object
+                    properties:
+                      CustoImplementacao:
+                        type: number
+                      TempoImplementacao:
+                        type: number
+                      CustoManutencao:
+                        type: number
+                      Subtotais:
+                        type: object
+                      TextoResumo:
+                        type: string
+        '400':
+          description: Erro nos parâmetros enviados.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro detalhada.
