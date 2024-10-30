@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 // Caminhos dos arquivos
 $jsonFile = __DIR__ . '/chatbots_iaturbo_precos.json';
 $logDir = __DIR__ . '/logs';
+$orcamentosDir = __DIR__ . '/orcamentos'; // Pasta para salvar os orçamentos
 
 // Verifica se o arquivo JSON existe
 if (!file_exists($jsonFile)) {
@@ -20,6 +21,11 @@ if (!is_dir($logDir)) {
     mkdir($logDir, 0755, true);
 }
 
+// Verifica se a pasta de orçamentos existe, caso contrário, cria
+if (!is_dir($orcamentosDir)) {
+    mkdir($orcamentosDir, 0755, true);
+}
+
 // Função para registrar logs
 function writeLog($message) {
     global $logDir;
@@ -30,14 +36,16 @@ function writeLog($message) {
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
 
-// Obtém os parâmetros enviados via POST
-$params = $_POST;
+// Obtém os parâmetros enviados via POST e ignora parâmetros vazios, nulos ou com valor "None"
+$params = array_filter($_POST, function($value) {
+    return !is_null($value) && $value !== '' && $value !== 'None';
+});
 
 // Verifica se parâmetros foram enviados
 if (empty($params)) {
-    $error = ['error' => 'Nenhum parâmetro foi enviado.'];
+    $error = ['error' => 'Nenhum parâmetro válido foi enviado.'];
     echo json_encode($error);
-    writeLog('Erro: Nenhum parâmetro foi enviado.');
+    writeLog('Erro: Nenhum parâmetro válido foi enviado.');
     exit;
 }
 
@@ -337,9 +345,14 @@ if ($hasCustomAPI) {
 }
 $response['ResumoGeral']['TextoResumo'] = $textoResumo;
 
+// Salva o payload de saída na pasta /orcamentos com nome no formato especificado
+$uniqueId = uniqid();
+$filename = "$orcamentosDir/orcamento_" . date('Y_m_d') . "_$uniqueId.json";
+file_put_contents($filename, json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
 // Retorna a resposta em JSON
 echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
 // Registra o log da requisição bem-sucedida
-writeLog('Orçamento gerado com sucesso. Parâmetros: ' . json_encode($params) . '. Resposta: ' . json_encode($response));
+writeLog("Orçamento gerado com sucesso. Arquivo salvo em: $filename. Parâmetros: " . json_encode($params) . ". Resposta: " . json_encode($response));
 ?>
