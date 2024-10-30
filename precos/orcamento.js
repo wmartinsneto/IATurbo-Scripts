@@ -80,74 +80,40 @@ function displayOrcamentoData(data, precosData) {
         }
     });
 
-    // Montar o layout final organizado por seções
-    const itensConfigurados = `
-        <div class="section">
-            <h3>🛠️ Detalhes dos Itens Configurados</h3>
-            
-            <!-- Seção Conversa Com IA -->
-            ${conversaComIa}
-            
-            <!-- Seção Conectado -->
+    // Combine all sections into the container
+    container.innerHTML = leadInfo + resumoGeral + conversaComIa;
+
+    // Add Conectado section if not empty
+    if (conectado) {
+        container.innerHTML += `
             <h4>🌐 Conectado</h4>
             <table>
                 <thead>
                     <tr><th>Rede Social</th><th>Descrição</th><th>Custo</th><th>Tempo de Implementação</th></tr>
                 </thead>
                 <tbody>${conectado}</tbody>
-            </table>
-            
-            <!-- Seção Multimídia -->
+            </table>`;
+    }
+
+    // Add Multimidia section if not empty
+    if (multimidia) {
+        container.innerHTML += `
             <h4>🎥 Multimídia</h4>
             <table>
                 <thead>
                     <tr><th>Componente</th><th>Descrição</th><th>Custo</th><th>Tempo de Implementação</th></tr>
                 </thead>
                 <tbody>${multimidia}</tbody>
-            </table>
-
-            <!-- Suporte e Monitoramento Contínuo -->
-            <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
-            <table>
-                <thead>
-                    <tr><th>Item</th><th>Descrição</th><th>Custo</th></tr>
-                </thead>
-                <tbody>${suporteMonitoramento}</tbody>
-            </table>
-        </div>`;
-
-    // Renderizar todo o conteúdo na página
-    container.innerHTML = leadInfo + resumoGeral + itensConfigurados;
-}
-
-// Função para buscar o JSON do orçamento e exibir
-function fetchOrcamentoData(orcamentoId) {
-    const url = `https://iaturbo.com.br/wp-content/uploads/scripts/precos/orcamentos/${orcamentoId}`;
-    const precosUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/chatbots_iaturbo_precos.json';
-
-    console.log("Buscando dados do orçamento e dos preços...");
-    Promise.all([fetch(url), fetch(precosUrl)])
-        .then(responses => {
-            if (!responses[0].ok || !responses[1].ok) throw new Error('Dados não encontrados');
-            return Promise.all(responses.map(res => res.json()));
-        })
-        .then(([data, precosData]) => {
-            console.log("Dados do orçamento e preços recebidos com sucesso.");
-            displayOrcamentoData(data, precosData);
-        })
-        .catch(error => {
-            document.getElementById('orcamento-container').innerHTML = `<p>Erro: ${error.message}</p>`;
-            console.error("Erro ao buscar dados:", error);
-        });
-}
-
-// Executa as funções ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const orcamentoId = getOrcamentoIdFromUrl();
-    if (orcamentoId) {
-        fetchOrcamentoData(orcamentoId);
-    } else {
-        document.getElementById('orcamento-container').innerHTML = '<p>ID do orçamento não encontrado na URL.</p>';
-        console.warn("ID do orçamento não encontrado na URL.");
+            </table>`;
     }
-});
+
+    // Add Suporte e Monitoramento Contínuo section
+    container.innerHTML += `
+        <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
+        <table>
+            <thead>
+                <tr><th>Item</th><th>Descrição</th><th>Custo</th></tr>
+            </thead>
+            <tbody>${suporteMonitoramento}</tbody>
+        </table>`;
+}
