@@ -7,7 +7,7 @@ function getOrcamentoIdFromUrl() {
 }
 
 // Função para formatar e exibir os dados do orçamento com o novo layout
-function displayOrcamentoData(data, precosData) {
+function displayOrcamentoData(data, precosData, orcamentoId) {
     console.log("Iniciando exibição de dados do orçamento.");
     const container = document.getElementById('orcamento-container');
 
@@ -16,7 +16,9 @@ function displayOrcamentoData(data, precosData) {
         <div class="section">
             <h2>👋 Olá, ${data.LeadInfo.nome}!</h2>
             <p>Aqui está o seu orçamento detalhado. 🔍</p>
-            <p><strong>Email:</strong> ${data.LeadInfo.email}<br><strong>WhatsApp:</strong> ${data.LeadInfo.whatsapp}</p>
+            <p><small>ID: ${orcamentoId} <i>(Válido por 7 dias)</i></small></p>
+            <p><strong>Dados Pessoais:</strong></p>
+            <p>Email: ${data.LeadInfo.email}<br>WhatsApp: ${data.LeadInfo.whatsapp}</p>
         </div>`;
 
     // Resumo Geral do Orçamento
@@ -128,7 +130,7 @@ function displayOrcamentoData(data, precosData) {
 
 // Função para buscar o JSON do orçamento e exibir
 function fetchOrcamentoData(orcamentoId) {
-    const url = `https://iaturbo.com.br/wp-content/uploads/scripts/precos/orcamentos/${orcamentoId}`;
+    const url = `https://iaturbo.com.br/wp-content/uploads/scripts/precos/orcamentos/${orcamentoId}.json`;
     const precosUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/chatbots_iaturbo_precos.json';
 
     console.log("Buscando dados do orçamento e dos preços...");
@@ -139,7 +141,7 @@ function fetchOrcamentoData(orcamentoId) {
         })
         .then(([data, precosData]) => {
             console.log("Dados do orçamento e preços recebidos com sucesso.");
-            displayOrcamentoData(data, precosData);
+            displayOrcamentoData(data, precosData, orcamentoId);
         })
         .catch(error => {
             document.getElementById('orcamento-container').innerHTML = `<p>Erro: ${error.message}</p>`;
