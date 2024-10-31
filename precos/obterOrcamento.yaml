@@ -15,22 +15,41 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - nome
+                - email
+                - whatsapp
+                - ConversaComIA_DescricaoLead
+                - ConversaComIA_NivelPersonalizacaoConversa
+                - ConversaComIA_SuporteMelhoriaContinua
               properties:
                 ConversaComIA_DescricaoLead:
                   type: string
                   description: Descrição personalizada do chatbot de conversa com IA.
-                ConversaComIA_CustomizacaoPrompt:
+                ConversaComIA_NivelPersonalizacaoConversa:
                   type: string
                   enum: [Basico, Padrao, Avancado]
                   description: Nível de customização do prompt do chatbot.
-                ConversaComIA_SuporteMonitoramentoContinuo:
+                ConversaComIA_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]
                   description: Nível de suporte e monitoramento contínuo para o chatbot de conversa com IA.
-                Conectado_RedesSociais_{rede}:
+                Conectado_RedesSociais_WhatsApp:
                   type: string
                   enum: [true]
-                  description: Integração com redes sociais (WhatsApp, Facebook, Instagram, Telegram).
+                  description: Integração com WhatsApp.
+                Conectado_RedesSociais_Facebook:
+                  type: string
+                  enum: [true]
+                  description: Integração com Facebook.
+                Conectado_RedesSociais_Instagram:
+                  type: string
+                  enum: [true]
+                  description: Integração com Instagram.
+                Conectado_RedesSociais_Telegram:
+                  type: string
+                  enum: [true]
+                  description: Integração com Telegram.
                 Conectado_APIPublica:
                   type: array
                   items:
@@ -46,29 +65,51 @@ paths:
                 Conectado_APISobMedida_Descricao:
                   type: string
                   description: Descrição da integração com API sob medida.
-                Conectado_SuporteMonitoramentoContinuo:
+                Conectado_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]
                   description: Nível de suporte e monitoramento contínuo para integrações.
-                Multimidia_Audio_{funcionalidade}:
-                  type: object
-                  properties:
-                    DescricaoLead:
-                      type: string
-                      description: Descrição personalizada da funcionalidade de áudio.
-                Multimidia_Imagem_{funcionalidade}:
-                  type: object
-                  properties:
-                    DescricaoLead:
-                      type: string
-                      description: Descrição personalizada da funcionalidade de imagem.
-                Multimidia_SuporteMonitoramentoContinuo:
+                Multimidia_Audio_VozParaTexto:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de voz para texto.
+                Multimidia_Audio_VozParaTexto_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de voz para texto.
+                Multimidia_Audio_TextoParaVoz:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de texto para voz.
+                Multimidia_Audio_TextoParaVoz_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de texto para voz.
+                Multimidia_Imagem_ImagemParaTexto:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de imagem para texto.
+                Multimidia_Imagem_ImagemParaTexto_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de imagem para texto.
+                Multimidia_Imagem_TextoParaImagem:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de texto para imagem.
+                Multimidia_Imagem_TextoParaImagem_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de texto para imagem.
+                Multimidia_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]
                   description: Nível de suporte e monitoramento contínuo para funcionalidades multimídia.
-            encoding:
-              Conectado_APIPublica:
-                explode: true
+                nome:
+                  type: string
+                  description: Nome do cliente.
+                email:
+                  type: string
+                  description: Email do cliente.
+                whatsapp:
+                  type: string
+                  description: Número de WhatsApp do cliente. No formato internacional E.164 (mínimo de 10 e máximo de 15 dígitos, iniciando com '+')
       responses:
         '200':
           description: Orçamento gerado com sucesso.

@@ -124,7 +124,7 @@
     *  **Chamada à API:**
     ```
     ConversaComIA_DescricaoLead: "Responder perguntas frequentes no site."
-    ConversaComIA_CustomizacaoPrompt: "Basico"
+    ConversaComIA_NivelPersonalizacaoConversa: "Basico"
     Conectado_RedesSociais_WhatsApp: false
     Conectado_RedesSociais_Instagram: false
     Conectado_RedesSociais_Facebook: false
@@ -140,7 +140,7 @@
     *  **Chamada à API:**
     ```
     ConversaComIA_DescricaoLead: "Chatbot para loja de veículos: responder perguntas e criar cards no Trello."
-    ConversaComIA_CustomizacaoPrompt: "Avancado"
+    ConversaComIA_NivelPersonalizacaoConversa: "Avancado"
     Conectado_RedesSociais_WhatsApp: true
     Conectado_RedesSociais_Instagram: false
     Conectado_RedesSociais_Facebook: false

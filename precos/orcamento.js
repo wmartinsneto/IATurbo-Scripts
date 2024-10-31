@@ -14,22 +14,24 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     // Informações do lead
     const leadInfo = `
         <div class="section">
-            <h2>👋 Olá, ${data.LeadInfo.nome}!</h2>
-            <p>Aqui está orçamento detalhado do seu chatbot. 🔍</p>
-            <p style="color:#ababab! important;"><small>ID: ${orcamentoId} <i>(Válido por 7 dias)</i></small></p>
-            <p><strong>Dados Pessoais:</strong></p>
-            <p style="color:#ababab! important;">Email: ${data.LeadInfo.email}<br>WhatsApp: ${data.LeadInfo.whatsapp}</p>
+            <h2 style="text-align:center !important;">👋 Olá, ${data.LeadInfo.nome}!</h2><br>
+            <p style="color:white;text-align:center !important;">Parabéns pelo primeiro passo em direção a um atendimento ao cliente mais moderno e eficiente!<br><br>Você está prestes a conferir uma solução sob medida para transformar:<br>1️⃣ O relacionamento com seus clientes<br>2️⃣ A eficiência do seu negócio<br>3️⃣ A imagem da sua marca<br>4️⃣ Os seus resultados 🚀</p>
+            <p style="text-align:center !important;"><strong>Dados Pessoais:</strong></p>
+            <p style="text-align:center !important;">Email: ${data.LeadInfo.email}<br>WhatsApp: ${data.LeadInfo.whatsapp}</p>
+            <p style="text-align:center !important;"><small>ID: ${orcamentoId} <i>(Válido por 7 dias)</i></small></p>
         </div>`;
 
     // Resumo Geral do Orçamento
     const resumoGeral = `
+        <br>
         <div class="section">
             <h3>📊 Resumo Geral do Orçamento</h3>
-            <p><i>${data.ResumoGeral.TextoResumo}</i></p>
+            <p style="color:white">${data.ResumoGeral.TextoResumo}</p>
         </div>`;
 
     // Novo cabeçalho para detalhes dos itens configurados
     const detalhesItensConfigurados = `
+        <br>
         <div class="section">
             <h3>🛠️ Detalhes dos Itens Configurados</h3>
         </div>`;
@@ -57,7 +59,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
         return `
             <tr>
                 <td>${item.Modulo}</td>
-                <td>${item.Nivel} - <span style="color:#ababab! important;">${item.DescricaoCustomizacao}</span></td>
+                <td>${item.Nivel} - <span>${item.DescricaoCustomizacao}</span></td>
                 <td>R$ ${item.Custo || 'N/A'}</td>
             </tr>`;
     }
@@ -68,15 +70,17 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
 
         if (item.Categoria == "Implementacao") {
             if (item.Modulo === "ConversaComIA") {
+                const tempoEmDias = (item.Tempo / 8).toFixed(0); // Assuming 8 hours per workday
                 conversaComIa += `
+                <br>
                 <div class="section">
-                    <h4 style="color:#43d9ea;">💬 Conversa Com IA</h4>
-                    <p style="color:#ababab! important;">${descricao}</p>
-                    <p><strong>Personalização:</strong> ${personalizacao}</p>
+                    <h4>💬 Conversa Com IA</h4>
+                    <p>${descricao}</p>
+                    <p style="color:white"><strong>Personalização:</strong> <i>${personalizacao}</i></p>
                     <table>
-                        <tr><td><strong>Nível de Personalização:</strong></td><td>${item.Nivel} - ${item.DescricaoCustomizacao}</td></tr>
-                        <tr><td><strong>Preço:</strong></td><td>R$ ${item.Custo || 'N/A'}</td></tr>
-                        <tr><td><strong>Tempo de Implementação:</strong></td><td>${item.Tempo || 'N/A'} horas</td></tr>
+                        <tr><td><strong>Nível de Personalização</strong></td><td>${item.Nivel} - <span style="color:#ababab">${item.DescricaoCustomizacao}</span></td></tr>
+                        <tr><td><strong>Preço</strong></td><td>${item.Custo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td></tr>
+                        <tr><td><strong>Prazo de Entrega</strong></td><td>${tempoEmDias} dias</td></tr>
                     </table>
                 </div>`;
             }
@@ -84,7 +88,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
                 if (item.Item.includes("RedesSociais")) {
                     redesSociais += `
                         <tr>
-                            <td>${item.Descricao}</td>
+                            <td>${item.Item.split(" > ").pop()} - <span style="color:$ababab">${item.Descricao}</span></td>
                             <td>R$ ${item.Custo || 'N/A'}</td>
                             <td>${item.Tempo || 'N/A'} horas</td>
                         </tr>`;
@@ -98,8 +102,8 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
                 } else if (item.Item.includes("APISobMedida")) {
                     apiSobMedida += `
                         <div class="section">
-                            <p><strong>Personalização:</strong> ${personalizacao}</p>
-                            <p><strong>Alerta:</strong> Preço e prazo sob consulta.</p>
+                            <p style="color:white"><strong>Personalização:</strong> ${personalizacao}</p>
+                            <p><strong>🚨Atenção:</strong> Preço e prazos para criação de APIs sob medida somente sob consulta.</p>
                         </div>`;
                 }
             }
@@ -120,10 +124,11 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     // Add Redes Sociais section if not empty
     if (redesSociais) {
         container.innerHTML += `
-            <h4 style="color:#43d9ea;">🌐 Conectado</h4>
-            <p style="color:#ababab! important;">${precosData.Conectado.Descricao}</p>
+            <br>
+            <h4>🌐 Conectado</h4>
+            <p>${precosData.Conectado.Descricao}</p>
             <h5>⚙ Redes Sociais</h5>
-            <p style="color:#ababab! important;">${precosData.Conectado.RedesSociais.Descricao}</p>
+            <p>${precosData.Conectado.RedesSociais.Descricao}</p>
             <table>
                 <thead>
                     <tr><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
@@ -135,8 +140,9 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     // Add API Pública section if not empty
     if (apiPublica) {
         container.innerHTML += `
+            <br>
             <h5>⚙ APIs Públicas</h5>
-            <p style="color:#ababab! important;">${precosData.Conectado.APIPublica.Descricao}</p>
+            <p>${precosData.Conectado.APIPublica.Descricao}</p>
             <table>
                 <thead>
                     <tr><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
@@ -148,16 +154,18 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     // Add API Sob Medida section if not empty
     if (apiSobMedida) {
         container.innerHTML += `
+            <br>
             <h5>⚙ API Sob Medida</h5>
-            <p style="color:#ababab! important;">${precosData.Conectado.APISobMedida.Descricao}</p>
+            <p>${precosData.Conectado.APISobMedida.Descricao}</p>
             ${apiSobMedida}`;
     }
 
     // Add Multimidia section if not empty
     if (multimidia) {
         container.innerHTML += `
-            <h4 style="color:#43d9ea;">🎥 Multimídia</h4>
-            <p style="color:#ababab! important;">${precosData.Multimidia.Descricao}</p>
+            <br>
+            <h4>🎥 Multimídia</h4>
+            <p>${precosData.Multimidia.Descricao}</p>
             <table>
                 <thead>
                     <tr><th>Componente</th><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
@@ -169,7 +177,8 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     // Add Suporte e Monitoramento Contínuo section
     if (suporteMonitoramento) {
         container.innerHTML += `
-            <h4 style="color:#43d9ea;">🛡️ Suporte e Monitoramento Contínuo</h4>
+            <br>
+            <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
             <table>
                 <thead>
                     <tr><th>Módulo</th><th>Nível</th><th>Preço</th></tr>

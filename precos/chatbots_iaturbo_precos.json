@@ -1,41 +1,48 @@
 {
   "ConversaComIA": {
     "Nome": "Conversa Com IA",
-    "Descricao": "O Chatbot de Conversa com IA utiliza inteligência artificial para criar interações naturais e envolventes com os usuários. Este modelo inclui uma página personalizada de chatbot (ex.: iaturbo.com.br/bots/[seu-chatbot]), além de um código HTML para fácil integração em sites e apps, proporcionando um canal direto e acessível de comunicação 24/7. Ideal para empresas que buscam melhorar o atendimento ao cliente e disponibilizar suporte constante.",
-    "CustomizacaoPrompt": {
-      "Descricao": "Customização dos comandos de IA para diferentes níveis de lógica e personalização nas respostas, ajustando o comportamento do chatbot conforme as necessidades do negócio.",
+    "Descricao": "O Chatbot de Conversa com IA transforma o atendimento ao cliente, utilizando inteligência artificial para criar interações naturais e cativantes. Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa além um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto e disponível 24/7. Ideal para empresas que buscam fortalecer o atendimento e oferecer suporte mais inteligente e eficiente.",
+    "NivelPersonalizacaoConversa": {
+      "Nome": "Nível de Personalização da Conversa",
+      "Descricao": "Personaliza a lógica e as respostas do chatbot, ajustando o comportamento de acordo com as necessidades específicas do negócio.",
       "Basico": {
-        "Descricao": "Prompts simples, com respostas diretas e sem lógica condicional complexa. Ideal para interações informativas e de baixa complexidade.",
-        "Custo": 480,
-        "Tempo": 4
+        "Nome": "Básico",
+        "Descricao": "Oferece respostas diretas e simples, ideal para fornecer informações básicas como horários de funcionamento, descrição de serviços e responder perguntas frequentes sobre a empresa e o negócio de forma amigável, rápida e precisa.",
+        "Custo": 600,
+        "Tempo": 5
       },
       "Padrao": {
-        "Descricao": "Lógica condicional e variações nas respostas, permitindo interações mais dinâmicas e personalizadas. Adequado para cenários onde as respostas precisam se adaptar ao contexto da conversa.",
-        "Custo": 960,
-        "Tempo": 8
-      },
-      "Avancado": {
-        "Descricao": "Lógica complexa e personalizações profundas, incluindo integração com bases de dados, permitindo que o chatbot acesse e use informações personalizadas em tempo real.",
-        "Custo": 2880,
-        "Tempo": 24
-      }
-    },
-    "SuporteMonitoramentoContinuo": {
-      "Descricao": "Serviço contínuo de suporte e monitoramento para garantir o funcionamento adequado e a evolução do chatbot conforme o uso aumenta.",
-      "Basico": {
-        "Descricao": "Atendimento via e-mail com tempo de resposta de até 24 horas úteis. Ideal para operações menos críticas, esse nível de suporte permite que problemas de baixa prioridade sejam tratados no dia seguinte ou ao longo da semana, dependendo da demanda.",
-        "Custo": 360,
-        "Tempo": 3
-      },
-      "Padrao": {
-        "Descricao": "Assistência por e-mail e WhatsApp com tempo de resposta de até 4 horas dentro do horário comercial. Esse nível é indicado para negócios que precisam de suporte mais rápido e interações frequentes, mas que ainda podem aguardar algumas horas para resolução de problemas não críticos.",
-        "Custo": 960,
-        "Tempo": 8
-      },
-      "Avancado": {
-        "Descricao": "Suporte 24 horas via e-mail e WhatsApp, com tempo de resposta de até 1 hora no horário comercial. Fora do horário comercial, é oferecido acompanhamento em eventos programados, como lançamentos de cursos e lives, com atendimento em tempo real durante esses eventos. Este nível é ideal para operações que exigem resposta imediata e continuidade nas operações sem interrupções, especialmente em lançamentos ou eventos críticos.",
+        "Nome": "Padrão",
+        "Descricao": "Interações mais dinâmicas, adaptando-se ao contexto da conversa e recebendo dados em tempo real para sugestões personalizadas, como recomendações de produtos ou atualização de status de serviços.",
         "Custo": 1920,
         "Tempo": 16
+      },
+      "Avancado": {
+        "Nome": "Avançado",
+        "Descricao": "Oferece respostas altamente personalizadas e complexas, coletando dados em tempo real para garantir interações detalhadas e adaptadas ao usuário, como consultas específicas e suporte técnico avançado.",
+        "Custo": 4800,
+        "Tempo": 40
+      }
+    },
+    "SuporteMelhoriaContinua": {
+      "Descricao": "Serviço de suporte e monitoramento contínuo, incluindo melhorias e treinamentos periódicos para que o chatbot esteja sempre atualizado e otimizado.",
+      "Basico": {
+        "Nome": "Básico",
+        "Descricao": "Suporte por e-mail com resposta em até 24 horas úteis. Indicado para tarefas de baixa prioridade e ajustes eventuais ao longo da semana.",
+        "Custo": 240,
+        "Tempo": 2
+      },
+      "Padrao": {
+        "Nome": "Padrão",
+        "Descricao": "Suporte via e-mail e WhatsApp, com resposta em até 4 horas no horário comercial. Indicado para tarefas que exigem acompanhamento mais ágil e ajustes frequentes, além de treinamentos periódicos de novas respostas.",
+        "Custo": 1440,
+        "Tempo": 12
+      },
+      "Avancado": {
+        "Nome": "Avançado",
+        "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial. Além do acompanhamento em eventos críticos, como lançamentos e campanhas, este nível inclui treinamentos contínuos para aprimorar o chatbot, adaptando respostas e funções conforme as necessidades específicas do negócio.",
+        "Custo": 2880,
+        "Tempo": 24
       }
     }
   },
@@ -87,7 +94,7 @@
       "Descricao": "Desenvolvimento de APIs customizadas para atender necessidades específicas do negócio, garantindo flexibilidade e adequação às integrações requeridas.",
       "PrecoHora": 120
     },
-    "SuporteMonitoramentoContinuo": {
+    "SuporteMelhoriaContinua": {
       "Descricao": "Serviço de suporte e monitoramento contínuo para garantir que o chatbot esteja sempre operacional e atualizado nas integrações.",
       "Basico": {
         "Descricao": "Suporte via e-mail com tempo de resposta de até 24 horas úteis. Ideal para operações menos complexas, com atendimento programado para resolução ao longo da semana.",
@@ -139,7 +146,7 @@
         "Tempo": 15
       }
     },
-    "SuporteMonitoramentoContinuo": {
+    "SuporteMelhoriaContinua": {
       "Descricao": "Serviço de suporte e monitoramento contínuo para funcionalidades de áudio e imagem, garantindo uma experiência multimídia sem interrupções.",
       "Basico": {
         "Descricao": "Suporte via e-mail com tempo de resposta de até 24 horas úteis, ideal para funcionalidades de uso ocasional ou para demandas não críticas.",

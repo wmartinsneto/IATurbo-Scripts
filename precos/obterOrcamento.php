@@ -65,13 +65,17 @@ if (!filter_var($leadInfo['email'], FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// Validação do formato de WhatsApp (apenas números, com mínimo de 10 e máximo de 15 dígitos)
-if (!preg_match('/^\d{10,15}$/', $leadInfo['whatsapp'])) {
-    $error = ['error' => 'WhatsApp inválido. Use apenas números, com DDD, entre 10 e 15 dígitos.'];
+// Limpeza do número para remover espaços e traços
+$leadInfo['whatsapp'] = preg_replace('/[\s-]/', '', $leadInfo['whatsapp']);
+
+// Validação do formato internacional E.164 (mínimo de 10 e máximo de 15 dígitos, iniciando com '+')
+if (!preg_match('/^\+\d{10,15}$/', $leadInfo['whatsapp'])) {
+    $error = ['error' => 'Número de WhatsApp inválido. Por favor, use o formato internacional: +[código do país][número]. Exemplo para um número brasileiro: +5511999999999.'];
     echo json_encode($error);
     writeLog('Erro: WhatsApp inválido.');
     exit;
 }
+
 
 // Inicializa arrays para itens válidos e inválidos
 $validItems = [];
@@ -119,30 +123,30 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                     $invalidParams[] = 'ConversaComIA_DescricaoLead (Obrigatório)';
                 }
                 // Nível de customização
-                if (isset($value['CustomizacaoPrompt'])) {
-                    $nivel = $value['CustomizacaoPrompt'];
-                    if (isset($jsonData['ConversaComIA']['CustomizacaoPrompt'][$nivel])) {
-                        $customizacao = $jsonData['ConversaComIA']['CustomizacaoPrompt'][$nivel];
-                        $item['Nivel'] = $nivel;
+                if (isset($value['NivelPersonalizacaoConversa'])) {
+                    $nivel = $value['NivelPersonalizacaoConversa'];
+                    if (isset($jsonData['ConversaComIA']['NivelPersonalizacaoConversa'][$nivel])) {
+                        $customizacao = $jsonData['ConversaComIA']['NivelPersonalizacaoConversa'][$nivel];
+                        $item['Nivel'] = $customizacao['Nome'];
                         $item['DescricaoCustomizacao'] = $customizacao['Descricao'];
                         $item['Custo'] = $customizacao['Custo'];
                         $item['Tempo'] = $customizacao['Tempo'];
                     } else {
-                        $invalidParams[] = 'ConversaComIA_CustomizacaoPrompt (Valor inválido: ' . $nivel . ')';
+                        $invalidParams[] = 'ConversaComIA_NivelPersonalizacaoConversa (Valor inválido: ' . $nivel . ')';
                     }
                 } else {
-                    $invalidParams[] = 'ConversaComIA_CustomizacaoPrompt (Obrigatório)';
+                    $invalidParams[] = 'ConversaComIA_NivelPersonalizacaoConversa (Obrigatório)';
                 }
                 $validItems[] = $item;
 
                 // Suporte e Monitoramento
-                if (isset($value['SuporteMonitoramentoContinuo'])) {
-                    $nivel = $value['SuporteMonitoramentoContinuo'];
-                    if (isset($jsonData['ConversaComIA']['SuporteMonitoramentoContinuo'][$nivel])) {
-                        $suporte = $jsonData['ConversaComIA']['SuporteMonitoramentoContinuo'][$nivel];
+                if (isset($value['SuporteMelhoriaContinua'])) {
+                    $nivel = $value['SuporteMelhoriaContinua'];
+                    if (isset($jsonData['ConversaComIA']['SuporteMelhoriaContinua'][$nivel])) {
+                        $suporte = $jsonData['ConversaComIA']['SuporteMelhoriaContinua'][$nivel];
                         $item = [
-                            'Item' => 'ConversaComIA > SuporteMonitoramentoContinuo',
-                            'Nivel' => $nivel,
+                            'Item' => 'ConversaComIA > SuporteMelhoriaContinua',
+                            'Nivel' => $suporte['Nome'],
                             'DescricaoCustomizacao' => $suporte['Descricao'],
                             'Custo' => $suporte['Custo'],
                             'Categoria' => 'Manutencao',
@@ -150,7 +154,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                         ];
                         $validItems[] = $item;
                     } else {
-                        $invalidParams[] = 'ConversaComIA_SuporteMonitoramentoContinuo (Valor inválido: ' . $nivel . ')';
+                        $invalidParams[] = 'ConversaComIA_SuporteMelhoriaContinua (Valor inválido: ' . $nivel . ')';
                     }
                 }
             } else {
@@ -215,12 +219,12 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                     $hasCustomAPI = true;
                 }
                 // Suporte e Monitoramento
-                if (isset($value['SuporteMonitoramentoContinuo'])) {
-                    $nivel = $value['SuporteMonitoramentoContinuo'];
-                    if (isset($jsonData['Conectado']['SuporteMonitoramentoContinuo'][$nivel])) {
-                        $suporte = $jsonData['Conectado']['SuporteMonitoramentoContinuo'][$nivel];
+                if (isset($value['SuporteMelhoriaContinua'])) {
+                    $nivel = $value['SuporteMelhoriaContinua'];
+                    if (isset($jsonData['Conectado']['SuporteMelhoriaContinua'][$nivel])) {
+                        $suporte = $jsonData['Conectado']['SuporteMelhoriaContinua'][$nivel];
                         $item = [
-                            'Item' => 'Conectado > SuporteMonitoramentoContinuo',
+                            'Item' => 'Conectado > SuporteMelhoriaContinua',
                             'Nivel' => $nivel,
                             'DescricaoCustomizacao' => $suporte['Descricao'],
                             'Custo' => $suporte['Custo'],
@@ -229,7 +233,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                         ];
                         $validItems[] = $item;
                     } else {
-                        $invalidParams[] = 'Conectado_SuporteMonitoramentoContinuo (Valor inválido: ' . $nivel . ')';
+                        $invalidParams[] = 'Conectado_SuporteMelhoriaContinua (Valor inválido: ' . $nivel . ')';
                     }
                 }
             } else {
@@ -269,12 +273,12 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                     }
                 }
                 // Suporte e Monitoramento
-                if (isset($value['SuporteMonitoramentoContinuo'])) {
-                    $nivel = $value['SuporteMonitoramentoContinuo'];
-                    if (isset($jsonData['Multimidia']['SuporteMonitoramentoContinuo'][$nivel])) {
-                        $suporte = $jsonData['Multimidia']['SuporteMonitoramentoContinuo'][$nivel];
+                if (isset($value['SuporteMelhoriaContinua'])) {
+                    $nivel = $value['SuporteMelhoriaContinua'];
+                    if (isset($jsonData['Multimidia']['SuporteMelhoriaContinua'][$nivel])) {
+                        $suporte = $jsonData['Multimidia']['SuporteMelhoriaContinua'][$nivel];
                         $item = [
-                            'Item' => 'Multimidia > SuporteMonitoramentoContinuo',
+                            'Item' => 'Multimidia > SuporteMelhoriaContinua',
                             'Nivel' => $nivel,
                             'DescricaoCustomizacao' => $suporte['Descricao'],
                             'Custo' => $suporte['Custo'],
@@ -283,7 +287,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                         ];
                         $validItems[] = $item;
                     } else {
-                        $invalidParams[] = 'Multimidia_SuporteMonitoramentoContinuo (Valor inválido: ' . $nivel . ')';
+                        $invalidParams[] = 'Multimidia_SuporteMelhoriaContinua (Valor inválido: ' . $nivel . ')';
                     }
                 }
             } else {
@@ -348,6 +352,7 @@ foreach ($validItems as $item) {
 }
 
 // Monta a resposta incluindo as informações do lead
+$id = "orcamento_" . date('Y_m_d') . uniqid();
 $response = [
     'LeadInfo' => $leadInfo,
     'ParametrosEntrada' => $inputParams,
@@ -356,24 +361,25 @@ $response = [
         'CustoImplementacao' => $totalImplementationCost,
         'TempoImplementacao' => $totalImplementationTime,
         'CustoManutencao' => $totalMaintenanceCost,
-        'Subtotais' => $moduleSubtotals
+        'Subtotais' => $moduleSubtotals,
+        'UrlOrcamentoDetalhado' => "https://iaturbo.com.br/orcamentos/?id=".$id
     ]
 ];
 
 // Adiciona resumo textual
 $tempoEmDias = ceil($totalImplementationTime / 8); // Considerando 8 horas por dia
-$textoResumo = "O custo de implementação é de R$ {$totalImplementationCost}, com um prazo estimado de {$totalImplementationTime} horas ({$tempoEmDias} dias úteis).";
+$textoResumo = "O custo de implementação é de R$ " . number_format($totalImplementationCost, 2, ',', '.') . ", com um prazo estimado de {$totalImplementationTime} horas ({$tempoEmDias} dias úteis) para entrega.";
 if ($totalMaintenanceCost > 0) {
-    $textoResumo .= " O custo mensal de manutenção é de R$ {$totalMaintenanceCost}.";
+    $textoResumo .= " O custo mensal de manutenção é de R$ " . number_format($totalMaintenanceCost, 2, ',', '.') . ".";
 }
 if ($hasCustomAPI) {
-    $textoResumo .= " Há itens que requerem consulta para determinação de preços e prazos.";
+    $textoResumo .= " ATENÇÃO: O orçamento solicitado inclui o a criação de uma API Sob Medida. Os preços e prazos desta solução não são tabelados. Entre em contato agora mesmo para obter estas informações.";
 }
 $response['ResumoGeral']['TextoResumo'] = $textoResumo;
 
 // Salva o payload de saída na pasta /orcamentos com nome no formato especificado
-$uniqueId = uniqid();
-$filename = "$orcamentosDir/orcamento_" . date('Y_m_d') . "_$uniqueId.json";
+$filename = $orcamentosDir . "/" . $id . ".json";
+
 file_put_contents($filename, json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
 // Retorna a resposta em JSON
