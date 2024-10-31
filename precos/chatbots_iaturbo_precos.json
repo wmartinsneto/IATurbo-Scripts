@@ -1,6 +1,7 @@
 {
   "ConversaComIA": {
-    "Descricao": "O Chatbot de Conversa com IA utiliza inteligência artificial para criar interações naturais e envolventes com os usuários. Este modelo inclui uma página personalizada de chatbot (ex.: iaturbo.com.br/bots/{seu-chatbot}), além de um código HTML para fácil integração em sites e apps, proporcionando um canal direto e acessível de comunicação 24/7. Ideal para empresas que buscam melhorar o atendimento ao cliente e disponibilizar suporte constante.",
+    "Nome": "Conversa Com IA",
+    "Descricao": "O Chatbot de Conversa com IA utiliza inteligência artificial para criar interações naturais e envolventes com os usuários. Este modelo inclui uma página personalizada de chatbot (ex.: iaturbo.com.br/bots/[seu-chatbot]), além de um código HTML para fácil integração em sites e apps, proporcionando um canal direto e acessível de comunicação 24/7. Ideal para empresas que buscam melhorar o atendimento ao cliente e disponibilizar suporte constante.",
     "CustomizacaoPrompt": {
       "Descricao": "Customização dos comandos de IA para diferentes níveis de lógica e personalização nas respostas, ajustando o comportamento do chatbot conforme as necessidades do negócio.",
       "Basico": {
@@ -39,6 +40,7 @@
     }
   },
   "Conectado": {
+    "Nome": "Conectado",
     "Descricao": "O Chatbot Conectado oferece uma experiência integrada entre diversas plataformas de redes sociais e comunicação, facilitando o gerenciamento de leads e oportunidades de vendas. Com um CRM integrado, ele é ideal para negócios que precisam consolidar interações de diferentes canais em um único sistema.",
     "RedesSociais": {
       "Descricao": "Integração com redes sociais populares para ampliar o alcance do chatbot e facilitar o atendimento onde os clientes estão.",
@@ -105,15 +107,18 @@
     }
   },
   "Multimidia": {
+    "Nome": "Multimídia",
     "Descricao": "O Chatbot Multimídia é uma solução avançada que incorpora funcionalidades de áudio e imagem, oferecendo experiências interativas e acessíveis para os usuários.",
     "Audio": {
       "Descricao": "Funcionalidades de áudio, permitindo que o chatbot entenda e responda a comandos de voz.",
       "VozParaTexto": {
+        "Nome": "Voz Para Texto",
         "Descricao": "Conversão de voz para texto, facilitando o registro e análise de comandos de voz dos usuários.",
         "Custo": 600,
         "Tempo": 5
       },
       "TextoParaVoz": {
+        "Nome": "Texto Para Voz",
         "Descricao": "Conversão de texto para voz, permitindo que o chatbot responda em áudio, melhorando a acessibilidade.",
         "Custo": 600,
         "Tempo": 5
@@ -122,11 +127,13 @@
     "Imagem": {
       "Descricao": "Funcionalidades relacionadas ao processamento de imagens, possibilitando que o chatbot entenda e responda a conteúdos visuais.",
       "ImagemParaTexto": {
+        "Nome": "Imagem Para Texto",
         "Descricao": "Leitura e interpretação de imagens, permitindo que o chatbot descreva o conteúdo visual para o usuário.",
         "Custo": 1200,
         "Tempo": 10
       },
       "TextoParaImagem": {
+        "Nome": "Texto Para Imagem",
         "Descricao": "Geração de imagens a partir de texto, criando conteúdo visual baseado nas interações do usuário.",
         "Custo": 1800,
         "Tempo": 15

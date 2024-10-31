@@ -146,7 +146,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                             'DescricaoCustomizacao' => $suporte['Descricao'],
                             'Custo' => $suporte['Custo'],
                             'Categoria' => 'Manutencao',
-                            'Modulo' => 'ConversaComIA'
+                            'Modulo' => 'Conversa Com IA'
                         ];
                         $validItems[] = $item;
                     } else {
@@ -247,6 +247,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                                     $itemData = $jsonData['Multimidia'][$tipo][$funcionalidade];
                                     $item = [
                                         'Item' => "Multimidia > $tipo > $funcionalidade",
+                                        'Nome' => $itemData['Nome'],
                                         'DescricaoPrincipal' => $itemData['Descricao'],
                                         'Custo' => $itemData['Custo'],
                                         'Tempo' => $itemData['Tempo'],
