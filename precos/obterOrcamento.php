@@ -163,7 +163,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
             }
         } elseif ($key === 'Conectado') {
             if (is_array($value)) {
-                // Processa Redes Sociais, API Pública e Conexão Personalizada
+                // Processa Redes Sociais, Conexão com APIs Públicas e Conexão Personalizada
                 if (isset($value['RedesSociais'])) {
                     foreach ($value['RedesSociais'] as $rede => $selecionado) {
                         if ($selecionado === 'true') {
@@ -244,7 +244,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
         } elseif ($key === 'Multimidia') {
             if (is_array($value)) {
                 // Processa funcionalidades de Áudio e Imagem
-                foreach (['Audio', 'Imagem'] as $tipo) {
+                foreach (['Voz', 'Imagem'] as $tipo) {
                     if (isset($value[$tipo])) {
                         foreach ($value[$tipo] as $funcionalidade => $selecionado) {
                             if (is_array($selecionado)) {

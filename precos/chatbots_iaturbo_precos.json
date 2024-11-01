@@ -130,16 +130,16 @@
   "Multimidia": {
     "Nome": "🎥 Chatbot Multimídia",
     "Descricao": "O Chatbot Multimídia oferece uma experiência acessível e completa, com recursos que replicam habilidades como ouvir, falar, ver e criar, tornando as interações mais inclusivas e próximas das habilidades humanas.",
-    "Audio": {
+    "Voz": {
       "Descricao": "Funcionalidades de áudio que permitem ao chatbot ouvir e responder aos usuários de forma acessível e intuitiva.",
-      "VozParaTexto": {
-        "Nome": "Audição Ativa",
+      "AudicaoAtiva": {
+        "Nome": "Audição Ativa (Voz ➡ Texto)",
         "Descricao": "Com a Audição Ativa, o chatbot “escuta” comandos de voz e os converte em texto, ideal para quem prefere falar em vez de digitar ou tem limitações com o teclado. Um jeito rápido e inclusivo de se comunicar.",
         "Custo": 960,
         "Tempo": 8
       },
-      "TextoParaVoz": {
-        "Nome": "Voz Personalizada",
+      "VozPersonalizada": {
+        "Nome": "Voz Personalizada (Texto ➡ Voz)",
         "Descricao": "O chatbot responde com vozes naturais, masculinas e femininas, ajustando o tom para cada interação. E, se preferir, você pode usar a sua própria voz! Ideal para criar uma experiência autêntica e próxima do atendimento humano.",
         "Custo": 1920,
         "Tempo": 16
@@ -147,14 +147,14 @@
     },
     "Imagem": {
       "Descricao": "Recursos visuais que possibilitam ao chatbot interpretar imagens e gerar conteúdo visual, criando uma experiência mais interativa e inclusiva.",
-      "ImagemParaTexto": {
-        "Nome": "Visão Inteligente",
+      "VisaoInteligente": {
+        "Nome": "Visão Inteligente (Fotos, Imagens e Documentos ➡ Texto)",
         "Descricao": "Dá ao chatbot a habilidade de \"enxergar\" e interpretar arquivos enviados, desde documentos de texto (PDF, DOCX, TXT) e planilhas (XLSX, CSV) até apresentações (PPTX) e imagens (JPEG, PNG). Ideal para um atendimento inclusivo, essa função ajuda a identificar produtos, verificar documentos ou simplificar o compartilhamento de informações.",
         "Custo": 1200,
         "Tempo": 10
       },
-      "TextoParaImagem": {
-        "Nome": "Criador Visual",
+      "CriadorVisual": {
+        "Nome": "Criador Visual (Texto ➡ Fotos e Imagens)",
         "Descricao": "Com o Criador Visual, o chatbot transforma descrições textuais em imagens únicas e personalizadas, perfeitas para gerar conteúdos visuais alinhados ao gosto dos usuários.",
         "Custo": 1800,
         "Tempo": 15

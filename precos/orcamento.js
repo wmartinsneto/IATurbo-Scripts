@@ -140,7 +140,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
             </table>`;
     }
 
-    // Add API Pública section if not empty
+    // Add Conexão com APIs Públicas section if not empty
     if (apiPublica) {
         container.innerHTML += `
             <br>

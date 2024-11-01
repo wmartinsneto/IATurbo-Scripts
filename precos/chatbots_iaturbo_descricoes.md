@@ -47,7 +47,7 @@
         
 *   **4.2 Tipos de Integrações**:
     
-    *   **APIs Públicas**: Descreva qual integração com API pública deseja. Estime a complexidade como "Básico", "Padrão" ou "Avançado".
+    *   **APIs Públicas**: Descreva qual integração com Conexão com APIs Públicas deseja. Estime a complexidade como "Básico", "Padrão" ou "Avançado".
         
         *   **Básico**: Integrações simples, buscando dados ou enviando comandos.
             
