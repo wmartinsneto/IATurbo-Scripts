@@ -101,7 +101,7 @@ Configurações adicionais de áudio e imagem:
 4.  **Multimidia\_Imagem\_TextoParaImagem**: Gera imagens com base em texto, descreva a aplicação.
     
 
-##### **Suporte e Monitoramento Contínuo para Multimídia**
+##### **Suporte e Melhoria Contínua para Multimídia**
 
 Especifique o nível de suporte:
 

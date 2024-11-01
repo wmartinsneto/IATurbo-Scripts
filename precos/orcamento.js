@@ -15,10 +15,10 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     const leadInfo = `
         <div class="section">
             <h2 style="text-align:center !important;">👋 Olá, ${data.LeadInfo.nome}!</h2><br>
-            <p style="color:white;text-align:center !important;">Parabéns pelo primeiro passo em direção a um atendimento ao cliente mais moderno e eficiente!<br><br>Você está prestes a conferir uma solução sob medida para transformar:<br>1️⃣ O relacionamento com seus clientes<br>2️⃣ A eficiência do seu negócio<br>3️⃣ A imagem da sua marca<br>4️⃣ Os seus resultados 🚀</p>
+            <p style="color:white;text-align:center !important;">Parabéns por este importante passo em direção a um atendimento ao cliente mais moderno e eficiente!<br><br>Você está prestes a conferir uma solução sob medida para você e que transformará:<br>1️⃣ O relacionamento com seus clientes<br>2️⃣ A eficiência do seu negócio<br>3️⃣ A imagem da sua marca<br>4️⃣ Os seus resultados 🚀</p>
             <p style="text-align:center !important;"><strong>Dados Pessoais:</strong></p>
             <p style="text-align:center !important;">Email: ${data.LeadInfo.email}<br>WhatsApp: ${data.LeadInfo.whatsapp}</p>
-            <p style="text-align:center !important;"><small>ID: ${orcamentoId} <i>(Válido por 7 dias)</i></small></p>
+            <p style="text-align:center !important;"><small>ID: ${orcamentoId}<br><i>(Válido por 7 dias)</i></small></p>
         </div>`;
 
     // Resumo Geral do Orçamento
@@ -26,7 +26,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
         <br>
         <div class="section">
             <h3>📊 Resumo Geral do Orçamento</h3>
-            <p style="color:white">${data.ResumoGeral.TextoResumo}</p>
+            ${data.ResumoGeral.TextoResumo}
         </div>`;
 
     // Novo cabeçalho para detalhes dos itens configurados
@@ -42,24 +42,24 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
     let apiPublica = '';
     let apiSobMedida = '';
     let multimidia = '';
-    let suporteMonitoramento = '';
+    let suporteMelhoriaContinua = '';
 
     // Função auxiliar para organizar os detalhes de cada item configurado
     function formatItemSection(item, description, personalization) {
+        const tempoEmDias = (item.Tempo / 8).toFixed(0); // Assuming 8 hours per workday
         return `
             <tr>
-                <td>${item.Nome}</td>
-                <td>${description}</td>
-                <td>R$ ${item.Custo || 'N/A'}</td>
-                <td>${item.Tempo || 'N/A'} horas úteis</td>
+                <td><span style="color:#ababab"><strong>${item.Nome}</strong>: ${item.DescricaoPrincipal}</span><br><strong>Personalização:</strong> ${item.DescricaoPersonalizada}</td>
+                <td>${item.Custo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td>
+                <td>${tempoEmDias} dia(s)</td>
             </tr>`;
     }
 
     function formatSupportItemSection(item) {
         return `
             <tr>
-                <td>${item.Modulo}</td>
-                <td>${item.Nivel} - <span>${item.DescricaoCustomizacao}</span></td>
+                <td><strong>${item.Modulo}</strong></td>
+                <td><strong>${item.Nivel}</strong><br><span>${item.DescricaoCustomizacao}</span></td>
                 <td>R$ ${item.Custo || 'N/A'}</td>
             </tr>`;
     }
@@ -78,32 +78,34 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
                     <p>${descricao}</p>
                     <p style="color:white"><strong>Personalização:</strong> <i>${personalizacao}</i></p>
                     <table>
-                        <tr><td><strong>Nível de Personalização</strong></td><td>${item.Nivel} - <span style="color:#ababab">${item.DescricaoCustomizacao}</span></td></tr>
+                        <tr><td><strong>Nível de Personalização</strong></td><td><strong>${item.Nivel}</strong><br><span style="color:#ababab">${item.DescricaoCustomizacao}</span></td></tr>
                         <tr><td><strong>Preço</strong></td><td>${item.Custo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td></tr>
-                        <tr><td><strong>Prazo de Entrega</strong></td><td>${tempoEmDias} dias</td></tr>
+                        <tr><td><strong>Prazo de Entrega</strong></td><td>${tempoEmDias} dia(s)</td></tr>
                     </table>
                 </div>`;
             }
             if (item.Modulo === "Conectado") {
                 if (item.Item.includes("RedesSociais")) {
+                    const tempoEmDias = (item.Tempo / 8).toFixed(0); // Assuming 8 hours per workday
                     redesSociais += `
                         <tr>
-                            <td>${item.Item.split(" > ").pop()} - <span style="color:$ababab">${item.Descricao}</span></td>
-                            <td>R$ ${item.Custo || 'N/A'}</td>
-                            <td>${item.Tempo || 'N/A'} horas</td>
+                            <td><strong>${item.Nome}</strong><br><span style="color:$ababab">${item.Descricao}</span></td>
+                            <td>${item.Custo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td>
+                            <td>${tempoEmDias || 'N/A'} dia(s)</td>
                         </tr>`;
                 } else if (item.Item.includes("APIPublica")) {
+                    const tempoEmDias = (item.Tempo / 8).toFixed(0); // Assuming 8 hours per workday
                     apiPublica += `
                         <tr>
-                            <td>${item.DescricaoPersonalizada}</td>
-                            <td>R$ ${item.Custo || 'N/A'}</td>
-                            <td>${item.Tempo || 'N/A'} horas</td>
+                            <td><strong>${item.DescricaoPersonalizada}</strong><br><span style="color:#ababab"><strong>Nível de complexidade: ${item.Nivel}</strong><br>${item.DescricaoCustomizacao}</span></td>
+                            <td>${item.Custo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td>
+                            <td>${tempoEmDias|| 'N/A'} dia(s)</td>
                         </tr>`;
                 } else if (item.Item.includes("APISobMedida")) {
                     apiSobMedida += `
                         <div class="section">
                             <p style="color:white"><strong>Personalização:</strong> ${personalizacao}</p>
-                            <p><strong>🚨Atenção:</strong> Preço e prazos para criação de APIs sob medida somente sob consulta.</p>
+                            <p><strong>🚨Atenção:</strong> ATENÇÃO: Este orçamento inclui a criação de uma API Sob Medida, cujos preços e prazos não são tabelados. Entre em contato para obter estas informações e completar este orçamento agora mesmo.</p>
                         </div>`;
                 }
             }
@@ -112,7 +114,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
             }
         }
         if (item.Categoria === "Manutencao") {
-            suporteMonitoramento += formatSupportItemSection(item);
+            suporteMelhoriaContinua += formatSupportItemSection(item);
         }
 
 
@@ -131,7 +133,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
             <p>${precosData.Conectado.RedesSociais.Descricao}</p>
             <table>
                 <thead>
-                    <tr><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
+                    <tr><th>Descrição</th><th>Preço</th><th>Prazo de Entrega</th></tr>
                 </thead>
                 <tbody>${redesSociais}</tbody>
             </table>`;
@@ -145,7 +147,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
             <p>${precosData.Conectado.APIPublica.Descricao}</p>
             <table>
                 <thead>
-                    <tr><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
+                    <tr><th>Descrição</th><th>Preço</th><th>Prazo de Entrega</th></tr>
                 </thead>
                 <tbody>${apiPublica}</tbody>
             </table>`;
@@ -168,22 +170,22 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
             <p>${precosData.Multimidia.Descricao}</p>
             <table>
                 <thead>
-                    <tr><th>Componente</th><th>Descrição</th><th>Preço</th><th>Tempo de Implementação</th></tr>
+                    <tr><th>Descrição</th><th>Preço</th><th>Prazo de Entrega</th></tr>
                 </thead>
                 <tbody>${multimidia}</tbody>
             </table>`;
     }
 
-    // Add Suporte e Monitoramento Contínuo section
-    if (suporteMonitoramento) {
+    // Add Suporte e Melhoria Contínua section
+    if (suporteMelhoriaContinua) {
         container.innerHTML += `
             <br>
-            <h4>🛡️ Suporte e Monitoramento Contínuo</h4>
+            <h4>🛡️ Suporte e Melhoria Contínua</h4>
             <table>
                 <thead>
                     <tr><th>Módulo</th><th>Nível</th><th>Preço</th></tr>
                 </thead>
-                <tbody>${suporteMonitoramento}</tbody>
+                <tbody>${suporteMelhoriaContinua}</tbody>
             </table>`;
     }
 }

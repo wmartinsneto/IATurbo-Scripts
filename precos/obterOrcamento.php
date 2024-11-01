@@ -189,7 +189,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                                 $item = [
                                     'Item' => "Conectado > APIPublica > " . ($i + 1),
                                     'DescricaoPersonalizada' => $api['Descricao'],
-                                    'Nivel' => $nivel,
+                                    'Nivel' => $apiData['Nome'],
                                     'DescricaoCustomizacao' => $apiData['Descricao'],
                                     'Custo' => $apiData['Custo'],
                                     'Tempo' => $apiData['Tempo'],
@@ -368,13 +368,18 @@ $response = [
 
 // Adiciona resumo textual
 $tempoEmDias = ceil($totalImplementationTime / 8); // Considerando 8 horas por dia
-$textoResumo = "O custo de implementação é de R$ " . number_format($totalImplementationCost, 2, ',', '.') . ", com um prazo estimado de {$totalImplementationTime} horas ({$tempoEmDias} dias úteis) para entrega.";
+$textoResumo = "<p style='color:white !important;'>O custo de implementação é de <strong>R$ " . number_format($totalImplementationCost, 2, ',', '.') . "</strong>, com um prazo estimado de <strong>{$totalImplementationTime} horas</strong> (<strong>{$tempoEmDias} dias úteis</strong>) para entrega.</p>";
+
 if ($totalMaintenanceCost > 0) {
-    $textoResumo .= " O custo mensal de manutenção é de R$ " . number_format($totalMaintenanceCost, 2, ',', '.') . ".";
+    $textoResumo .= "<p style='color:white !important;'>O custo mensal de manutenção é de <strong>R$ " . number_format($totalMaintenanceCost, 2, ',', '.') . "</strong>.</p>";
 }
+
 if ($hasCustomAPI) {
-    $textoResumo .= " ATENÇÃO: O orçamento solicitado inclui o a criação de uma API Sob Medida. Os preços e prazos desta solução não são tabelados. Entre em contato agora mesmo para obter estas informações.";
+    $textoResumo .= "<p><strong>⚠️ Atenção:</strong> Este orçamento inclui a criação de uma API Sob Medida, cujos preços e prazos não são tabelados. Entre em contato para obter estas informações e completar este orçamento agora mesmo.</p>";
 }
+
+$textoResumo .= "<p><strong>💡Observação Importante:</strong> Além desses valores, o uso do chatbot gera um custo de consumo de tokens da OpenAI – empresa que fornece a tecnologia de inteligência artificial do chatbot. Pense nisso como o uso de eletricidade ou combustível: quanto mais o chatbot interage, mais ele consome. Esse custo é proporcional ao volume de interações e é cobrado diretamente pela OpenAI conforme o uso.</p>";
+
 $response['ResumoGeral']['TextoResumo'] = $textoResumo;
 
 // Salva o payload de saída na pasta /orcamentos com nome no formato especificado

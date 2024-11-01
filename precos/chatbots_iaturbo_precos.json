@@ -1,7 +1,7 @@
 {
   "ConversaComIA": {
     "Nome": "Conversa Com IA",
-    "Descricao": "O Chatbot de Conversa com IA transforma o atendimento ao cliente, utilizando inteligência artificial para criar interações naturais e cativantes. Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa além um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto e disponível 24/7. Ideal para empresas que buscam fortalecer o atendimento e oferecer suporte mais inteligente e eficiente.",
+    "Descricao": "O Chatbot de Conversa com IA transforma o atendimento ao cliente, utilizando inteligência artificial para criar interações naturais e cativantes.<br>Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa além um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto e disponível 24/7.<br>Ideal para empresas que buscam fortalecer o atendimento e oferecer suporte mais inteligente e eficiente.",
     "NivelPersonalizacaoConversa": {
       "Nome": "Nível de Personalização da Conversa",
       "Descricao": "Personaliza a lógica e as respostas do chatbot, ajustando o comportamento de acordo com as necessidades específicas do negócio.",
@@ -47,119 +47,142 @@
     }
   },
   "Conectado": {
-    "Nome": "Conectado",
-    "Descricao": "O Chatbot Conectado oferece uma experiência integrada entre diversas plataformas de redes sociais e comunicação, facilitando o gerenciamento de leads e oportunidades de vendas. Com um CRM integrado, ele é ideal para negócios que precisam consolidar interações de diferentes canais em um único sistema.",
+    "Nome": "Chatbot Conectado",
+    "Descricao": "O Chatbot Conectado facilita o atendimento e a gestão de leads em um painel centralizado com CRM integrado. A partir dele, você acessa e responde clientes onde eles estão, como WhatsApp, Facebook, Instagram, Telegram e muito mais. Com flexibilidade para integrar APIs públicas e customizadas, ele oferece uma experiência completa para automação de tarefas com comunicação centralizada.<br>Ideal para negócios que desejam consolidar suas interações em um único lugar, tornando o atendimento mais eficiente e estratégico.",
     "RedesSociais": {
-      "Descricao": "Integração com redes sociais populares para ampliar o alcance do chatbot e facilitar o atendimento onde os clientes estão.",
+      "Nome": "Integração com Redes Sociais",
+      "Descricao": "Conecte o chatbot às redes sociais mais populares, ampliando seu alcance e oferecendo suporte direto nas plataformas preferidas dos clientes.",
       "WhatsApp": {
-        "Descricao": "Integração com WhatsApp, permitindo que o chatbot interaja com usuários diretamente no app de mensagens mais utilizado.",
-        "Custo": 480,
-        "Tempo": 4
+        "Nome": "Integração com WhatsApp",
+        "Descricao": "Permite que o chatbot interaja diretamente com usuários no WhatsApp, o app de mensagens mais utilizado.",
+        "Custo": 960,
+        "Tempo": 8
       },
       "Facebook": {
-        "Descricao": "Integração com Facebook, incluindo o Messenger e respostas automáticas a comentários em posts. A solução ideal para interagir com clientes e seguidores na rede social.",
-        "Custo": 480,
-        "Tempo": 4
+        "Nome": "Integração com Facebook",
+        "Descricao": "Inclui o Messenger e respostas automáticas a comentários em posts, ideal para interagir com seguidores e clientes na rede social.",
+        "Custo": 960,
+        "Tempo": 8
       },
       "Instagram": {
-        "Descricao": "Integração com Instagram, incluindo DMs e respostas automáticas a comentários em Stories e Reels, aumentando o engajamento e a interatividade na plataforma.",
-        "Custo": 480,
-        "Tempo": 4
+        "Nome": "Integração com Instagram",
+        "Descricao": "Permite que o chatbot responda a DMs e comentários em Stories e Reels, promovendo engajamento direto na plataforma.",
+        "Custo": 960,
+        "Tempo": 8
       },
       "Telegram": {
-        "Descricao": "Integração com Telegram, permitindo que o chatbot responda a mensagens e interaja em grupos e canais, atendendo uma base de usuários crescente.",
-        "Custo": 480,
-        "Tempo": 4
+        "Nome": "Integração com Telegram",
+        "Descricao": "Permite que o chatbot interaja em grupos e canais do Telegram, ideal para atender uma base de usuários em expansão.",
+        "Custo": 960,
+        "Tempo": 8
       }
     },
     "APIPublica": {
-      "Descricao": "Conexão com APIs públicas e populares para expandir as funcionalidades do chatbot e acessar serviços externos.",
+      "Nome": "Integração com API Pública",
+      "Descricao": "Amplie as capacidades do chatbot conectando-o a APIs públicas populares para acessar dados externos e realizar tarefas adicionais.",
       "Basico": {
-        "Descricao": "Integrações simples com APIs externas, permitindo ao chatbot realizar ações básicas e buscar dados externos.",
+        "Nome": "Básico",
+        "Descricao": "Integrações simples, que permitem ao chatbot buscar informações ou realizar ações básicas a partir de fontes externas.",
         "Custo": 960,
         "Tempo": 8
       },
       "Padrao": {
-        "Descricao": "Integrações com múltiplas interações e manipulação de dados, ideal para processos que exigem a consulta e combinação de várias fontes de dados.",
+        "Nome": "Padrão",
+        "Descricao": "Integrações com múltiplas interações e manipulação de dados, ideal para processos que exigem consulta e combinação de várias fontes.",
         "Custo": 2880,
         "Tempo": 24
       },
       "Avancado": {
-        "Descricao": "Integrações complexas com lógica avançada e sincronização bidirecional, possibilitando um fluxo contínuo de dados entre sistemas.",
+        "Nome": "Avançado",
+        "Descricao": "Integrações complexas com sincronização bidirecional e lógica avançada, oferecendo um fluxo contínuo de dados entre sistemas e clientes.",
         "Custo": 4800,
         "Tempo": 40
       }
     },
     "APISobMedida": {
-      "Descricao": "Desenvolvimento de APIs customizadas para atender necessidades específicas do negócio, garantindo flexibilidade e adequação às integrações requeridas.",
-      "PrecoHora": 120
+      "Nome": "Integração com API Sob Medida",
+      "Descricao": "Desenvolvimento de APIs personalizadas para atender necessidades específicas, proporcionando flexibilidade total nas integrações."
     },
     "SuporteMelhoriaContinua": {
-      "Descricao": "Serviço de suporte e monitoramento contínuo para garantir que o chatbot esteja sempre operacional e atualizado nas integrações.",
+      "Nome": "Suporte e Melhoria Contínua",
+      "Descricao": "Serviço completo de suporte e monitoramento, com aprimoramentos contínuos para garantir que seu chatbot esteja sempre otimizado e pronto para responder rapidamente.",
       "Basico": {
-        "Descricao": "Suporte via e-mail com tempo de resposta de até 24 horas úteis. Ideal para operações menos complexas, com atendimento programado para resolução ao longo da semana.",
+        "Nome": "Básico",
+        "Descricao": "Suporte por e-mail com tempo de resposta em até 24 horas úteis, adequado para ajustes de rotina e monitoramento básico. Ideal para tarefas de baixa complexidade que podem ser agendadas ao longo da semana.",
         "Custo": 480,
         "Tempo": 4
       },
       "Padrao": {
-        "Descricao": "Suporte via e-mail e WhatsApp com tempo de resposta de até 4 horas para questões mais urgentes, priorizando demandas que exigem resposta dentro do mesmo dia.",
+        "Nome": "Padrão",
+        "Descricao": "Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis durante o horário comercial, permitindo acompanhamento ágil de solicitações moderadas. Recomendado para quem precisa de uma rotina de suporte mais rápida, com ajustes frequentes e monitoramento ativo.",
         "Custo": 960,
         "Tempo": 8
       },
       "Avancado": {
-        "Descricao": "Suporte 24 horas via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial. Fora do horário comercial, oferece acompanhamento personalizado para eventos programados, como lançamentos de produtos, garantindo suporte imediato em momentos críticos.",
-        "Custo": 1920,
-        "Tempo": 16
+        "Nome": "Avançado",
+        "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com tempo de resposta de até 1 hora no horário comercial. Inclui monitoramento constante e aprimoramentos contínuos, além de um suporte proativo em eventos e períodos críticos, garantindo que o chatbot esteja sempre atualizado e adaptado às necessidades do negócio.",
+        "Custo": 2400,
+        "Tempo": 20
       }
     }
   },
   "Multimidia": {
-    "Nome": "Multimídia",
-    "Descricao": "O Chatbot Multimídia é uma solução avançada que incorpora funcionalidades de áudio e imagem, oferecendo experiências interativas e acessíveis para os usuários.",
+    "Nome": "Chatbot Multimídia",
+    "Descricao": "O Chatbot Multimídia oferece uma experiência acessível e completa, com recursos que replicam habilidades como ouvir, falar, ver e criar, tornando as interações mais inclusivas e próximas das habilidades humanas.",
     "Audio": {
-      "Descricao": "Funcionalidades de áudio, permitindo que o chatbot entenda e responda a comandos de voz.",
+      "Descricao": "Funcionalidades de áudio que permitem ao chatbot ouvir e responder aos usuários de forma acessível e intuitiva.",
       "VozParaTexto": {
-        "Nome": "Voz Para Texto",
-        "Descricao": "Conversão de voz para texto, facilitando o registro e análise de comandos de voz dos usuários.",
-        "Custo": 600,
-        "Tempo": 5
+        "Nome": "Voz para Texto",
+        "Descricao": "Permite que o chatbot 'ouça' comandos de voz e os converta em texto, ideal para quem prefere falar ao invés de digitar ou tem limitações para usar o teclado.",
+        "Custo": 960,
+        "Tempo": 8
       },
       "TextoParaVoz": {
-        "Nome": "Texto Para Voz",
-        "Descricao": "Conversão de texto para voz, permitindo que o chatbot responda em áudio, melhorando a acessibilidade.",
-        "Custo": 600,
-        "Tempo": 5
+        "Nome": "Texto para Voz",
+        "Descricao": "Permite que o chatbot responda usando uma variedade de vozes masculinas e femininas, ajustando o tom para cada interação. E, se preferir, você também pode gravar a sua própria voz, tornando a experiência ainda mais personalizada e autêntica.",
+        "Custo": 1920,
+        "Tempo": 16
       }
     },
     "Imagem": {
-      "Descricao": "Funcionalidades relacionadas ao processamento de imagens, possibilitando que o chatbot entenda e responda a conteúdos visuais.",
+      "Descricao": "Recursos visuais que possibilitam ao chatbot interpretar imagens e gerar conteúdo visual, criando uma experiência mais interativa e inclusiva.",
       "ImagemParaTexto": {
-        "Nome": "Imagem Para Texto",
-        "Descricao": "Leitura e interpretação de imagens, permitindo que o chatbot descreva o conteúdo visual para o usuário.",
+        "Nome": "Imagem para Texto",
+        "Descricao": "Capacita o chatbot a 'ver' imagens enviadas pelos usuários e descrevê-las em texto, ideal para assistências visuais como identificação de produtos ou documentos.",
         "Custo": 1200,
         "Tempo": 10
       },
       "TextoParaImagem": {
-        "Nome": "Texto Para Imagem",
-        "Descricao": "Geração de imagens a partir de texto, criando conteúdo visual baseado nas interações do usuário.",
+        "Nome": "Texto para Imagem",
+        "Descricao": "Habilidade de 'criar' imagens a partir de descrições textuais, ideal para gerar conteúdo visual customizado com base nas preferências dos usuários.",
         "Custo": 1800,
         "Tempo": 15
       }
     },
+    "UploadDeArquivos": {
+      "Nome": "Upload de Arquivos",
+      "Descricao": "Permite que os usuários enviem documentos e arquivos diretamente para o chatbot, que pode processar e interpretar formatos como PDF, imagens, planilhas e textos. Ideal para compartilhar informações, como documentos de cadastro, comprovantes ou formulários, de maneira rápida e segura, ampliando o suporte multimídia para atender diversas necessidades.",
+      "Custo": 1440,
+      "Tempo": 12
+    },
     "SuporteMelhoriaContinua": {
-      "Descricao": "Serviço de suporte e monitoramento contínuo para funcionalidades de áudio e imagem, garantindo uma experiência multimídia sem interrupções.",
+      "Nome": "Suporte e Melhoria Contínua",
+      "Descricao": "Serviço de suporte e monitoramento contínuo para manter o chatbot Multimídia atualizado, responsivo e pronto para melhorar constantemente sua acessibilidade e capacidades de comunicação.",
       "Basico": {
-        "Descricao": "Suporte via e-mail com tempo de resposta de até 24 horas úteis, ideal para funcionalidades de uso ocasional ou para demandas não críticas.",
+        "Nome": "Básico",
+        "Descricao": "Suporte via e-mail com resposta em até 24 horas úteis. Ideal para demandas de baixa prioridade, com manutenção e atualizações agendadas semanalmente.",
         "Custo": 480,
         "Tempo": 4
       },
       "Padrao": {
-        "Descricao": "Suporte via e-mail e WhatsApp com tempo de resposta de até 4 horas, para garantir resposta rápida a problemas recorrentes e ajustes pontuais.",
+        "Nome": "Padrão",
+        "Descricao": "Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis. Ideal para garantir qualidade em interações frequentes e atualizações ágeis nas funcionalidades multimídia.",
         "Custo": 960,
         "Tempo": 8
       },
       "Avancado": {
-        "Descricao": "Suporte 24 horas via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial, oferecendo também acompanhamento para eventos multimídia programados. Ideal para operações que dependem de resposta em tempo real para garantir a continuidade.",
+        "Nome": "Avançado",
+        "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial e acompanhamento especial em eventos programados, ideal para operações que exigem resposta imediata e continuidade em acessibilidade e interatividade.",
         "Custo": 1920,
         "Tempo": 16
       }
