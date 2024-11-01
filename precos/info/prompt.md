@@ -285,6 +285,7 @@ curl --location 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterO
 --data-urlencode 'Conectado_RedesSociais_Instagram=true' \
 --data-urlencode 'Conectado_APIPublica_0_Descricao=Integração com API de pagamentos' \
 --data-urlencode 'Conectado_APIPublica_0_Nivel=Padrao' \
+--data-urlencode 'Conectado_SuporteMelhoriaContinua=Padrao' \
 --data-urlencode 'Multimidia_Voz_AudicaoAtiva=true' \
 --data-urlencode 'Multimidia_Voz_AudicaoAtiva_DescricaoLead=Permitir que clientes enviem comandos por voz.' \
 --data-urlencode 'Multimidia_SuporteMelhoriaContinua=Padrao'
