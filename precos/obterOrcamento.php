@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Caminhos dos arquivos
-$jsonFile = __DIR__ . '/chatbots_iaturbo_precos.json';
+$jsonFile = __DIR__ . '/info/chatbots_iaturbo_precos.json';
 $logDir = __DIR__ . '/logs';
 $orcamentosDir = __DIR__ . '/orcamentos'; // Pasta para salvar os orçamentos
 

@@ -194,7 +194,7 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
 // Função para buscar o JSON do orçamento e exibir
 function fetchOrcamentoData(orcamentoId) {
     const url = `https://iaturbo.com.br/wp-content/uploads/scripts/precos/orcamentos/${orcamentoId}.json`;
-    const precosUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/chatbots_iaturbo_precos.json';
+    const precosUrl = 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/info/chatbots_iaturbo_precos.json';
 
     console.log("Buscando dados do orçamento e dos preços...");
     Promise.all([fetch(url), fetch(precosUrl)])

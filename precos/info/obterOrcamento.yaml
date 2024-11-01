@@ -1,0 +1,290 @@
+openapi: 3.0.0
+info:
+  title: API de Orçamento de Chatbots IA Turbo
+  version: 1.1.0
+  description: >
+    API para gerar orçamentos detalhados de chatbots personalizados com base em módulos como Conversa Com IA, Conectado, e Multimídia.
+    Suporta seleção de níveis de personalização, integração com APIs, e suporte contínuo.
+servers:
+  - url: https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterOrcamento.php
+paths:
+  /obterOrcamento.php:
+    post:
+      summary: Gera um orçamento baseado nos parâmetros fornecidos.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - nome
+                - email
+                - whatsapp
+                - ConversaComIA_DescricaoLead
+                - ConversaComIA_NivelPersonalizacaoConversa
+                - ConversaComIA_SuporteMelhoriaContinua
+              properties:
+                nome:
+                  type: string
+                  description: Nome do cliente.
+                email:
+                  type: string
+                  description: Email do cliente.
+                whatsapp:
+                  type: string
+                  description: Número de WhatsApp do cliente, em formato internacional (+5511912345678).
+                ConversaComIA_DescricaoLead:
+                  type: string
+                  description: Objetivo principal do chatbot, como vendas, suporte, etc.
+                ConversaComIA_NivelPersonalizacaoConversa:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de personalização da conversa conforme a complexidade do chatbot.
+                ConversaComIA_SuporteMelhoriaContinua:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e melhoria contínua para o módulo Conversa Com IA.
+                Conectado_RedesSociais_WhatsApp:
+                  type: string
+                  enum: [true]
+                  description: Integração com WhatsApp para interação direta.
+                Conectado_RedesSociais_Facebook:
+                  type: string
+                  enum: [true]
+                  description: Integração com Facebook, incluindo respostas automáticas no Messenger.
+                Conectado_RedesSociais_Instagram:
+                  type: string
+                  enum: [true]
+                  description: Integração com Instagram, incluindo DMs e comentários.
+                Conectado_RedesSociais_Telegram:
+                  type: string
+                  enum: [true]
+                  description: Integração com Telegram para interação em grupos e canais.
+                Conectado_APIPublica_0_Descricao:
+                  type: string
+                  description: Descrição da Conexão com API Pública 0.
+                Conectado_APIPublica_0_Nivel:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Complexidade da integração com a Conexão com API Pública 0.
+                Conectado_APIPublica_1_Descricao:
+                  type: string
+                  description: Descrição da Conexão com API Pública 1.
+                Conectado_APIPublica_1_Nivel:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Complexidade da integração com a Conexão com API Pública 1.
+                Conectado_APIPublica_2_Descricao:
+                  type: string
+                  description: Descrição da Conexão com API Pública 2.
+                Conectado_APIPublica_2_Nivel:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Complexidade da integração com a Conexão com API Pública 2.
+                Conectado_ConexaoPersonalizada_Descricao:
+                  type: string
+                  description: Descrição da integração personalizada para APIs específicas do cliente.
+                Conectado_SuporteMelhoriaContinua:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e melhoria contínua para o módulo Conectado.
+                Multimidia_Voz_AudicaoAtiva:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de voz para texto.
+                Multimidia_Voz_AudicaoAtiva_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de voz para texto.
+                Multimidia_Voz_VozPersonalizada:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de texto para voz.
+                Multimidia_Voz_VozPersonalizada_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de texto para voz.
+                Multimidia_Imagem_VisaoInteligente:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de imagem para texto.
+                Multimidia_Imagem_VisaoInteligente_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de imagem para texto.
+                Multimidia_Imagem_CriadorVisual:
+                  type: string
+                  enum: [true]
+                  description: Ativar funcionalidade de texto para imagem.
+                Multimidia_Imagem_CriadorVisual_DescricaoLead:
+                  type: string
+                  description: Descrição personalizada da funcionalidade de texto para imagem.
+                Multimidia_SuporteMelhoriaContinua:
+                  type: string
+                  enum: [Basico, Padrao, Avancado]
+                  description: Nível de suporte e melhoria contínua para funcionalidades multimídia.
+      responses:
+        '200':
+          description: Orçamento gerado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  LeadInfo:
+                    type: object
+                    description: Informações do lead.
+                    properties:
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      whatsapp:
+                        type: string
+                  ParametrosEntrada:
+                    type: object
+                    description: Parâmetros recebidos pela API.
+                    properties:
+                      ConversaComIA:
+                        type: object
+                        properties:
+                          DescricaoLead:
+                            type: string
+                          NivelPersonalizacaoConversa:
+                            type: string
+                          SuporteMelhoriaContinua:
+                            type: string
+                      Conectado:
+                        type: object
+                        properties:
+                          RedesSociais:
+                            type: object
+                            properties:
+                              WhatsApp:
+                                type: string
+                              Facebook:
+                                type: string
+                              Instagram:
+                                type: string
+                              Telegram:
+                                type: string
+                          APIPublica:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Descricao:
+                                  type: string
+                                Nivel:
+                                  type: string
+                          ConexaoPersonalizada:
+                            type: object
+                            properties:
+                              Descricao:
+                                type: string
+                          SuporteMelhoriaContinua:
+                            type: string
+                      Multimidia:
+                        type: object
+                        properties:
+                          Voz:
+                            type: object
+                            properties:
+                              AudicaoAtiva:
+                                type: object
+                                properties:
+                                  DescricaoLead:
+                                    type: string
+                              VozPersonalizada:
+                                type: object
+                                properties:
+                                  DescricaoLead:
+                                    type: string
+                          Imagem:
+                            type: object
+                            properties:
+                              VisaoInteligente:
+                                type: object
+                                properties:
+                                  DescricaoLead:
+                                    type: string
+                              CriadorVisual:
+                                type: object
+                                properties:
+                                  DescricaoLead:
+                                    type: string
+                          SuporteMelhoriaContinua:
+                            type: string
+                  ItensConfigurados:
+                    type: array
+                    description: Lista de itens configurados com seus detalhes.
+                    items:
+                      type: object
+                      properties:
+                        Item:
+                          type: string
+                          description: Identificação do item.
+                        Nome:
+                          type: string
+                        DescricaoPrincipal:
+                          type: string
+                        DescricaoPersonalizada:
+                          type: string
+                        Nivel:
+                          type: string
+                        DescricaoCustomizacao:
+                          type: string
+                        Custo:
+                          type: number
+                        Tempo:
+                          type: number
+                        Categoria:
+                          type: string
+                        Aviso:
+                          type: string
+                  ResumoGeral:
+                    type: object
+                    properties:
+                      CustoImplementacao:
+                        type: number
+                      TempoImplementacao:
+                        type: number
+                      CustoManutencao:
+                        type: number
+                      Subtotais:
+                        type: object
+                        properties:
+                          ConversaComIA:
+                            type: object
+                            properties:
+                              CustoImplementacao:
+                                type: number
+                              TempoImplementacao:
+                                type: number
+                          Conectado:
+                            type: object
+                            properties:
+                              CustoImplementacao:
+                                type: number
+                              TempoImplementacao:
+                                type: number
+                          Multimidia:
+                            type: object
+                            properties:
+                              CustoImplementacao:
+                                type: number
+                              TempoImplementacao:
+                                type: number
+                      UrlOrcamentoDetalhado:
+                        type: string
+                        description: URL para acessar o orçamento detalhado.
+                      TextoResumo:
+                        type: string
+        '400':
+          description: Erro nos parâmetros enviados.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro detalhada.
