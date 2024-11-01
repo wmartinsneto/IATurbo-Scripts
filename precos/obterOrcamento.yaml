@@ -62,9 +62,9 @@ paths:
                         type: string
                         enum: [Basico, Padrao, Avancado]
                         description: Nível de complexidade da integração.
-                Conectado_APISobMedida_Descricao:
+                Conectado_ConexaoPersonalizada_Descricao:
                   type: string
-                  description: Descrição da integração com API sob medida.
+                  description: Descrição da integração com Conexão Personalizada.
                 Conectado_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]

@@ -55,7 +55,7 @@
             
         *   **Avançado**: Integração com lógica complexa, como sincronização bidirecional entre sistemas.
             
-    *   **API Sob Medida**: Se precisar de algo personalizado, explique que os preços e prazos para estas integrações são fornecidos mediante consulta.
+    *   **Conexão Personalizada**: Se precisar de algo personalizado, explique que os preços e prazos para estas integrações são fornecidos mediante consulta.
         
 
 #### 5\. Funcionalidades Multimídia

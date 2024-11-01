@@ -81,7 +81,7 @@ Configuração para APIs externas com múltiplos níveis:
 
 ##### **Integração com APIs Sob Medida**
 
-*   **Conectado\_APISobMedida\_Descricao**: Descrição para uma API customizada. **Observação**: Preço e prazo sob consulta.
+*   **Conectado\_ConexaoPersonalizada\_Descricao**: Descrição para uma API customizada. **Observação**: Preço e prazo sob consulta.
     
 
 #### 2.3 Funcionalidades Multimídia

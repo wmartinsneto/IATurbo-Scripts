@@ -112,6 +112,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                 // Descrição padrão do ConversaComIA
                 $item = [
                     'Item' => 'ConversaComIA',
+                    'Nome' => $jsonData['ConversaComIA']['Nome'],
                     'DescricaoPrincipal' => $jsonData['ConversaComIA']['Descricao'],
                     'Categoria' => 'Implementacao',
                     'Modulo' => 'ConversaComIA'
@@ -162,7 +163,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
             }
         } elseif ($key === 'Conectado') {
             if (is_array($value)) {
-                // Processa Redes Sociais, API Pública e API Sob Medida
+                // Processa Redes Sociais, API Pública e Conexão Personalizada
                 if (isset($value['RedesSociais'])) {
                     foreach ($value['RedesSociais'] as $rede => $selecionado) {
                         if ($selecionado === 'true') {
@@ -206,11 +207,12 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
                         $i++;
                     }
                 }
-                // Processa API Sob Medida
-                if (isset($value['APISobMedida']['Descricao'])) {
+                // Processa Conexão Personalizada
+                if (isset($value['ConexaoPersonalizada']['Descricao'])) {
                     $item = [
-                        'Item' => 'Conectado > APISobMedida',
-                        'DescricaoPersonalizada' => $value['APISobMedida']['Descricao'],
+                        'Item' => 'Conectado > ConexaoPersonalizada',
+                        'Nome' => $jsonData['Conectado']['ConexaoPersonalizada']['Nome'],
+                        'DescricaoPersonalizada' => $value['ConexaoPersonalizada']['Descricao'],
                         'Aviso' => 'Preços e prazos para esta solução só podem ser oferecidos sob consulta.',
                         'Categoria' => 'Implementacao',
                         'Modulo' => 'Conectado'
@@ -299,7 +301,7 @@ function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$h
     }
 }
 
-// Variável para verificar se há solicitação de API sob medida
+// Variável para verificar se há solicitação de Conexão Personalizada
 $hasCustomAPI = false;
 
 // Variável para armazenar os parâmetros de entrada processados
@@ -375,7 +377,7 @@ if ($totalMaintenanceCost > 0) {
 }
 
 if ($hasCustomAPI) {
-    $textoResumo .= "<p><strong>⚠️ Atenção:</strong> Este orçamento inclui a criação de uma API Sob Medida, cujos preços e prazos não são tabelados. Entre em contato para obter estas informações e completar este orçamento agora mesmo.</p>";
+    $textoResumo .= "<p><strong>⚠️ Atenção:</strong> Este orçamento inclui a criação de uma Conexão Personalizada, cujos preços e prazos não são tabelados. Entre em contato para obter estas informações e completar este orçamento agora mesmo.</p>";
 }
 
 $textoResumo .= "<p><strong>💡Observação Importante:</strong> Além desses valores, o uso do chatbot gera um custo de consumo de tokens da OpenAI – empresa que fornece a tecnologia de inteligência artificial do chatbot. Pense nisso como o uso de eletricidade ou combustível: quanto mais o chatbot interage, mais ele consome. Esse custo é proporcional ao volume de interações e é cobrado diretamente pela OpenAI conforme o uso.</p>";

@@ -1,30 +1,31 @@
 {
   "ConversaComIA": {
-    "Nome": "Conversa Com IA",
-    "Descricao": "O Chatbot de Conversa com IA transforma o atendimento ao cliente, utilizando inteligência artificial para criar interações naturais e cativantes.<br>Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa além um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto e disponível 24/7.<br>Ideal para empresas que buscam fortalecer o atendimento e oferecer suporte mais inteligente e eficiente.",
+    "Nome": "💬 Chatbot de Conversa com IA",
+    "Descricao": "O Chatbot de Conversa com IA transforma seu atendimento, usando inteligência artificial para criar interações naturais e envolventes com seus clientes. Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa, além de um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto, acessível e sempre disponível.<br>Ideal para empresas que buscam um atendimento mais eficiente e suporte inteligente, acessível 24/7.",
     "NivelPersonalizacaoConversa": {
       "Nome": "Nível de Personalização da Conversa",
-      "Descricao": "Personaliza a lógica e as respostas do chatbot, ajustando o comportamento de acordo com as necessidades específicas do negócio.",
+      "Descricao": "Ajusta o comportamento e a lógica de respostas do chatbot conforme as necessidades específicas do seu negócio, com níveis de personalização que ampliam as possibilidades de interação.",
       "Basico": {
         "Nome": "Básico",
-        "Descricao": "Oferece respostas diretas e simples, ideal para fornecer informações básicas como horários de funcionamento, descrição de serviços e responder perguntas frequentes sobre a empresa e o negócio de forma amigável, rápida e precisa.",
+        "Descricao": "Respostas diretas e práticas, perfeitas para tirar dúvidas comuns, como horários de funcionamento e informações sobre serviços e produtos de maneira rápida e acessível. Ideal para interações informativas e objetivas.",
         "Custo": 600,
         "Tempo": 5
       },
       "Padrao": {
         "Nome": "Padrão",
-        "Descricao": "Interações mais dinâmicas, adaptando-se ao contexto da conversa e recebendo dados em tempo real para sugestões personalizadas, como recomendações de produtos ou atualização de status de serviços.",
+        "Descricao": "Interações mais dinâmicas e personalizadas, adaptando-se ao contexto da conversa e trazendo dados em tempo real, como sugestões de produtos e status de pedidos. Uma ótima escolha para empresas que buscam interações com um toque a mais de personalização.",
         "Custo": 1920,
         "Tempo": 16
       },
       "Avancado": {
         "Nome": "Avançado",
-        "Descricao": "Oferece respostas altamente personalizadas e complexas, coletando dados em tempo real para garantir interações detalhadas e adaptadas ao usuário, como consultas específicas e suporte técnico avançado.",
+        "Descricao": "Personalização máxima para interações detalhadas e focadas no usuário, usando dados em tempo real para respostas precisas e complexas, como consultas específicas e suporte técnico avançado. Ideal para quem quer um chatbot que seja praticamente um assistente digital.",
         "Custo": 4800,
         "Tempo": 40
       }
     },
     "SuporteMelhoriaContinua": {
+      "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço de suporte e monitoramento contínuo, incluindo melhorias e treinamentos periódicos para que o chatbot esteja sempre atualizado e otimizado.",
       "Basico": {
         "Nome": "Básico",
@@ -47,7 +48,7 @@
     }
   },
   "Conectado": {
-    "Nome": "Chatbot Conectado",
+    "Nome": "🌐 Chatbot Conectado",
     "Descricao": "O Chatbot Conectado facilita o atendimento e a gestão de leads em um painel centralizado com CRM integrado. A partir dele, você acessa e responde clientes onde eles estão, como WhatsApp, Facebook, Instagram, Telegram e muito mais. Com flexibilidade para integrar APIs públicas e customizadas, ele oferece uma experiência completa para automação de tarefas com comunicação centralizada.<br>Ideal para negócios que desejam consolidar suas interações em um único lugar, tornando o atendimento mais eficiente e estratégico.",
     "RedesSociais": {
       "Nome": "Integração com Redes Sociais",
@@ -78,33 +79,33 @@
       }
     },
     "APIPublica": {
-      "Nome": "Integração com API Pública",
-      "Descricao": "Amplie as capacidades do chatbot conectando-o a APIs públicas populares para acessar dados externos e realizar tarefas adicionais.",
+      "Nome": "⚙ Conexão com APIs Públicas",
+      "Descricao": "Amplia o poder do seu chatbot conectando-o a serviços e informações de fontes externas. Perfeito para deixar o atendimento mais completo, dinâmico e cheio de possibilidades.",
       "Basico": {
         "Nome": "Básico",
-        "Descricao": "Integrações simples, que permitem ao chatbot buscar informações ou realizar ações básicas a partir de fontes externas.",
+        "Descricao": "Conexões simples que permitem ao chatbot buscar dados de fontes externas e realizar tarefas rápidas, deixando o atendimento mais informado e prático.",
         "Custo": 960,
         "Tempo": 8
       },
       "Padrao": {
         "Nome": "Padrão",
-        "Descricao": "Integrações com múltiplas interações e manipulação de dados, ideal para processos que exigem consulta e combinação de várias fontes.",
+        "Descricao": "Consultas que envolvem diversas fontes, permitindo que o chatbot consulte e organize informações mais detalhadas e complexas para atender a necessidades específicas.",
         "Custo": 2880,
         "Tempo": 24
       },
       "Avancado": {
         "Nome": "Avançado",
-        "Descricao": "Integrações complexas com sincronização bidirecional e lógica avançada, oferecendo um fluxo contínuo de dados entre sistemas e clientes.",
+        "Descricao": "Sincronização avançada, onde o chatbot interage com diferentes sistemas em tempo real, gerenciando dados de ponta a ponta. Ideal para processos de atendimento e suporte que exigem precisão e atualizações em tempo real.",
         "Custo": 4800,
         "Tempo": 40
       }
     },
-    "APISobMedida": {
-      "Nome": "Integração com API Sob Medida",
-      "Descricao": "Desenvolvimento de APIs personalizadas para atender necessidades específicas, proporcionando flexibilidade total nas integrações."
+    "ConexaoPersonalizada": {
+      "Nome": "⚙ Conexão Personalizada",
+      "Descricao": "Integrações feitas sob medida para o que você precisa! Com APIs personalizadas, o chatbot conecta-se diretamente aos seus sistemas, trazendo total flexibilidade e adequação ao seu negócio, desde processos internos até dados exclusivos."
     },
     "SuporteMelhoriaContinua": {
-      "Nome": "Suporte e Melhoria Contínua",
+      "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço completo de suporte e monitoramento, com aprimoramentos contínuos para garantir que seu chatbot esteja sempre otimizado e pronto para responder rapidamente.",
       "Basico": {
         "Nome": "Básico",
@@ -127,19 +128,19 @@
     }
   },
   "Multimidia": {
-    "Nome": "Chatbot Multimídia",
+    "Nome": "🎥 Chatbot Multimídia",
     "Descricao": "O Chatbot Multimídia oferece uma experiência acessível e completa, com recursos que replicam habilidades como ouvir, falar, ver e criar, tornando as interações mais inclusivas e próximas das habilidades humanas.",
     "Audio": {
       "Descricao": "Funcionalidades de áudio que permitem ao chatbot ouvir e responder aos usuários de forma acessível e intuitiva.",
       "VozParaTexto": {
-        "Nome": "Voz para Texto",
-        "Descricao": "Permite que o chatbot 'ouça' comandos de voz e os converta em texto, ideal para quem prefere falar ao invés de digitar ou tem limitações para usar o teclado.",
+        "Nome": "Audição Ativa",
+        "Descricao": "Com a Audição Ativa, o chatbot “escuta” comandos de voz e os converte em texto, ideal para quem prefere falar em vez de digitar ou tem limitações com o teclado. Um jeito rápido e inclusivo de se comunicar.",
         "Custo": 960,
         "Tempo": 8
       },
       "TextoParaVoz": {
-        "Nome": "Texto para Voz",
-        "Descricao": "Permite que o chatbot responda usando uma variedade de vozes masculinas e femininas, ajustando o tom para cada interação. E, se preferir, você também pode gravar a sua própria voz, tornando a experiência ainda mais personalizada e autêntica.",
+        "Nome": "Voz Personalizada",
+        "Descricao": "O chatbot responde com vozes naturais, masculinas e femininas, ajustando o tom para cada interação. E, se preferir, você pode usar a sua própria voz! Ideal para criar uma experiência autêntica e próxima do atendimento humano.",
         "Custo": 1920,
         "Tempo": 16
       }
@@ -147,26 +148,20 @@
     "Imagem": {
       "Descricao": "Recursos visuais que possibilitam ao chatbot interpretar imagens e gerar conteúdo visual, criando uma experiência mais interativa e inclusiva.",
       "ImagemParaTexto": {
-        "Nome": "Imagem para Texto",
-        "Descricao": "Capacita o chatbot a 'ver' imagens enviadas pelos usuários e descrevê-las em texto, ideal para assistências visuais como identificação de produtos ou documentos.",
+        "Nome": "Visão Inteligente",
+        "Descricao": "Dá ao chatbot a habilidade de \"enxergar\" e interpretar arquivos enviados, desde documentos de texto (PDF, DOCX, TXT) e planilhas (XLSX, CSV) até apresentações (PPTX) e imagens (JPEG, PNG). Ideal para um atendimento inclusivo, essa função ajuda a identificar produtos, verificar documentos ou simplificar o compartilhamento de informações.",
         "Custo": 1200,
         "Tempo": 10
       },
       "TextoParaImagem": {
-        "Nome": "Texto para Imagem",
-        "Descricao": "Habilidade de 'criar' imagens a partir de descrições textuais, ideal para gerar conteúdo visual customizado com base nas preferências dos usuários.",
+        "Nome": "Criador Visual",
+        "Descricao": "Com o Criador Visual, o chatbot transforma descrições textuais em imagens únicas e personalizadas, perfeitas para gerar conteúdos visuais alinhados ao gosto dos usuários.",
         "Custo": 1800,
         "Tempo": 15
       }
     },
-    "UploadDeArquivos": {
-      "Nome": "Upload de Arquivos",
-      "Descricao": "Permite que os usuários enviem documentos e arquivos diretamente para o chatbot, que pode processar e interpretar formatos como PDF, imagens, planilhas e textos. Ideal para compartilhar informações, como documentos de cadastro, comprovantes ou formulários, de maneira rápida e segura, ampliando o suporte multimídia para atender diversas necessidades.",
-      "Custo": 1440,
-      "Tempo": 12
-    },
     "SuporteMelhoriaContinua": {
-      "Nome": "Suporte e Melhoria Contínua",
+      "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço de suporte e monitoramento contínuo para manter o chatbot Multimídia atualizado, responsivo e pronto para melhorar constantemente sua acessibilidade e capacidades de comunicação.",
       "Basico": {
         "Nome": "Básico",
