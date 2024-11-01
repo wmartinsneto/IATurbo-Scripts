@@ -143,10 +143,11 @@ Níveis:
   - **Avancado**
 
 
+**Nota:** Se o lead optar por algum recurso do módulo Conectado, certifique-se de solicitar o nível de suporte e melhoria contínua para este módulo.
+
 **Exemplo:**
 
-
-"Também oferecemos suporte contínuo para as integrações do chatbot. Você prefere um nível Básico, Padrão ou Avançado de suporte?"
+"Ótimo, para garantir que suas integrações funcionem perfeitamente, oferecemos suporte contínuo. Você prefere um nível Básico, Padrão ou Avançado de suporte para o módulo Conectado?"
 
 
 #### 2.2.3 Multimidia (Funcionalidades Multimídia)
@@ -395,4 +396,3 @@ curl --location 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterO
 - **Imediatismo e Contextualização**: Relacione as funcionalidades ao contexto específico do lead.
 - **Personalização**: Ajuste as sugestões com base nas informações do lead.
 - **Uso de Metáforas e Analogias**: Use exemplos relacionáveis para explicar conceitos complexos.
-

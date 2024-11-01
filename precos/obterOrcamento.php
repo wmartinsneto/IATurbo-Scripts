@@ -101,6 +101,36 @@ function buildParamHierarchy($params) {
 // Converte os parâmetros planos em hierarquia
 $paramHierarchy = buildParamHierarchy($params);
 
+// Check if any Conectado feature is enabled
+if (isset($paramHierarchy['Conectado'])) {
+    $conectadoFeatures = $paramHierarchy['Conectado'];
+    // Remove SuporteMelhoriaContinua from the features array for checking
+    $featuresToCheck = $conectadoFeatures;
+    unset($featuresToCheck['SuporteMelhoriaContinua']);
+    if (!empty($featuresToCheck) && empty($conectadoFeatures['SuporteMelhoriaContinua'])) {
+        $errorMessage = 'O parâmetro Conectado_SuporteMelhoriaContinua é obrigatório quando algum recurso do módulo Conectado é selecionado.';
+        $error = ['error' => $errorMessage];
+        echo json_encode($error);
+        writeLog('Erro: ' . $errorMessage);
+        exit;
+    }
+}
+
+// Check if any Multimidia feature is enabled
+if (isset($paramHierarchy['Multimidia'])) {
+    $multimidiaFeatures = $paramHierarchy['Multimidia'];
+    // Remove SuporteMelhoriaContinua from the features array for checking
+    $featuresToCheck = $multimidiaFeatures;
+    unset($featuresToCheck['SuporteMelhoriaContinua']);
+    if (!empty($featuresToCheck) && empty($multimidiaFeatures['SuporteMelhoriaContinua'])) {
+        $errorMessage = 'O parâmetro Multimidia_SuporteMelhoriaContinua é obrigatório quando algum recurso do módulo Multimidia é selecionado.';
+        $error = ['error' => $errorMessage];
+        echo json_encode($error);
+        writeLog('Erro: ' . $errorMessage);
+        exit;
+    }
+}
+
 // Função para validar parâmetros e montar o orçamento
 function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$hasCustomAPI, &$inputParams, $path = '') {
     foreach ($params as $key => $value) {

@@ -88,7 +88,9 @@ paths:
                 Conectado_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]
-                  description: Nível de suporte e melhoria contínua para o módulo Conectado.
+                  description: |
+                    Nível de suporte e melhoria contínua para o módulo Conectado.
+                    **Obrigatório se algum recurso do módulo Conectado for selecionado.**
                 Multimidia_Voz_AudicaoAtiva:
                   type: string
                   enum: [true]
@@ -120,7 +122,8 @@ paths:
                 Multimidia_SuporteMelhoriaContinua:
                   type: string
                   enum: [Basico, Padrao, Avancado]
-                  description: Nível de suporte e melhoria contínua para funcionalidades multimídia.
+                  description: Nível de suporte e melhoria contínua para funcionalidades multimídia. **Obrigatório se algum recurso do módulo Multimidia for selecionado.**
+
       responses:
         '200':
           description: Orçamento gerado com sucesso.
