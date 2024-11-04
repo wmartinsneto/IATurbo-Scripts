@@ -27,7 +27,8 @@ if (!is_dir($orcamentosDir)) {
 }
 
 // Função para registrar logs
-function writeLog($message) {
+function writeLog($message)
+{
     global $logDir;
     $date = date('Y-m-d');
     $logFile = "$logDir/log_$date.txt";
@@ -36,8 +37,32 @@ function writeLog($message) {
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
 
+// Recebe todos os parâmetros POST
+$params = $_POST;
+
+// Função de validação para parâmetros opcionais
+function validateOptionalParams($params, &$invalidParams)
+{
+    // Valida volumeInteracoesMensais se fornecido
+    if (isset($params['volumeInteracoesMensais']) && !is_numeric($params['volumeInteracoesMensais'])) {
+        $invalidParams[] = 'volumeInteracoesMensais deve ser numérico.';
+    }
+}
+
+// Validação dos parâmetros opcionais
+$invalidParams = [];
+validateOptionalParams($params, $invalidParams);
+
+if (!empty($invalidParams)) {
+    $errorMessage = 'Erro de validação: ' . implode(' ', $invalidParams);
+    $error = ['error' => $errorMessage];
+    echo json_encode($error);
+    writeLog('Erro: ' . $errorMessage);
+    exit;
+}
+
 // Obtém os parâmetros enviados via POST e ignora parâmetros vazios, nulos ou com valor "None"
-$params = array_filter($_POST, function($value) {
+$params = array_filter($_POST, function ($value) {
     return !is_null($value) && $value !== '' && $value !== 'None';
 });
 
@@ -45,15 +70,40 @@ $params = array_filter($_POST, function($value) {
 $leadInfo = [
     'nome' => $params['nome'] ?? null,
     'email' => $params['email'] ?? null,
-    'whatsapp' => $params['whatsapp'] ?? null
+    'whatsapp' => $params['whatsapp'] ?? null,
+    'nomeEmpresa' => $params['nomeEmpresa'] ?? null,
+    'segmentoMercado' => $params['segmentoMercado'] ?? null,
+    'volumeInteracoesMensais' => $params['volumeInteracoesMensais'] ?? null
 ];
-unset($params['nome'], $params['email'], $params['whatsapp']); // Remove do array principal
+unset($params['nome'], $params['email'], $params['whatsapp'], $params['nomeEmpresa'], $params['segmentoMercado'], $params['volumeInteracoesMensais']); // Remove do array principal
 
-// Verifica se os parâmetros obrigatórios (nome, email, WhatsApp) estão presentes e válidos
-if (empty($leadInfo['nome']) || empty($leadInfo['email']) || empty($leadInfo['whatsapp'])) {
-    $error = ['error' => 'Nome, email e WhatsApp são obrigatórios.'];
+// Verifica se os parâmetros obrigatórios estão presentes e válidos
+$missingFields = [];
+
+if (empty($leadInfo['nome'])) {
+    $missingFields[] = 'nome';
+}
+if (empty($leadInfo['email'])) {
+    $missingFields[] = 'email';
+}
+if (empty($leadInfo['whatsapp'])) {
+    $missingFields[] = 'whatsapp';
+}
+if (empty($leadInfo['nomeEmpresa'])) {
+    $missingFields[] = 'nomeEmpresa';
+}
+if (empty($leadInfo['segmentoMercado'])) {
+    $missingFields[] = 'segmentoMercado';
+}
+if (empty($leadInfo['volumeInteracoesMensais'])) {
+    $missingFields[] = 'volumeInteracoesMensais';
+}
+
+if (!empty($missingFields)) {
+    $errorMessage = 'Os seguintes campos obrigatórios estão faltando ou vazios: ' . implode(', ', $missingFields) . '.';
+    $error = ['error' => $errorMessage];
     echo json_encode($error);
-    writeLog('Erro: Nome, email e WhatsApp são obrigatórios.');
+    writeLog('Erro: ' . $errorMessage);
     exit;
 }
 
@@ -82,7 +132,8 @@ $validItems = [];
 $invalidParams = [];
 
 // Função para converter parâmetros planos em hierarquia
-function buildParamHierarchy($params) {
+function buildParamHierarchy($params)
+{
     $hierarchy = [];
     foreach ($params as $key => $value) {
         $keys = explode('_', $key);
@@ -132,7 +183,8 @@ if (isset($paramHierarchy['Multimidia'])) {
 }
 
 // Função para validar parâmetros e montar o orçamento
-function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$hasCustomAPI, &$inputParams, $path = '') {
+function validateAndBuild($params, $jsonData, &$validItems, &$invalidParams, &$hasCustomAPI, &$inputParams, $path = '')
+{
     foreach ($params as $key => $value) {
         $currentPath = $path ? "$path > $key" : $key;
         $inputParams[$currentPath] = $value;
@@ -386,7 +438,14 @@ foreach ($validItems as $item) {
 // Monta a resposta incluindo as informações do lead
 $id = "orcamento_" . date('Y_m_d') . uniqid();
 $response = [
-    'LeadInfo' => $leadInfo,
+    'LeadInfo' => [
+        'nome' => $leadInfo['nome'],
+        'email' => $leadInfo['email'],
+        'whatsapp' => $leadInfo['whatsapp'],
+        'nomeEmpresa' => isset($leadInfo['nomeEmpresa']) ? $leadInfo['nomeEmpresa'] : null,
+        'segmentoMercado' => isset($leadInfo['segmentoMercado']) ? $leadInfo['segmentoMercado'] : null,
+        'volumeInteracoesMensais' => isset($leadInfo['volumeInteracoesMensais']) ? intval($leadInfo['volumeInteracoesMensais']) : null,
+    ],
     'ParametrosEntrada' => $inputParams,
     'ItensConfigurados' => $validItems,
     'ResumoGeral' => [
@@ -394,7 +453,7 @@ $response = [
         'TempoImplementacao' => $totalImplementationTime,
         'CustoManutencao' => $totalMaintenanceCost,
         'Subtotais' => $moduleSubtotals,
-        'UrlOrcamentoDetalhado' => "https://iaturbo.com.br/orcamentos/?id=".$id
+        'UrlOrcamentoDetalhado' => "https://iaturbo.com.br/orcamentos/?id=" . $id
     ]
 ];
 
@@ -424,4 +483,3 @@ echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
 // Registra o log da requisição bem-sucedida
 writeLog("Orçamento gerado com sucesso. Arquivo salvo em: $filename. Parâmetros: " . json_encode($params) . ". Resposta: " . json_encode($response));
-?>

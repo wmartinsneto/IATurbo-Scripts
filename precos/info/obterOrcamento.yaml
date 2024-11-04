@@ -21,6 +21,9 @@ paths:
                 - nome
                 - email
                 - whatsapp
+                - nomeEmpresa
+                - segmentoMercado
+                - volumeInteracoesMensais
                 - ConversaComIA_DescricaoLead
                 - ConversaComIA_NivelPersonalizacaoConversa
                 - ConversaComIA_SuporteMelhoriaContinua
@@ -34,6 +37,15 @@ paths:
                 whatsapp:
                   type: string
                   description: Número de WhatsApp do cliente, em formato internacional (+5511912345678).
+                nomeEmpresa:
+                  type: string
+                  description: Nome da empresa do cliente.
+                segmentoMercado:
+                  type: string
+                  description: Segmento de mercado do cliente (ex. Finanças, Saúde).
+                volumeInteracoesMensais:
+                  type: integer
+                  description: Volume estimado de interações mensais (ex. 5000).
                 ConversaComIA_DescricaoLead:
                   type: string
                   description: Objetivo principal do chatbot, como vendas, suporte, etc.
@@ -142,6 +154,12 @@ paths:
                         type: string
                       whatsapp:
                         type: string
+                      nomeEmpresa:
+                        type: string
+                      segmentoMercado:
+                        type: string
+                      volumeInteracoesMensais:
+                        type: integer
                   ParametrosEntrada:
                     type: object
                     description: Parâmetros recebidos pela API.

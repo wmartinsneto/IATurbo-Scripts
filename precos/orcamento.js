@@ -13,13 +13,28 @@ function displayOrcamentoData(data, precosData, orcamentoId) {
 
     // Informações do lead
     const leadInfo = `
-        <div class="section">
-            <h2 style="text-align:center !important;">👋 Olá, ${data.LeadInfo.nome}!</h2><br>
-            <p style="color:white;text-align:center !important;">Parabéns por este importante passo em direção a um atendimento ao cliente mais moderno e eficiente!<br><br>Você está prestes a conferir uma solução sob medida para você que transformará:<br>1️⃣ O relacionamento com seus clientes<br>2️⃣ A eficiência do seu negócio<br>3️⃣ A imagem da sua marca<br>4️⃣ Os seus resultados 🚀</p>
-            <p style="text-align:center !important;"><strong>Dados Pessoais:</strong></p>
-            <p style="text-align:center !important;">Email: ${data.LeadInfo.email}<br>WhatsApp: ${data.LeadInfo.whatsapp}</p>
-            <p style="text-align:center !important;"><small>ID: ${orcamentoId}<br><i>(Válido por 7 dias)</i></small></p>
-        </div>`;
+    <div class="section">
+        <h2 style="text-align:center !important;">👋 Olá, ${data.LeadInfo.nome}!</h2><br>
+        <p style="color:white;text-align:center !important;">
+            Parabéns por este importante passo em direção a um atendimento ao cliente mais moderno e eficiente!<br><br>
+            Você está prestes a conferir uma solução sob medida para você que transformará:<br>
+            1️⃣ O relacionamento com seus clientes<br>
+            2️⃣ A eficiência do seu negócio<br>
+            3️⃣ A imagem da sua marca<br>
+            4️⃣ Os seus resultados 🚀
+        </p>
+        <p style="text-align:center !important;"><strong>Dados Pessoais:</strong></p>
+        <p style="text-align:center !important;">
+            Email: ${data.LeadInfo.email}<br>
+            WhatsApp: ${data.LeadInfo.whatsapp}<br>
+            ${data.LeadInfo.nomeEmpresa ? `Empresa: ${data.LeadInfo.nomeEmpresa}<br>` : ''}
+            ${data.LeadInfo.segmentoMercado ? `Segmento: ${data.LeadInfo.segmentoMercado}<br>` : ''}
+            ${data.LeadInfo.volumeInteracoesMensais ? `Interações Mensais Estimadas: ${data.LeadInfo.volumeInteracoesMensais}<br>` : ''}
+        </p>
+        <p style="text-align:center !important;">
+            <small>ID: ${orcamentoId}<br><i>(Válido por 7 dias)</i></small>
+        </p>
+    </div>`;
 
     // Resumo Geral do Orçamento
     const resumoGeral = `
