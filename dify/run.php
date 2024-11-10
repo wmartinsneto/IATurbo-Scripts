@@ -162,6 +162,33 @@ if (!unlink($file_path)) {
 
 log_message("Arquivo pendente removido com sucesso para id: $id");
 
+// Integração com generate-audio.php
+log_message("Iniciando integração com generate-audio.php para mensagem $id.");
+
+try {
+    $response_data = json_decode(file_get_contents($completed_file_path), true);
+    $mensagemDeVoz = json_decode($response_data['thought'], true)['mensagemDeVoz'] ?? 'Sem resposta disponível';
+
+    $audio_payload = json_encode([
+        'input_text' => $mensagemDeVoz,
+        'id' => $id
+    ]);
+
+    $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
+    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($audio_ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json'
+    ]);
+    curl_setopt($audio_ch, CURLOPT_POST, true);
+    curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
+    curl_exec($audio_ch);
+    curl_close($audio_ch);
+
+    log_message("Integração com generate-audio.php completa para id: $id.");
+} catch (Exception $e) {
+    log_message("Falha na integração com generate-audio.php para id: $id. Erro: " . $e->getMessage());
+}
+
 // Integração com o Trello - Chama a função `send_to_trello` para enviar a resposta ao Trello
 log_message("Iniciando envio ao Trello para mensagem $id.");
 
@@ -229,7 +256,7 @@ try {
         echo 'Mensagem enviada com sucesso ao Slack.';
     }
 } catch (Exception $e) {
-    log_message("Falha ao enviar notificação no Slack. Erro: " . $e->getMessage());
+    log_message("Falha ao enviar notificação ao Slack. Erro: " . $e->getMessage());
 }
 
 // Retorna 200 OK mesmo em caso de falha no Trello
