@@ -165,51 +165,50 @@ log_message("Arquivo pendente removido com sucesso para id: $id");
 // Integração com generate-audio.php
 log_message("Iniciando integração com generate-audio.php para mensagem $id.");
 
-try {
-    $response_data = json_decode(file_get_contents($completed_file_path), true);
-    $mensagemDeVoz = json_decode($response_data['thought'], true)['mensagemDeVoz'] ?? 'Sem resposta disponível';
+// Prepara o payload
+$response_data = json_decode(file_get_contents($completed_file_path), true);
+$mensagemDeVoz = json_decode($response_data['thought'], true)['mensagemDeVoz'] ?? 'Sem resposta disponível';
+$audio_payload = json_encode([
+    'input_text' => $mensagemDeVoz,
+    'id' => $id
+]);
 
-    $audio_payload = json_encode([
-        'input_text' => $mensagemDeVoz,
-        'id' => $id
-    ]);
+// Configura a requisição cURL sem bloquar
+$audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
+curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
+curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($audio_ch, CURLOPT_POST, true);
+curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, false);
+curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50); // Tempo de espera mínimo
+curl_setopt($audio_ch, CURLOPT_FORBID_REUSE, true);
+curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200); // Tempo de conexão mínimo
 
-    $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
-    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($audio_ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($audio_ch, CURLOPT_POST, true);
-    curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
-    curl_exec($audio_ch);
-    curl_close($audio_ch);
+curl_exec($audio_ch); // Executa a chamada sem esperar pela resposta
+curl_close($audio_ch);
 
-    log_message("Integração com generate-audio.php completa para id: $id.");
-} catch (Exception $e) {
-    log_message("Falha na integração com generate-audio.php para id: $id. Erro: " . $e->getMessage());
-}
+log_message("Chamada para generate-audio.php enviada para id: $id.");
 
 // Integração com o Trello - Chama a função `send_to_trello` para enviar a resposta ao Trello
 log_message("Iniciando envio ao Trello para mensagem $id.");
 
 $formattedResponse = null;
 try {
-    $response_data = json_decode(file_get_contents($completed_file_path), true);
+$response_data = json_decode(file_get_contents($completed_file_path), true);
     log_message('Decoding $response_data["thought"]');
-    $decodedTextResponse = json_decode($response_data['thought'], true);
+$decodedTextResponse = json_decode($response_data['thought'], true);
 
     log_message('Formatting decodedTextResponse');
-    $formattedResponse = formatTrelloContent($id, $decodedTextResponse);
+$formattedResponse = formatTrelloContent($id, $decodedTextResponse);
 
     log_message('Sending to Trello');
     send_to_trello([
-        'leadRequestId' => $id, 
-        'leadQuestion' => $pending_data['question'] ?? 'Sem pergunta disponível', 
-        'leadName' => $pending_data['userData']['firstName'] . ' ' . $pending_data['userData']['lastName'],  
-        'source' => $pending_data['source'] ?? 'Desconhecido', 
-        'sessionId' => $pending_data['overrideConfig']['sessionId'], 
-        'userData' => $pending_data['userData'] ?? [],  
-        'formattedResponse' => $formattedResponse
+    'leadRequestId' => $id, 
+    'leadQuestion' => $pending_data['question'] ?? 'Sem pergunta disponível', 
+    'leadName' => $pending_data['userData']['firstName'] . ' ' . $pending_data['userData']['lastName'],  
+    'source' => $pending_data['source'] ?? 'Desconhecido', 
+    'sessionId' => $pending_data['overrideConfig']['sessionId'], 
+    'userData' => $pending_data['userData'] ?? [],  
+    'formattedResponse' => $formattedResponse
     ]);
 
     log_message("Envio ao Trello completo para id: $id.");
@@ -222,12 +221,12 @@ log_message("Iniciando envio de notificação p/ Slack");
 try {
     $webhookUrl = 'https://hooks.slack.com/services/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';
 
-    $slackMessage = "Lead no " . $pending_data['source'] . "\n";
-    foreach ($pending_data['userData'] as $key => $value) {
-        $slackMessage .= ucfirst($key) . ": $value\n";
-    }
-    $slackMessage .= "PERGUNTA:\n" . $pending_data['question'] . "\n\n";
-    $slackMessage .= "RESPOSTA:\n" . $formattedResponse;
+$slackMessage = "Lead no " . $pending_data['source'] . "\n";
+foreach ($pending_data['userData'] as $key => $value) {
+    $slackMessage .= ucfirst($key) . ": $value\n";
+}
+$slackMessage .= "PERGUNTA:\n" . $pending_data['question'] . "\n\n";
+$slackMessage .= "RESPOSTA:\n" . $formattedResponse;
 
     // Configura o payload para enviar ao Slack
     $payload = json_encode([
