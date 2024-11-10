@@ -1243,27 +1243,34 @@ curl --location 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterO
 ```sh
 curl --location 'https://iaturbo.com.br/wp-content/uploads/scripts/precos/obterOrcamento.php' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'nome=Marcos Oliveira' \
---data-urlencode 'email=marcos.oliveira@example.com' \
---data-urlencode 'whatsapp=+5511912345678' \
---data-urlencode 'nomeEmpresa=HealthCare Plus' \
---data-urlencode 'segmentoMercado=Saúde' \
---data-urlencode 'volumeInteracoesMensais=10000' \
---data-urlencode 'ConversaComIA_DescricaoLead=Chatbot avançado para atendimento personalizado e agendamentos.' \
+--data-urlencode 'nome=Lucas Almeida' \
+--data-urlencode 'email=lucas.almeida@example.com' \
+--data-urlencode 'whatsapp=+5511987654321' \
+--data-urlencode 'nomeEmpresa=Tech Innovators' \
+--data-urlencode 'segmentoMercado=Tecnologia' \
+--data-urlencode 'volumeInteracoesMensais=20000' \
+--data-urlencode 'ConversaComIA_DescricaoLead=Chatbot avançado para suporte técnico, vendas e agendamentos personalizados.' \
 --data-urlencode 'ConversaComIA_NivelPersonalizacaoConversa=Avancado' \
 --data-urlencode 'ConversaComIA_SuporteMelhoriaContinua=Avancado' \
 --data-urlencode 'Conectado_RedesSociais_WhatsApp=true' \
 --data-urlencode 'Conectado_RedesSociais_Facebook=true' \
 --data-urlencode 'Conectado_RedesSociais_Instagram=true' \
 --data-urlencode 'Conectado_RedesSociais_Telegram=true' \
+--data-urlencode 'Conectado_APIPublica_0_Descricao=Integração com API de pagamentos para processar transações de forma segura e eficiente.' \
+--data-urlencode 'Conectado_APIPublica_0_Nivel=Avancado' \
+--data-urlencode 'Conectado_APIPublica_1_Descricao=Integração com API de CRM para gerenciar e acompanhar leads e clientes.' \
+--data-urlencode 'Conectado_APIPublica_1_Nivel=Avancado' \
+--data-urlencode 'Conectado_APIPublica_2_Descricao=Integração com API de logística para rastreamento de entregas em tempo real.' \
+--data-urlencode 'Conectado_APIPublica_2_Nivel=Avancado' \
+--data-urlencode 'Conectado_ConexaoPersonalizada_Descricao=Integração personalizada com sistema interno de ERP para sincronização de dados financeiros e operacionais.' \
 --data-urlencode 'Conectado_SuporteMelhoriaContinua=Avancado' \
 --data-urlencode 'Multimidia_Voz_AudicaoAtiva=true' \
---data-urlencode 'Multimidia_Voz_AudicaoAtiva_DescricaoLead=Comandos de voz para agendamentos.' \
+--data-urlencode 'Multimidia_Voz_AudicaoAtiva_DescricaoLead=Permitir que os clientes enviem comandos por voz para agendar serviços e obter suporte técnico.' \
 --data-urlencode 'Multimidia_Voz_VozPersonalizada=true' \
---data-urlencode 'Multimidia_Voz_VozPersonalizada_DescricaoLead=Respostas em áudio personalizadas.' \
+--data-urlencode 'Multimidia_Voz_VozPersonalizada_DescricaoLead=Respostas em áudio personalizadas com vozes naturais, ajustando o tom conforme a interação.' \
 --data-urlencode 'Multimidia_Imagem_VisaoInteligente=true' \
---data-urlencode 'Multimidia_Imagem_VisaoInteligente_DescricaoLead=Análise de exames enviados pelos pacientes.' \
+--data-urlencode 'Multimidia_Imagem_VisaoInteligente_DescricaoLead=Análise de imagens enviadas pelos clientes para identificar problemas técnicos e fornecer soluções.' \
 --data-urlencode 'Multimidia_Imagem_CriadorVisual=true' \
---data-urlencode 'Multimidia_Imagem_CriadorVisual_DescricaoLead=Geração de materiais visuais personalizados.' \
+--data-urlencode 'Multimidia_Imagem_CriadorVisual_DescricaoLead=Geração de imagens personalizadas para campanhas de marketing e materiais promocionais.' \
 --data-urlencode 'Multimidia_SuporteMelhoriaContinua=Avancado'
 ```

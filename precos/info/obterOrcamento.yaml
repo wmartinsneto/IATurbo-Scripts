@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: API de Orçamento de Chatbots IA Turbo
-  version: 1.1.0
+  version: 1.1.1
   description: >
     API para gerar orçamentos detalhados de chatbots personalizados com base em módulos como Conversa Com IA, Conectado, e Multimídia.
     Suporta seleção de níveis de personalização, integração com APIs, e suporte contínuo.
@@ -11,6 +11,10 @@ paths:
   /obterOrcamento.php:
     post:
       summary: Gera um orçamento baseado nos parâmetros fornecidos.
+      x-execution-order: sequential # Garantia de execução sequencial para evitar paralelismo indesejado
+      description: |
+        A ferramenta deve ser chamada primeiro no fluxo, antes de qualquer mensagem ser redigida pelo agente.
+        Essa abordagem assegura que a ferramenta seja executada de forma síncrona, evitando interrupções ou sobreposição de mensagens no meio da conversa.
       requestBody:
         required: true
         content:
