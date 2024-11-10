@@ -55,11 +55,11 @@ paths:
                   description: Objetivo principal do chatbot, como vendas, suporte, etc.
                 ConversaComIA_NivelPersonalizacaoConversa:
                   type: string
-                  enum: [Basico, Padrao, Avancado]
+                  enum: [Avancado]
                   description: Nível de personalização da conversa conforme a complexidade do chatbot.
                 ConversaComIA_SuporteMelhoriaContinua:
                   type: string
-                  enum: [Basico, Padrao, Avancado]
+                  enum: [Avancado]
                   description: Nível de suporte e melhoria contínua para o módulo Conversa Com IA.
                 Conectado_RedesSociais_WhatsApp:
                   type: string
@@ -103,7 +103,7 @@ paths:
                   description: Descrição da integração personalizada para APIs específicas do cliente.
                 Conectado_SuporteMelhoriaContinua:
                   type: string
-                  enum: [Basico, Padrao, Avancado]
+                  enum: [Avancado]
                   description: |
                     Nível de suporte e melhoria contínua para o módulo Conectado.
                     **Obrigatório se algum recurso do módulo Conectado for selecionado.**
@@ -137,7 +137,7 @@ paths:
                   description: Descrição personalizada da funcionalidade de texto para imagem.
                 Multimidia_SuporteMelhoriaContinua:
                   type: string
-                  enum: [Basico, Padrao, Avancado]
+                  enum: [Avancado]
                   description: Nível de suporte e melhoria contínua para funcionalidades multimídia. **Obrigatório se algum recurso do módulo Multimidia for selecionado.**
 
       responses:

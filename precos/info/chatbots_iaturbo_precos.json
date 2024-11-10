@@ -1,22 +1,10 @@
 {
   "ConversaComIA": {
     "Nome": "💬 Chatbot de Conversa com IA",
-    "Descricao": "O Chatbot de Conversa com IA transforma seu atendimento, usando inteligência artificial para criar interações naturais e envolventes com seus clientes. Inclui uma página personalizada (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa, além de um código HTML de fácil integração em sites e aplicativos, oferecendo um canal direto, acessível e sempre disponível.<br>Ideal para empresas que buscam um atendimento mais eficiente e suporte inteligente, acessível 24/7.",
+    "Descricao": "<p>Ao optar pelo <strong>Chatbot de Conversa com IA da IATurbo</strong>, você contará com:</p><ul><li><strong>Interações Naturais e Envolventes</strong>: Utilize inteligência artificial avançada para criar conversas fluídas e humanas com seus clientes, garantindo um atendimento personalizado e eficaz.</li><li><strong>Canal Personalizado</strong>: Página exclusiva (ex.: iaturbo.com.br/bots/[seu-chatbot]) com as cores e o logo da sua empresa, reforçando a identidade da marca e a confiança dos clientes.</li><li><strong>Fácil Integração</strong>: Código HTML simples para adicionar o chatbot em sites e aplicativos, oferecendo um canal de comunicação acessível e sempre disponível.</li></ul><p>Ideal para empresas que buscam um atendimento mais eficiente e suporte inteligente, acessível 24/7.</p>",
     "NivelPersonalizacaoConversa": {
       "Nome": "Nível de Personalização da Conversa",
       "Descricao": "Ajusta o comportamento e a lógica de respostas do chatbot conforme as necessidades específicas do seu negócio, com níveis de personalização que ampliam as possibilidades de interação.",
-      "Basico": {
-        "Nome": "Básico",
-        "Descricao": "Respostas diretas e práticas, perfeitas para tirar dúvidas comuns, como horários de funcionamento e informações sobre serviços e produtos de maneira rápida e acessível. Ideal para interações informativas e objetivas.",
-        "Custo": 600,
-        "Tempo": 5
-      },
-      "Padrao": {
-        "Nome": "Padrão",
-        "Descricao": "Interações mais dinâmicas e personalizadas, adaptando-se ao contexto da conversa e trazendo dados em tempo real, como sugestões de produtos e status de pedidos. Uma ótima escolha para empresas que buscam interações com um toque a mais de personalização.",
-        "Custo": 1920,
-        "Tempo": 16
-      },
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Personalização máxima para interações detalhadas e focadas no usuário, usando dados em tempo real para respostas precisas e complexas, como consultas específicas e suporte técnico avançado. Ideal para quem quer um chatbot que seja praticamente um assistente digital.",
@@ -27,23 +15,11 @@
     "SuporteMelhoriaContinua": {
       "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço de suporte e monitoramento contínuo, incluindo melhorias e treinamentos periódicos para que o chatbot esteja sempre atualizado e otimizado.",
-      "Basico": {
-        "Nome": "Básico",
-        "Descricao": "Suporte por e-mail com resposta em até 24 horas úteis. Indicado para tarefas de baixa prioridade e ajustes eventuais ao longo da semana.",
-        "Custo": 240,
-        "Tempo": 2
-      },
-      "Padrao": {
-        "Nome": "Padrão",
-        "Descricao": "Suporte via e-mail e WhatsApp, com resposta em até 4 horas no horário comercial. Indicado para tarefas que exigem acompanhamento mais ágil e ajustes frequentes, além de treinamentos periódicos de novas respostas.",
-        "Custo": 1440,
-        "Tempo": 12
-      },
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial. Além do acompanhamento em eventos críticos, como lançamentos e campanhas, este nível inclui treinamentos contínuos para aprimorar o chatbot, adaptando respostas e funções conforme as necessidades específicas do negócio.",
-        "Custo": 2880,
-        "Tempo": 24
+        "Custo": 1440,
+        "Tempo": 12
       }
     }
   },
@@ -107,29 +83,17 @@
     "SuporteMelhoriaContinua": {
       "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço completo de suporte e monitoramento, com aprimoramentos contínuos para garantir que seu chatbot esteja sempre otimizado e pronto para responder rapidamente.",
-      "Basico": {
-        "Nome": "Básico",
-        "Descricao": "Suporte por e-mail com tempo de resposta em até 24 horas úteis, adequado para ajustes de rotina e monitoramento básico. Ideal para tarefas de baixa complexidade que podem ser agendadas ao longo da semana.",
-        "Custo": 480,
-        "Tempo": 4
-      },
-      "Padrao": {
-        "Nome": "Padrão",
-        "Descricao": "Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis durante o horário comercial, permitindo acompanhamento ágil de solicitações moderadas. Recomendado para quem precisa de uma rotina de suporte mais rápida, com ajustes frequentes e monitoramento ativo.",
-        "Custo": 960,
-        "Tempo": 8
-      },
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com tempo de resposta de até 1 hora no horário comercial. Inclui monitoramento constante e aprimoramentos contínuos, além de um suporte proativo em eventos e períodos críticos, garantindo que o chatbot esteja sempre atualizado e adaptado às necessidades do negócio.",
-        "Custo": 2400,
-        "Tempo": 20
+        "Custo": 1440,
+        "Tempo": 12
       }
     }
   },
   "Multimidia": {
     "Nome": "🎥 Chatbot Multimídia",
-    "Descricao": "O Chatbot Multimídia oferece uma experiência acessível e completa, com recursos que replicam habilidades como ouvir, falar, ver e criar, tornando as interações mais inclusivas e próximas das habilidades humanas.",
+    "Descricao": "<p>Com o <strong>Chatbot Multimídia da IATurbo</strong>, sua empresa terá uma experiência de atendimento que vai além do texto, incluindo:</p><ul><li><strong>Reconhecimento de Voz</strong>: Ouça e entenda comandos de voz dos clientes, permitindo uma interação mais natural e ágil.</li><li><strong>Respostas em Áudio</strong>: Responda com mensagens de voz, humanizando a comunicação e oferecendo mais acessibilidade.</li><li><strong>Interpretação de Imagens</strong>: Capacidade de 'ver' e analisar imagens enviadas pelos clientes, oferecendo respostas contextuais e relevantes.</li><li><strong>Criação Visual</strong>: Gere imagens automaticamente, permitindo uma comunicação visual atrativa e inovadora.</li></ul><p>Ideal para empresas que desejam tornar as interações mais inclusivas e próximas das habilidades humanas, aumentando a satisfação e engajamento dos clientes.</p>",
     "Voz": {
       "Descricao": "Funcionalidades de áudio que permitem ao chatbot ouvir e responder aos usuários de forma acessível e intuitiva.",
       "AudicaoAtiva": {
@@ -141,8 +105,8 @@
       "VozPersonalizada": {
         "Nome": "Voz Personalizada (Texto ➡ Voz)",
         "Descricao": "O chatbot responde com vozes naturais, masculinas e femininas, ajustando o tom para cada interação. E, se preferir, você pode usar a sua própria voz! Ideal para criar uma experiência autêntica e próxima do atendimento humano.",
-        "Custo": 1920,
-        "Tempo": 16
+        "Custo": 2880,
+        "Tempo": 24
       }
     },
     "Imagem": {
@@ -150,36 +114,24 @@
       "VisaoInteligente": {
         "Nome": "Visão Inteligente (Fotos, Imagens e Documentos ➡ Texto)",
         "Descricao": "Dá ao chatbot a habilidade de \"enxergar\" e interpretar arquivos enviados, desde documentos de texto (PDF, DOCX, TXT) e planilhas (XLSX, CSV) até apresentações (PPTX) e imagens (JPEG, PNG). Ideal para um atendimento inclusivo, essa função ajuda a identificar produtos, verificar documentos ou simplificar o compartilhamento de informações.",
-        "Custo": 1200,
-        "Tempo": 10
+        "Custo": 4800,
+        "Tempo": 40
       },
       "CriadorVisual": {
         "Nome": "Criador Visual (Texto ➡ Fotos e Imagens)",
         "Descricao": "Com o Criador Visual, o chatbot transforma descrições textuais em imagens únicas e personalizadas, perfeitas para gerar conteúdos visuais alinhados ao gosto dos usuários.",
-        "Custo": 1800,
-        "Tempo": 15
+        "Custo": 4800,
+        "Tempo": 40
       }
     },
     "SuporteMelhoriaContinua": {
       "Nome": "🛡️ Suporte e Melhoria Contínua",
       "Descricao": "Serviço de suporte e monitoramento contínuo para manter o chatbot Multimídia atualizado, responsivo e pronto para melhorar constantemente sua acessibilidade e capacidades de comunicação.",
-      "Basico": {
-        "Nome": "Básico",
-        "Descricao": "Suporte via e-mail com resposta em até 24 horas úteis. Ideal para demandas de baixa prioridade, com manutenção e atualizações agendadas semanalmente.",
-        "Custo": 480,
-        "Tempo": 4
-      },
-      "Padrao": {
-        "Nome": "Padrão",
-        "Descricao": "Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis. Ideal para garantir qualidade em interações frequentes e atualizações ágeis nas funcionalidades multimídia.",
-        "Custo": 960,
-        "Tempo": 8
-      },
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial e acompanhamento especial em eventos programados, ideal para operações que exigem resposta imediata e continuidade em acessibilidade e interatividade.",
-        "Custo": 1920,
-        "Tempo": 16
+        "Custo": 1200,
+        "Tempo": 10
       }
     }
   }

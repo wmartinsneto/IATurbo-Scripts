@@ -8,23 +8,11 @@ O Chatbot de Conversa com IA transforma seu atendimento, usando inteligência ar
 ### 1.2 Nível de Personalização da Conversa
 Ajusta o comportamento e a lógica de respostas do chatbot conforme as necessidades específicas do seu negócio, com níveis de personalização que ampliam as possibilidades de interação.
 
-#### 1.2.1 Básico
-Respostas diretas e práticas, perfeitas para tirar dúvidas comuns, como horários de funcionamento e informações sobre serviços e produtos de maneira rápida e acessível. Ideal para interações informativas e objetivas.
-
-#### 1.2.2 Padrão
-Interações mais dinâmicas e personalizadas, adaptando-se ao contexto da conversa e trazendo dados em tempo real, como sugestões de produtos e status de pedidos. Uma ótima escolha para empresas que buscam interações com um toque a mais de personalização.
-
 #### 1.2.3 Avançado
 Personalização máxima para interações detalhadas e focadas no usuário, usando dados em tempo real para respostas precisas e complexas, como consultas específicas e suporte técnico avançado. Ideal para quem quer um chatbot que seja praticamente um assistente digital.
 
 ### 1.3 🛡️ Suporte e Melhoria Contínua
 Serviço de suporte e monitoramento contínuo, incluindo melhorias e treinamentos periódicos para que o chatbot esteja sempre atualizado e otimizado.
-
-#### 1.3.1 Básico
-Suporte por e-mail com resposta em até 24 horas úteis. Indicado para tarefas de baixa prioridade e ajustes eventuais ao longo da semana.
-
-#### 1.3.2 Padrão
-Suporte via e-mail e WhatsApp, com resposta em até 4 horas no horário comercial. Indicado para tarefas que exigem acompanhamento mais ágil e ajustes frequentes, além de treinamentos periódicos de novas respostas.
 
 #### 1.3.3 Avançado
 Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial. Além do acompanhamento em eventos críticos, como lançamentos e campanhas, este nível inclui treinamentos contínuos para aprimorar o chatbot, adaptando respostas e funções conforme as necessidades específicas do negócio.
@@ -67,12 +55,6 @@ Integrações feitas sob medida para o que você precisa! Com APIs personalizada
 ### 2.5 🛡️ Suporte e Melhoria Contínua
 Serviço completo de suporte e monitoramento, com aprimoramentos contínuos para garantir que seu chatbot esteja sempre otimizado e pronto para responder rapidamente.
 
-#### 2.5.1 Básico
-Suporte por e-mail com tempo de resposta em até 24 horas úteis, adequado para ajustes de rotina e monitoramento básico. Ideal para tarefas de baixa complexidade que podem ser agendadas ao longo da semana.
-
-#### 2.5.2 Padrão
-Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis durante o horário comercial, permitindo acompanhamento ágil de solicitações moderadas. Recomendado para quem precisa de uma rotina de suporte mais rápida, com ajustes frequentes e monitoramento ativo.
-
 #### 2.5.3 Avançado
 Suporte 24/7 via e-mail e WhatsApp, com tempo de resposta de até 1 hora no horário comercial. Inclui monitoramento constante e aprimoramentos contínuos, além de um suporte proativo em eventos e períodos críticos, garantindo que o chatbot esteja sempre atualizado e adaptado às necessidades do negócio.
 
@@ -101,12 +83,6 @@ Com o Criador Visual, o chatbot transforma descrições textuais em imagens úni
 
 ### 3.4 🛡️ Suporte e Melhoria Contínua
 Serviço de suporte e monitoramento contínuo para manter o chatbot Multimídia atualizado, responsivo e pronto para melhorar constantemente sua acessibilidade e capacidades de comunicação.
-
-#### 3.4.1 Básico
-Suporte via e-mail com resposta em até 24 horas úteis. Ideal para demandas de baixa prioridade, com manutenção e atualizações agendadas semanalmente.
-
-#### 3.4.2 Padrão
-Suporte via e-mail e WhatsApp com resposta em até 4 horas úteis. Ideal para garantir qualidade em interações frequentes e atualizações ágeis nas funcionalidades multimídia.
 
 #### 3.4.3 Avançado
 Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial e acompanhamento especial em eventos programados, ideal para operações que exigem resposta imediata e continuidade em acessibilidade e interatividade.
