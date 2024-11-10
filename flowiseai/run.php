@@ -87,12 +87,12 @@ if ($response === FALSE) {
     die(json_encode(['error' => 'Falha na requisição ao FlowiseAI. Verifique os logs para mais detalhes.']));
 }
 
-log_message("Resposta recebida do FlowiseAI para id: $id.");
+log_message("Resposta recebida de IATurbo para id: $id.");
 
 // Validação da resposta do FlowiseAI
 $response_data = json_decode($response, true);
 if (!$response_data) {
-    log_message("Falha ao decodificar a resposta do FlowiseAI para id: $id");
+    log_message("Falha ao decodificar a resposta de IATurbo para id: $id");
     die(json_encode(['error' => 'Falha ao decodificar a resposta do FlowiseAI.']));
 }
 
