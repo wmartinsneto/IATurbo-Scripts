@@ -11,9 +11,6 @@ $pending_dir = './pending/';
 $completed_dir = './completed/';
 $log_file = './logs/run-' . date('Y-m-d') . '.log';
 
-// Inclui o script trello-message.php para enviar ao Trello
-require_once './trello-message.php';
-
 if (!is_dir($completed_dir)) {
     mkdir($completed_dir, 0777, true);
 }
@@ -173,92 +170,68 @@ $audio_payload = json_encode([
     'id' => $id
 ]);
 
-// Configura a requisição cURL sem bloquar
+// Configura a requisição cURL sem bloquear
 $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
 curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
 curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($audio_ch, CURLOPT_POST, true);
 curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, false);
-curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50); // Tempo de espera mínimo
+curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50);
 curl_setopt($audio_ch, CURLOPT_FORBID_REUSE, true);
-curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200); // Tempo de conexão mínimo
+curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
 
-curl_exec($audio_ch); // Executa a chamada sem esperar pela resposta
+curl_exec($audio_ch);
 curl_close($audio_ch);
 
 log_message("Chamada para generate-audio.php enviada para id: $id.");
 
-// Integração com o Trello - Chama a função `send_to_trello` para enviar a resposta ao Trello
-log_message("Iniciando envio ao Trello para mensagem $id.");
+// Integração com trello_integration.php
+log_message("Iniciando integração com trello_integration.php para mensagem $id.");
 
-$formattedResponse = null;
-try {
-$response_data = json_decode(file_get_contents($completed_file_path), true);
-    log_message('Decoding $response_data["thought"]');
-$decodedTextResponse = json_decode($response_data['thought'], true);
+// Prepara o payload
+$trello_payload = json_encode([
+    'id' => $id
+]);
 
-    log_message('Formatting decodedTextResponse');
-$formattedResponse = formatTrelloContent($id, $decodedTextResponse);
+// Configura a requisição cURL sem bloquear
+$trello_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/trello_integration.php');
+curl_setopt($trello_ch, CURLOPT_POSTFIELDS, $trello_payload);
+curl_setopt($trello_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($trello_ch, CURLOPT_POST, true);
+curl_setopt($trello_ch, CURLOPT_RETURNTRANSFER, false);
+curl_setopt($trello_ch, CURLOPT_TIMEOUT_MS, 50);
+curl_setopt($trello_ch, CURLOPT_FORBID_REUSE, true);
+curl_setopt($trello_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
 
-    log_message('Sending to Trello');
-    send_to_trello([
-    'leadRequestId' => $id, 
-    'leadQuestion' => $pending_data['question'] ?? 'Sem pergunta disponível', 
-    'leadName' => $pending_data['userData']['firstName'] . ' ' . $pending_data['userData']['lastName'],  
-    'source' => $pending_data['source'] ?? 'Desconhecido', 
-    'sessionId' => $pending_data['overrideConfig']['sessionId'], 
-    'userData' => $pending_data['userData'] ?? [],  
-    'formattedResponse' => $formattedResponse
-    ]);
+curl_exec($trello_ch);
+curl_close($trello_ch);
 
-    log_message("Envio ao Trello completo para id: $id.");
-} catch (Exception $e) {
-    log_message("Falha ao enviar ao Trello para id: $id. Erro: " . $e->getMessage());
-}
+log_message("Chamada para trello_integration.php enviada para id: $id.");
 
-// Integração com Slack
-log_message("Iniciando envio de notificação p/ Slack");
-try {
-    $webhookUrl = 'https://hooks.slack.com/services/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';
+// Integração com slack_integration.php
+log_message("Iniciando integração com slack_integration.php para mensagem $id.");
 
-$slackMessage = "Lead no " . $pending_data['source'] . "\n";
-foreach ($pending_data['userData'] as $key => $value) {
-    $slackMessage .= ucfirst($key) . ": $value\n";
-}
-$slackMessage .= "PERGUNTA:\n" . $pending_data['question'] . "\n\n";
-$slackMessage .= "RESPOSTA:\n" . $formattedResponse;
+// Prepara o payload
+$slack_payload = json_encode([
+    'id' => $id
+]);
 
-    // Configura o payload para enviar ao Slack
-    $payload = json_encode([
-        'text' => $slackMessage
-    ]);
+// Configura a requisição cURL sem bloquear
+$slack_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/slack_integration.php');
+curl_setopt($slack_ch, CURLOPT_POSTFIELDS, $slack_payload);
+curl_setopt($slack_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($slack_ch, CURLOPT_POST, true);
+curl_setopt($slack_ch, CURLOPT_RETURNTRANSFER, false);
+curl_setopt($slack_ch, CURLOPT_TIMEOUT_MS, 50);
+curl_setopt($slack_ch, CURLOPT_FORBID_REUSE, true);
+curl_setopt($slack_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
 
-    // Configura as opções de contexto para a requisição HTTP
-    $options = [
-        'http' => [
-            'header'  => "Content-type: application/json\r\n",
-            'method'  => 'POST',
-            'content' => $payload,
-        ]
-    ];
+curl_exec($slack_ch);
+curl_close($slack_ch);
 
-    // Cria o contexto de stream
-    $context = stream_context_create($options);
+log_message("Chamada para slack_integration.php enviada para id: $id.");
 
-    // Envia a requisição ao Slack
-    $result = @file_get_contents($webhookUrl, false, $context);
-
-    // Verifica o resultado e retorna a resposta apropriada
-    if ($result === FALSE) {
-        echo 'Falha ao enviar a mensagem ao Slack.';
-    } else {
-        echo 'Mensagem enviada com sucesso ao Slack.';
-    }
-} catch (Exception $e) {
-    log_message("Falha ao enviar notificação ao Slack. Erro: " . $e->getMessage());
-}
-
-// Retorna 200 OK mesmo em caso de falha no Trello
+// Retorna 200 OK
 http_response_code(200);
-log_message("Resposta retornada com sucesso para id: $id.");
+log_message("Processamento concluído para id: $id.");
 ?>

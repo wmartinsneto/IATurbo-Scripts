@@ -1,4 +1,9 @@
 <?php
+/**
+ * trello_integration.php
+ *
+ * Este script recebe um `id` via POST, carrega os dados correspondentes e envia as informações ao Trello.
+ */
 
 // Chaves de API do Trello
 $apiKey = 'eede912d114a15aacb161506dd170cf5';
@@ -6,16 +11,21 @@ $apiToken = 'ATTA3176dbbbc3c0e5a22bdb3fcba706ac35c9b4b96e930098e562d153b0a5758d6
 $boardId = '669eaa63f0fde49eefa7381a'; // ID do board "Chatbots IATurbo"
 $listId = '669eaa743dce7b9bf018a635'; // ID da lista "Novo Lead"
 
+// Função para registrar logs
+function log_message($message) {
+    $log_file = './logs/trello_integration-' . date('Y-m-d') . '.log';
+    $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
+    file_put_contents($log_file, $log_entry, FILE_APPEND);
+}
+
 // Função para registrar logs de sucesso
-function registrarLogSucesso($mensagem)
-{
+function registrarLogSucesso($mensagem) {
     $caminhoLog = './logs/trello_log_sucesso.txt';
     file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $mensagem . "\n", FILE_APPEND);
 }
 
 // Função para registrar logs de erro
-function registrarLogErro($mensagem, $sessionId = null)
-{
+function registrarLogErro($mensagem, $sessionId = null) {
     $dataHora = date("Ymd_His");
     $milissegundos = substr((string)microtime(), 2, 3);
     $sessionIdPart = $sessionId ? "_$sessionId" : "";
@@ -25,24 +35,21 @@ function registrarLogErro($mensagem, $sessionId = null)
 }
 
 // Função para logar todos os parâmetros de entrada recebidos do `run.php`
-function logInputParams($data)
-{
+function logInputParams($data) {
     $caminhoLog = './logs/trello_input_log.txt';
     $logMensagem = "Parâmetros recebidos do `run.php`:\n" . print_r($data, true) . "\n";
     file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $logMensagem . "\n", FILE_APPEND);
 }
 
 // Função para logar todos os parâmetros enviados para o Trello
-function logOutputParams($params)
-{
+function logOutputParams($params) {
     $caminhoLog = './logs/trello_output_log.txt';
     $logMensagem = "Parâmetros enviados para o Trello:\n" . print_r($params, true) . "\n";
     file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $logMensagem . "\n", FILE_APPEND);
 }
 
 // Função para buscar um cartão no Trello com base no sessionId
-function searchCard($sessionId, $apiKey, $apiToken, $boardId, &$logPadrao, &$logErro)
-{
+function searchCard($sessionId, $apiKey, $apiToken, $boardId, &$logPadrao, &$logErro) {
     $url = "https://api.trello.com/1/boards/$boardId/cards?key=$apiKey&token=$apiToken";
 
     // Verifica se o sessionId está correto e presente nos logs
@@ -83,8 +90,7 @@ function searchCard($sessionId, $apiKey, $apiToken, $boardId, &$logPadrao, &$log
 }
 
 // Função para criar um novo cartão no Trello
-function createCard($name, $sessionId, $source, $userData, $comment, $apiKey, $apiToken, $listId, &$logPadrao, &$logErro)
-{
+function createCard($name, $sessionId, $source, $userData, $comment, $apiKey, $apiToken, $listId, &$logPadrao, &$logErro) {
     $url = "https://api.trello.com/1/cards?key=$apiKey&token=$apiToken";
     $timestamp = date("Y-m-d H:i:s");
 
@@ -125,8 +131,7 @@ function createCard($name, $sessionId, $source, $userData, $comment, $apiKey, $a
 }
 
 // Função para adicionar um comentário a um cartão no Trello
-function addCommentToCard($cardId, $comment, $apiKey, $apiToken, &$logPadrao, &$logErro)
-{
+function addCommentToCard($cardId, $comment, $apiKey, $apiToken, &$logPadrao, &$logErro) {
     $url = "https://api.trello.com/1/cards/$cardId/actions/comments?key=$apiKey&token=$apiToken";
     $data = array(
         'text' => $comment
@@ -152,8 +157,7 @@ function addCommentToCard($cardId, $comment, $apiKey, $apiToken, &$logPadrao, &$
 }
 
 // Função para gerar o nome do cartão de forma flexível
-function generateCardName($source, $userData, $sessionId)
-{
+function generateCardName($source, $userData, $sessionId) {
     // Checa se existe firstName e lastName
     if (!empty($userData['firstName']) && !empty($userData['lastName'])) {
         return "[$source]: {$userData['firstName']} {$userData['lastName']}";
@@ -173,8 +177,7 @@ function generateCardName($source, $userData, $sessionId)
 }
 
 // Função para criar ou atualizar um cartão no Trello
-function send_to_trello($data)
-{
+function send_to_trello($data) {
     global $apiKey, $apiToken, $boardId, $listId;
 
     // Verifica se o sessionId foi passado corretamente
@@ -183,7 +186,7 @@ function send_to_trello($data)
     } else {
         $errorMsg = "Session ID não encontrado.";
         registrarLogErro($errorMsg, null);
-        log_message($errorMsg, 'error');  // Log detalhado
+        log_message($errorMsg);  // Log detalhado
         return;
     }
 
@@ -214,7 +217,7 @@ function send_to_trello($data)
     // Inicia os logs para criar ou atualizar o cartão
     $logPadrao = "";
     $logErro = "";
-    log_message("Buscando ou criando cartão no Trello para sessionId: $sessionId", 'info');  // Log detalhado
+    log_message("Buscando ou criando cartão no Trello para sessionId: $sessionId");  // Log detalhado
 
     // Busca o cartão no Trello pelo sessionId do payload
     $searchResult = searchCard($sessionId, $apiKey, $apiToken, $boardId, $logPadrao, $logErro);
@@ -222,41 +225,37 @@ function send_to_trello($data)
     if ($searchResult) {
         // Se o card existe, adiciona um comentário
         $cardId = $searchResult['id'];
-        log_message("Cartão encontrado para sessionId: $sessionId. ID do cartão: $cardId", 'info');  // Log detalhado
+        log_message("Cartão encontrado para sessionId: $sessionId. ID do cartão: $cardId");  // Log detalhado
 
         $resultComment = addCommentToCard($cardId, $comment, $apiKey, $apiToken, $logPadrao, $logErro);
         if ($resultComment) {
             registrarLogSucesso($logPadrao);
-            log_message("Comentário adicionado ao cartão $cardId com sucesso.", 'info');  // Log detalhado
+            log_message("Comentário adicionado ao cartão $cardId com sucesso.");  // Log detalhado
         } else {
             $logErro .= "Erro ao adicionar comentário ao card existente.\n";
             registrarLogErro($logErro, $sessionId);
-            log_message("Falha ao adicionar comentário ao cartão $cardId. Erro: $logErro", 'error');  // Log detalhado
+            log_message("Falha ao adicionar comentário ao cartão $cardId. Erro: $logErro");  // Log detalhado
         }
         echo 'Comentário adicionado ao card existente.';
     } else {
         // Se o card não existe, cria um novo card com o nome gerado
-        log_message("Cartão não encontrado para sessionId: $sessionId. Criando novo cartão.", 'info');  // Log detalhado
+        log_message("Cartão não encontrado para sessionId: $sessionId. Criando novo cartão.");  // Log detalhado
 
         $resultCreate = createCard($cardName, $sessionId, $source, $userData, $comment, $apiKey, $apiToken, $listId, $logPadrao, $logErro);
         if ($resultCreate) {
             registrarLogSucesso($logPadrao);
-            log_message("Novo cartão criado com sucesso para sessionId: $sessionId.", 'info');  // Log detalhado
+            log_message("Novo cartão criado com sucesso para sessionId: $sessionId.");  // Log detalhado
         } else {
             $logErro .= "Erro ao criar novo card.\n";
             registrarLogErro($logErro, $sessionId);
-            log_message("Falha ao criar novo cartão para sessionId: $sessionId. Erro: $logErro", 'error');  // Log detalhado
+            log_message("Falha ao criar novo cartão para sessionId: $sessionId. Erro: $logErro");  // Log detalhado
         }
         echo 'Novo card criado com sucesso.';
     }
 }
 
-
 // Função para formatar o conteúdo com base no JSON_SCHEMA
-
-function formatTrelloContent($id, $response_data)
-{
-
+function formatTrelloContent($id, $response_data) {
     log_message("Iniciando formatTrelloContent. Id = $id");
     $formatted_content = "";
 
@@ -283,7 +282,51 @@ function formatTrelloContent($id, $response_data)
     }
     log_message("formatted_content = $formatted_content");
 
-
-
     return $formatted_content;
 }
+
+// Recebe os parâmetros do JSON de entrada
+$data = json_decode(file_get_contents('php://input'), true);
+$id = $data['id'] ?? null;
+
+if (!$id) {
+    log_message("Parâmetro 'id' não fornecido.");
+    die(json_encode(['error' => 'Parâmetro "id" não fornecido.']));
+}
+
+log_message("Iniciando integração com Trello para id: $id.");
+
+// Caminhos dos arquivos
+$completed_file_path = './completed/' . $id . '.json';
+
+// Verifica se os arquivos existem
+if (!file_exists($completed_file_path)) {
+    log_message("Arquivo não encontrado: $completed_file_path");
+    die(json_encode(['error' => "Arquivo não encontrado: $completed_file_path"]));
+}
+
+// Carrega os dados necessários
+$response_data = json_decode(file_get_contents($completed_file_path), true);
+
+// Prepara os dados
+$decodedTextResponse = json_decode($response_data['thought'], true);
+$formattedResponse = formatTrelloContent($id, $decodedTextResponse);
+
+// Envia para o Trello
+try {
+    send_to_trello([
+        'leadRequestId' => $id,
+        'leadQuestion' => $response_data['question'] ?? 'Sem pergunta disponível',
+        'leadName' => $response_data['userData']['firstName'] . ' ' . $response_data['userData']['lastName'],
+        'source' => $response_data['source'] ?? 'Desconhecido',
+        'sessionId' => $response_data['overrideConfig']['sessionId'],
+        'userData' => $response_data['userData'] ?? [],
+        'formattedResponse' => $formattedResponse
+    ]);
+    log_message("Envio ao Trello concluído para id: $id.");
+} catch (Exception $e) {
+    log_message("Falha ao enviar para o Trello para id: $id. Erro: " . $e->getMessage());
+}
+
+// Retorna 200 OK
+http_response_code(200);
