@@ -5,6 +5,8 @@
  * Este script recebe um `id` via POST, carrega os dados correspondentes e envia as informações ao Trello.
  */
 
+include 'helpers.php';
+
 // Chaves de API do Trello
 $apiKey = 'eede912d114a15aacb161506dd170cf5';
 $apiToken = 'ATTA3176dbbbc3c0e5a22bdb3fcba706ac35c9b4b96e930098e562d153b0a5758d6718848C8E';
@@ -254,37 +256,6 @@ function send_to_trello($data) {
     }
 }
 
-// Função para formatar o conteúdo com base no JSON_SCHEMA
-function formatTrelloContent($id, $response_data) {
-    log_message("Iniciando formatTrelloContent. Id = $id");
-    $formatted_content = "";
-
-    // Mensagem de Texto
-    if (!empty($response_data['mensagemDeTexto'])) {
-        $formatted_content .= "### Mensagem de Texto\n";
-        $formatted_content .= $response_data['mensagemDeTexto'] . "\n\n";
-        log_message("Mensagem de Texto formatada.");
-    }
-
-    // Mensagem de Voz
-    if (!empty($response_data['mensagemDeVoz'])) {
-        $formatted_content .= "### Mensagem de Voz\n";
-        $formatted_content .= $response_data['mensagemDeVoz'] . "\n\n";
-        $formatted_content .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
-        log_message("Mensagem de Voz formatada.");
-    }
-
-    // Informações de Controle
-    if (!empty($response_data['mensagemDeControle'])) {
-        $formatted_content .= "### Mensagem de Controle\n";
-        $formatted_content .= $response_data['mensagemDeControle'] . "\n\n";
-        log_message("Mensagem de Controle formatada.");
-    }
-    log_message("formatted_content = $formatted_content");
-
-    return $formatted_content;
-}
-
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? null;
@@ -308,9 +279,17 @@ if (!file_exists($completed_file_path)) {
 // Carrega os dados necessários
 $response_data = json_decode(file_get_contents($completed_file_path), true);
 
+// Processa todos os pensamentos do agente
+$agent_thoughts = $response_data['agent_thoughts'] ?? [];
+$mensagemDeTexto = getMensagemDeTexto($agent_thoughts);
+$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+$mensagemDeControle = getMensagemDeControle($agent_thoughts);
+
 // Prepara os dados
-$decodedTextResponse = json_decode($response_data['thought'], true);
-$formattedResponse = formatTrelloContent($id, $decodedTextResponse);
+$formattedResponse = "### Mensagem de Texto\n" . $mensagemDeTexto . "\n\n";
+$formattedResponse .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
+$formattedResponse .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
+$formattedResponse .= "### Mensagem de Controle\n" . $mensagemDeControle . "\n\n";
 
 // Envia para o Trello
 try {
@@ -330,3 +309,4 @@ try {
 
 // Retorna 200 OK
 http_response_code(200);
+?>

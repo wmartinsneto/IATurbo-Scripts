@@ -5,6 +5,8 @@
  * Este script recebe um `id` via POST, carrega os dados correspondentes e envia uma notificação ao Slack.
  */
 
+include 'helpers.php';
+
 // Função para registrar logs
 function log_message($message) {
     $log_file = './logs/slack_integration-' . date('Y-m-d') . '.log';
@@ -42,10 +44,10 @@ foreach ($response_data['userData'] as $key => $value) {
 $slackMessage .= "PERGUNTA:\n" . ($response_data['question'] ?? 'Sem pergunta') . "\n\n";
 
 // Processa todos os pensamentos do agente
-$decodedTextResponse = json_decode($response_data['thought'], true);
-$mensagemDeTexto = $decodedTextResponse['mensagemDeTexto'] ?? 'Sem resposta';
-$mensagemDeVoz = $decodedTextResponse['mensagemDeVoz'] ?? 'Sem resposta';
-$mensagemDeControle = $decodedTextResponse['mensagemDeControle'] ?? 'Sem mensagem de controle';
+$agent_thoughts = $response_data['agent_thoughts'] ?? [];
+$mensagemDeTexto = getMensagemDeTexto($agent_thoughts);
+$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+$mensagemDeControle = getMensagemDeControle($agent_thoughts);
 
 $slackMessage .= "### Mensagem de Texto\n" . $mensagemDeTexto . "\n\n";
 $slackMessage .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
@@ -82,4 +84,5 @@ try {
 
 // Retorna 200 OK
 http_response_code(200);
+log_message("Processamento concluído para id: $id.");
 ?>

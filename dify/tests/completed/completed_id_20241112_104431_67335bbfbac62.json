@@ -1,0 +1,26 @@
+{
+    "question": "Iniciando conversa via automa\u00e7\u00e3o no WhatsApp. Seguem os dados fornecidos pelo WhatsApp. Primeiro Nome = { Waldomiro Martins }. Sobrenome = { Neto }. N\u00famero do WhatsApp = { +5511945701184 }. Email = {  }. Primeira mensagem do lead = { ol\u00e1 }. Saude o lead utilizando estas informa\u00e7\u00f5es fornecidas pelo WhatsApp.",
+    "source": "WhatsApp",
+    "overrideConfig": {
+        "sessionId": "123456"
+    },
+    "userData": {
+        "firstName": "Waldomiro Martins",
+        "lastName": "Neto",
+        "phoneNumber": "+5511945701184",
+        "email": ""
+    },
+    "event": "agent_thought",
+    "conversation_id": "7622bd97-b464-4748-ac64-749ee6912749",
+    "message_id": "7e6bfd27-93cd-4724-be3f-da204cfdf5b4",
+    "created_at": 1731419418,
+    "task_id": "c3715480-63ff-457d-ae4b-bbdef1f30431",
+    "id": "bd1f02af-85e3-4714-b946-d20db9226c5b",
+    "position": 1,
+    "thought": "{\"mensagemDeTexto\":\"Oi, *Waldomiro*! \ud83d\ude0a Sou a IARA, a assistente super inteligente dos Chatbots IATurbo! Como posso ajudar voc\u00ea hoje? Se puder me contar um pouco sobre os desafios que enfrenta no atendimento ao cliente, ficarei feliz em sugerir algumas solu\u00e7\u00f5es incr\u00edveis!\",\"mensagemDeVoz\":\"Ol\u00e1, Waldomiro! Aqui \u00e9 a IARA da IATurbo. Estou aqui para ajudar com qualquer d\u00favida ou desafio que voc\u00ea tenha. Vamos conversar sobre como podemos melhorar o seu atendimento ao cliente?\",\"mensagemDeControle\":\"1. **Temperatura e explica\u00e7\u00e3o**: 5 - O lead est\u00e1 come\u00e7ando a intera\u00e7\u00e3o de forma neutra com um simples \\\"ol\u00e1\\\".\\n2. **Etapa SPIN Selling e explica\u00e7\u00e3o**: '1. Situa\u00e7\u00e3o' - A etapa inicial \u00e9 entender o contexto do lead e suas necessidades.\\n3. **Etapa do Agendamento e explica\u00e7\u00e3o**: 'N\/A' - Ainda n\u00e3o estamos no processo de agendamento.\\n4. **Etapa da Cria\u00e7\u00e3o de Or\u00e7amento**: 'N\/A' - N\u00e3o estamos na fase de cria\u00e7\u00e3o de or\u00e7amento.\\n5. **An\u00e1lise da copy**: Uso de linguagem amig\u00e1vel e acolhedora para iniciar a conversa.\\n6. **An\u00e1lise de humaniza\u00e7\u00e3o**: Uso do nome do lead para personalizar a intera\u00e7\u00e3o e criar uma conex\u00e3o mais pr\u00f3xima.\\n7. **Emo\u00e7\u00e3o principal e intensidade + outras emo\u00e7\u00f5es e intensidade na mensagem da IARA**: Amig\u00e1vel (intensidade 7), acolhedora (intensidade 6).\\n8. **Emo\u00e7\u00e3o principal e intensidade + outras emo\u00e7\u00f5es e intensidade na mensagem do lead**: Neutra (intensidade 5).\\n9. **Sugest\u00e3o para o vendedor**: Continuar explorando as necessidades do lead para identificar oportunidades espec\u00edficas onde os chatbots podem ajudar.\\n10. **Ferramentas utilizadas**: Nenhuma ferramenta adicional foi utilizada nesta resposta.\"}",
+    "observation": "",
+    "tool": "",
+    "tool_labels": [],
+    "tool_input": "",
+    "message_files": []
+}

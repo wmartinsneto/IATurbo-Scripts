@@ -34,28 +34,18 @@
  */
 
 $pending_dir = './pending/';
-$log_file = './logs/request-' . date('Y-m-d') . '.log';
+
+include 'helpers.php';
 
 if (!is_dir($pending_dir)) {
     mkdir($pending_dir, 0777, true);
-}
-
-if (!is_dir(dirname($log_file))) {
-    mkdir(dirname($log_file), 0777, true);
-}
-
-// Função para registrar logs
-function log_message($message) {
-    global $log_file;
-    $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
-    file_put_contents($log_file, $log_entry, FILE_APPEND);
 }
 
 // Recebe o JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!$data) {
-    log_message("Erro: JSON de entrada inválido.");
+    log_message('request', 'error', "JSON de entrada inválido.");
     die(json_encode(['error' => 'JSON de entrada inválido.']));
 }
 
@@ -64,7 +54,7 @@ $request_id = 'id_' . date('Ymd_His') . '_' . uniqid();
 
 // Salva os dados na pasta ./pending
 file_put_contents($pending_dir . $request_id . '.json', json_encode($data));
-log_message("ID gerado: $request_id - Dados salvos em ./pending/$request_id.json");
+log_message('request', 'info', "ID gerado: $request_id - Dados salvos em ./pending/$request_id.json");
 
 // Retorna o id para que o processo possa ser monitorado
 echo json_encode(['id' => $request_id]);
