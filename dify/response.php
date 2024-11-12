@@ -41,33 +41,80 @@ $completed_data = json_decode(file_get_contents($completed_file_path), true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     log_message("Erro ao decodificar JSON para o id: $id");
     header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o JSON de thought']);
+    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o JSON completado']);
     exit;
 }
 
-// Decodifica o campo "thought"
-$parsed_thought = json_decode($completed_data['thought'], true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    log_message("Erro ao decodificar o campo thought para o id: $id");
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o campo thought']);
-    exit;
+// Função para obter todas as mensagens de texto
+function getMensagemDeTexto($agent_thoughts) {
+    $mensagemDeTexto = '';
+    foreach ($agent_thoughts as $thought) {
+        $thought_text = $thought['thought'] ?? '';
+        if (!$thought_text) {
+            continue;
+        }
+        $parsed_thought = json_decode($thought_text, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            log_message("Erro ao decodificar o pensamento: " . json_last_error_msg());
+            continue;
+        }
+        $mensagemDeTexto .= ($parsed_thought['mensagemDeTexto'] ?? '') . "\n\n";
+    }
+    return trim($mensagemDeTexto);
 }
 
-// Combina os dados do arquivo completado com os dados decodificados do campo "thought"
-$response_data = array_merge($completed_data, $parsed_thought);
+// Função para obter todas as mensagens de voz
+function getMensagemDeVoz($agent_thoughts) {
+    $mensagemDeVoz = '';
+    foreach ($agent_thoughts as $thought) {
+        $thought_text = $thought['thought'] ?? '';
+        if (!$thought_text) {
+            continue;
+        }
+        $parsed_thought = json_decode($thought_text, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            log_message("Erro ao decodificar o pensamento: " . json_last_error_msg());
+            continue;
+        }
+        $mensagemDeVoz .= ($parsed_thought['mensagemDeVoz'] ?? '') . "\n\n";
+    }
+    return trim($mensagemDeVoz);
+}
 
-// Remove o campo "thought" original
-unset($response_data['thought']);
+// Função para obter todas as mensagens de controle
+function getMensagemDeControle($agent_thoughts) {
+    $mensagemDeControle = '';
+    foreach ($agent_thoughts as $thought) {
+        $thought_text = $thought['thought'] ?? '';
+        if (!$thought_text) {
+            continue;
+        }
+        $parsed_thought = json_decode($thought_text, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            log_message("Erro ao decodificar o pensamento: " . json_last_error_msg());
+            continue;
+        }
+        $mensagemDeControle .= ($parsed_thought['mensagemDeControle'] ?? '') . "\n\n";
+    }
+    return trim($mensagemDeControle);
+}
 
-// Adiciona o status "completed"
-$response_data['status'] = 'completed';
+// Processa todos os pensamentos do agente
+$agent_thoughts = $completed_data['agent_thoughts'] ?? [];
+$mensagemDeTexto = getMensagemDeTexto($agent_thoughts);
+$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+$mensagemDeControle = getMensagemDeControle($agent_thoughts);
 
-// Log the completion
+// Adiciona as novas mensagens ao completed_data
+$completed_data['mensagemDeTexto'] = $mensagemDeTexto;
+$completed_data['mensagemDeVoz'] = $mensagemDeVoz;
+$completed_data['mensagemDeControle'] = $mensagemDeControle;
+$completed_data['status'] = 'completed';
+
+// Log da conclusão
 log_message("Resposta completada para o id: $id");
 
-// Retorna o conteúdo do arquivo JSON
+// Retorna a resposta JSON
 header('Content-Type: application/json');
-echo json_encode($response_data);
+echo json_encode($completed_data);
 ?>
