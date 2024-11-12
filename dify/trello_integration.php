@@ -13,41 +13,110 @@ $apiToken = 'ATTA3176dbbbc3c0e5a22bdb3fcba706ac35c9b4b96e930098e562d153b0a5758d6
 $boardId = '669eaa63f0fde49eefa7381a'; // ID do board "Chatbots IATurbo"
 $listId = '669eaa743dce7b9bf018a635'; // ID da lista "Novo Lead"
 
-// Função para registrar logs
-function log_message($message) {
-    $log_file = './logs/trello_integration-' . date('Y-m-d') . '.log';
-    $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
-    file_put_contents($log_file, $log_entry, FILE_APPEND);
+// Recebe os parâmetros do JSON de entrada
+$data = json_decode(file_get_contents('php://input'), true);
+$id = $data['id'] ?? null;
+
+if (!$id) {
+    log_message('trello_integration', 'error', "Parâmetro 'id' não fornecido.");
+    die(json_encode(['error' => 'Parâmetro "id" não fornecido.']));
 }
 
-// Função para registrar logs de sucesso
-function registrarLogSucesso($mensagem) {
-    $caminhoLog = './logs/trello_log_sucesso.txt';
-    file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $mensagem . "\n", FILE_APPEND);
+log_message('trello_integration', 'info', "Iniciando integração com Trello para id: $id.");
+
+// Caminhos dos arquivos
+$completed_file_path = './completed/' . $id . '.json';
+
+// Verifica se os arquivos existem
+if (!file_exists($completed_file_path)) {
+    log_message('trello_integration', 'error', "Arquivo não encontrado: $completed_file_path");
+    die(json_encode(['error' => "Arquivo não encontrado: $completed_file_path"]));
 }
 
-// Função para registrar logs de erro
-function registrarLogErro($mensagem, $sessionId = null) {
-    $dataHora = date("Ymd_His");
-    $milissegundos = substr((string)microtime(), 2, 3);
-    $sessionIdPart = $sessionId ? "_$sessionId" : "";
-    $nomeArquivo = "trello_log_erro_{$dataHora}_{$milissegundos}{$sessionIdPart}.txt";
-    $caminhoLog = './logs/' . $nomeArquivo;
-    file_put_contents($caminhoLog, $mensagem);
-}
+// Carrega os dados necessários
+$response_data = json_decode(file_get_contents($completed_file_path), true);
 
-// Função para logar todos os parâmetros de entrada recebidos do `run.php`
-function logInputParams($data) {
-    $caminhoLog = './logs/trello_input_log.txt';
-    $logMensagem = "Parâmetros recebidos do `run.php`:\n" . print_r($data, true) . "\n";
-    file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $logMensagem . "\n", FILE_APPEND);
-}
+// Processa todos os pensamentos do agente
+$agent_thoughts = $response_data['agent_thoughts'] ?? [];
+$mensagemDeTexto = getMensagemDeTexto($agent_thoughts);
+$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+$mensagemDeControle = getMensagemDeControle($agent_thoughts);
 
-// Função para logar todos os parâmetros enviados para o Trello
-function logOutputParams($params) {
-    $caminhoLog = './logs/trello_output_log.txt';
-    $logMensagem = "Parâmetros enviados para o Trello:\n" . print_r($params, true) . "\n";
-    file_put_contents($caminhoLog, date("Y-m-d H:i:s") . " - " . $logMensagem . "\n", FILE_APPEND);
+// Prepara os dados
+$formattedResponse = "### Mensagem de Texto\n" . $mensagemDeTexto . "\n\n";
+$formattedResponse .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
+$formattedResponse .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
+$formattedResponse .= "### Mensagem de Controle\n" . $mensagemDeControle . "\n\n";
+
+// Função para criar ou atualizar um cartão no Trello
+function send_to_trello($data) {
+    global $apiKey, $apiToken, $boardId, $listId;
+
+    // Verifica se o sessionId foi passado corretamente
+    if (isset($data['sessionId']) && !empty($data['sessionId'])) {
+        $sessionId = $data['sessionId'];
+    } else {
+        $errorMsg = "Session ID não encontrado.";
+        log_message('trello_integration', 'error', $errorMsg);
+        return;
+    }
+
+    // Loga todos os parâmetros de entrada
+    log_message('trello_integration', 'info', "Parâmetros recebidos: " . print_r($data, true));
+
+    $source = $data['source'];
+    $userData = $data['userData'];
+    $question = $data['leadQuestion']; // Pergunta do lead
+    $formattedResponse = $data['formattedResponse']; // Resposta formatada para o Trello
+
+    // Monta o conteúdo do comentário
+    $comment = "### Pergunta do Lead:\n$question\n\n";
+    $comment .= "**Resposta do Chatbot**:\n$formattedResponse\n\n";
+
+    // Loga os parâmetros de saída antes de enviá-los ao Trello
+    log_message('trello_integration', 'info', "Parâmetros enviados para o Trello: " . print_r([
+        'sessionId' => $sessionId,
+        'source' => $source,
+        'userData' => $userData,
+        'question' => $question,
+        'formattedResponse' => $formattedResponse
+    ], true));
+
+    // Gera o nome do cartão baseado na lógica de flexibilidade
+    $cardName = generateCardName($source, $userData, $sessionId);
+
+    // Inicia os logs para criar ou atualizar o cartão
+    $logPadrao = "";
+    $logErro = "";
+    log_message('trello_integration', 'info', "Buscando ou criando cartão no Trello para sessionId: $sessionId");
+
+    // Busca o cartão no Trello pelo sessionId do payload
+    $searchResult = searchCard($sessionId, $apiKey, $apiToken, $boardId, $logPadrao, $logErro);
+
+    if ($searchResult) {
+        // Se o card existe, adiciona um comentário
+        $cardId = $searchResult['id'];
+        log_message('trello_integration', 'info', "Cartão encontrado para sessionId: $sessionId. ID do cartão: $cardId");
+
+        $resultComment = addCommentToCard($cardId, $comment, $apiKey, $apiToken, $logPadrao, $logErro);
+        if ($resultComment) {
+            log_message('trello_integration', 'info', "Comentário adicionado ao cartão $cardId com sucesso.");
+        } else {
+            $logErro .= "Erro ao adicionar comentário ao card existente.\n";
+            log_message('trello_integration', 'error', $logErro);
+        }
+    } else {
+        // Se o card não existe, cria um novo card com o nome gerado
+        log_message('trello_integration', 'info', "Cartão não encontrado para sessionId: $sessionId. Criando novo cartão.");
+
+        $resultCreate = createCard($cardName, $sessionId, $source, $userData, $comment, $apiKey, $apiToken, $listId, $logPadrao, $logErro);
+        if ($resultCreate) {
+            log_message('trello_integration', 'info', "Novo cartão criado com sucesso para sessionId: $sessionId.");
+        } else {
+            $logErro .= "Erro ao criar novo card.\n";
+            log_message('trello_integration', 'error', $logErro);
+        }
+    }
 }
 
 // Função para buscar um cartão no Trello com base no sessionId
@@ -178,101 +247,23 @@ function generateCardName($source, $userData, $sessionId) {
     }
 }
 
-// Função para criar ou atualizar um cartão no Trello
-function send_to_trello($data) {
-    global $apiKey, $apiToken, $boardId, $listId;
-
-    // Verifica se o sessionId foi passado corretamente
-    if (isset($data['sessionId']) && !empty($data['sessionId'])) {
-        $sessionId = $data['sessionId'];
-    } else {
-        $errorMsg = "Session ID não encontrado.";
-        registrarLogErro($errorMsg, null);
-        log_message($errorMsg);  // Log detalhado
-        return;
-    }
-
-    // Loga todos os parâmetros de entrada
-    logInputParams($data);
-
-    $source = $data['source'];
-    $userData = $data['userData'];
-    $question = $data['leadQuestion']; // Pergunta do lead
-    $formattedResponse = $data['formattedResponse']; // Resposta formatada para o Trello
-
-    // Monta o conteúdo do comentário
-    $comment = "### Pergunta do Lead:\n$question\n\n";
-    $comment .= "**Resposta do Chatbot**:\n$formattedResponse\n\n";
-
-    // Loga os parâmetros de saída antes de enviá-los ao Trello
-    logOutputParams([
-        'sessionId' => $sessionId,
-        'source' => $source,
-        'userData' => $userData,
-        'question' => $question,
-        'formattedResponse' => $formattedResponse
-    ]);
-
-    // Gera o nome do cartão baseado na lógica de flexibilidade
-    $cardName = generateCardName($source, $userData, $sessionId);
-
-    // Inicia os logs para criar ou atualizar o cartão
-    $logPadrao = "";
-    $logErro = "";
-    log_message("Buscando ou criando cartão no Trello para sessionId: $sessionId");  // Log detalhado
-
-    // Busca o cartão no Trello pelo sessionId do payload
-    $searchResult = searchCard($sessionId, $apiKey, $apiToken, $boardId, $logPadrao, $logErro);
-
-    if ($searchResult) {
-        // Se o card existe, adiciona um comentário
-        $cardId = $searchResult['id'];
-        log_message("Cartão encontrado para sessionId: $sessionId. ID do cartão: $cardId");  // Log detalhado
-
-        $resultComment = addCommentToCard($cardId, $comment, $apiKey, $apiToken, $logPadrao, $logErro);
-        if ($resultComment) {
-            registrarLogSucesso($logPadrao);
-            log_message("Comentário adicionado ao cartão $cardId com sucesso.");  // Log detalhado
-        } else {
-            $logErro .= "Erro ao adicionar comentário ao card existente.\n";
-            registrarLogErro($logErro, $sessionId);
-            log_message("Falha ao adicionar comentário ao cartão $cardId. Erro: $logErro");  // Log detalhado
-        }
-        echo 'Comentário adicionado ao card existente.';
-    } else {
-        // Se o card não existe, cria um novo card com o nome gerado
-        log_message("Cartão não encontrado para sessionId: $sessionId. Criando novo cartão.");  // Log detalhado
-
-        $resultCreate = createCard($cardName, $sessionId, $source, $userData, $comment, $apiKey, $apiToken, $listId, $logPadrao, $logErro);
-        if ($resultCreate) {
-            registrarLogSucesso($logPadrao);
-            log_message("Novo cartão criado com sucesso para sessionId: $sessionId.");  // Log detalhado
-        } else {
-            $logErro .= "Erro ao criar novo card.\n";
-            registrarLogErro($logErro, $sessionId);
-            log_message("Falha ao criar novo cartão para sessionId: $sessionId. Erro: $logErro");  // Log detalhado
-        }
-        echo 'Novo card criado com sucesso.';
-    }
-}
-
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? null;
 
 if (!$id) {
-    log_message("Parâmetro 'id' não fornecido.");
+    log_message('trello_integration', 'error', "Parâmetro 'id' não fornecido.");
     die(json_encode(['error' => 'Parâmetro "id" não fornecido.']));
 }
 
-log_message("Iniciando integração com Trello para id: $id.");
+log_message('trello_integration', 'info', "Iniciando integração com Trello para id: $id.");
 
 // Caminhos dos arquivos
 $completed_file_path = './completed/' . $id . '.json';
 
 // Verifica se os arquivos existem
 if (!file_exists($completed_file_path)) {
-    log_message("Arquivo não encontrado: $completed_file_path");
+    log_message('trello_integration', 'error', "Arquivo não encontrado: $completed_file_path");
     die(json_encode(['error' => "Arquivo não encontrado: $completed_file_path"]));
 }
 
@@ -302,9 +293,9 @@ try {
         'userData' => $response_data['userData'] ?? [],
         'formattedResponse' => $formattedResponse
     ]);
-    log_message("Envio ao Trello concluído para id: $id.");
+    log_message('trello_integration', 'info', "Envio ao Trello concluído para id: $id.");
 } catch (Exception $e) {
-    log_message("Falha ao enviar para o Trello para id: $id. Erro: " . $e->getMessage());
+    log_message('trello_integration', 'error', "Falha ao enviar para o Trello para id: $id. Erro: " . $e->getMessage());
 }
 
 // Retorna 200 OK
