@@ -7,30 +7,23 @@
 
 include 'helpers.php';
 
-// Função para registrar logs
-function log_message($message) {
-    $log_file = './logs/slack_integration-' . date('Y-m-d') . '.log';
-    $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
-    file_put_contents($log_file, $log_entry, FILE_APPEND);
-}
-
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? null;
 
 if (!$id) {
-    log_message("Parâmetro 'id' não fornecido.");
+    log_message('slack_integration', 'error', "Parâmetro 'id' não fornecido.");
     die(json_encode(['error' => 'Parâmetro "id" não fornecido.']));
 }
 
-log_message("Iniciando integração com Slack para id: $id.");
+log_message('slack_integration', 'info', "Iniciando integração com Slack para id: $id.");
 
 // Caminhos dos arquivos
 $completed_file_path = './completed/' . $id . '.json';
 
 // Verifica se os arquivos existem
 if (!file_exists($completed_file_path)) {
-    log_message("Arquivo não encontrado: $completed_file_path");
+    log_message('slack_integration', 'error', "Arquivo não encontrado: $completed_file_path");
     die(json_encode(['error' => "Arquivo não encontrado: $completed_file_path"]));
 }
 
@@ -54,7 +47,7 @@ $slackMessage .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
 $slackMessage .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
 $slackMessage .= "### Mensagem de Controle\n" . $mensagemDeControle . "\n\n";
 
-log_message("Mensagem para Slack: " . $slackMessage);
+log_message('slack_integration', 'info', "Mensagem para Slack: " . $slackMessage);
 
 try {
     $webhookUrl = 'https://hooks.slack.com/services/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';
@@ -74,15 +67,15 @@ try {
 
     if ($result === FALSE) {
         $error = error_get_last();
-        log_message("Falha ao enviar a mensagem ao Slack para id: $id. Erro: " . $error['message']);
+        log_message('slack_integration', 'error', "Falha ao enviar a mensagem ao Slack para id: $id. Erro: " . $error['message']);
     } else {
-        log_message("Mensagem enviada com sucesso ao Slack para id: $id.");
+        log_message('slack_integration', 'info', "Mensagem enviada com sucesso ao Slack para id: $id.");
     }
 } catch (Exception $e) {
-    log_message("Erro ao enviar para o Slack para id: $id. Erro: " . $e->getMessage());
+    log_message('slack_integration', 'error', "Erro ao enviar para o Slack para id: $id. Erro: " . $e->getMessage());
 }
 
 // Retorna 200 OK
 http_response_code(200);
-log_message("Processamento concluído para id: $id.");
+log_message('slack_integration', 'info', "Processamento concluído para id: $id.");
 ?>
