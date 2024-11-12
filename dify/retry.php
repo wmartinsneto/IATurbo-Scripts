@@ -183,16 +183,18 @@ function get_conversation_history($retry_url, $dify_key, $id, $pending_data) {
         return false;
     }
 
-    // Adiciona o campo "thought" à resposta
-    $latest_message['thought'] = $latest_message['answer'];
+    // Processa todos os pensamentos do agente
+    $agent_thoughts = $latest_message['agent_thoughts'] ?? [];
+    if (empty($agent_thoughts)) {
+        log_message("Nenhum pensamento do agente encontrado para id: $id");
+        return false;
+    }
 
-    // Combina os dados do arquivo pendente com os dados da resposta
-    $combined_data = array_merge($pending_data, $latest_message);
-
-    // Salva os dados combinados na pasta `./completed`
+    // Salva na pasta completed
     $completed_file_path = $completed_dir . $id . '.json';
-    file_put_contents($completed_file_path, json_encode($combined_data, JSON_PRETTY_PRINT));
-    log_message("Dados combinados salvos em: $completed_file_path");
+    $data_to_save = array_merge($pending_data, ['agent_thoughts' => $agent_thoughts]);
+    file_put_contents($completed_file_path, json_encode($data_to_save, JSON_PRETTY_PRINT));
+    log_message("Dados salvos em: $completed_file_path");
 
     // Retorna 200 OK
     http_response_code(200);

@@ -41,33 +41,47 @@ $completed_data = json_decode(file_get_contents($completed_file_path), true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     log_message("Erro ao decodificar JSON para o id: $id");
     header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o JSON de thought']);
+    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o JSON completado']);
     exit;
 }
 
-// Decodifica o campo "thought"
-$parsed_thought = json_decode($completed_data['thought'], true);
+// Inicializa as variáveis para concatenar as mensagens
+$mensagemDeTexto = '';
+$mensagemDeVoz = '';
+$mensagemDeControle = '';
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    log_message("Erro ao decodificar o campo thought para o id: $id");
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Erro ao decodificar o campo thought']);
-    exit;
+// Itera sobre os pensamentos do agente
+$agent_thoughts = $completed_data['agent_thoughts'] ?? [];
+foreach ($agent_thoughts as $thought) {
+    $thought_text = $thought['thought'] ?? '';
+    if (!$thought_text) {
+        continue;
+    }
+    $parsed_thought = json_decode($thought_text, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message("Erro ao decodificar o pensamento para id: $id, posição: " . ($thought['position'] ?? 'desconhecida'));
+        continue;
+    }
+    $mensagemDeTexto .= ($parsed_thought['mensagemDeTexto'] ?? '') . "\n";
+    $mensagemDeVoz .= ($parsed_thought['mensagemDeVoz'] ?? '') . "\n";
+    $mensagemDeControle .= ($parsed_thought['mensagemDeControle'] ?? '') . "\n";
 }
 
-// Combina os dados do arquivo completado com os dados decodificados do campo "thought"
-$response_data = array_merge($completed_data, $parsed_thought);
+// Constrói os dados de resposta
+$response_data = [
+    'status' => 'completed',
+    'id' => $id,
+    'userData' => $completed_data['userData'] ?? [],
+    'question' => $completed_data['question'] ?? '',
+    'mensagemDeTexto' => trim($mensagemDeTexto),
+    'mensagemDeVoz' => trim($mensagemDeVoz),
+    'mensagemDeControle' => trim($mensagemDeControle)
+];
 
-// Remove o campo "thought" original
-unset($response_data['thought']);
-
-// Adiciona o status "completed"
-$response_data['status'] = 'completed';
-
-// Log the completion
+// Log da conclusão
 log_message("Resposta completada para o id: $id");
 
-// Retorna o conteúdo do arquivo JSON
+// Retorna a resposta JSON
 header('Content-Type: application/json');
 echo json_encode($response_data);
 ?>

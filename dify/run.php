@@ -88,33 +88,26 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
-$thought_found = false;
+$agent_thoughts = [];
 
-curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use ($id, $completed_dir, $pending_data, &$thought_found) {
-
-    // Store the length of the original data
-    $original_length = strlen($data);
-
-    // Remove the "data: " prefix if it exists
-    $data = preg_replace('/^data: /', '', $data);
-
-    $response = json_decode($data, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        //log_message("Erro ao decodificar JSON: " . json_last_error_msg());
-        return $original_length; // Return the length of the original data to avoid cURL error
+// Configura a opção de retorno de chamada para processar o streaming
+curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$agent_thoughts, $id, $completed_dir, $pending_data) {
+    $lines = explode("\n", $data);
+    foreach ($lines as $line) {
+        if (empty($line)) {
+            continue;
+        }
+        $eventData = json_decode($line, true);
+        if (isset($eventData['event']) && $eventData['event'] === 'agent_thought') {
+            // Adiciona o pensamento ao array
+            $agent_thoughts[] = $eventData;
+            // Salva todos os pensamentos na pasta completed
+            $completed_file_path = $completed_dir . $id . '.json';
+            $data_to_save = array_merge($pending_data, ['agent_thoughts' => $agent_thoughts]);
+            file_put_contents($completed_file_path, json_encode($data_to_save, JSON_PRETTY_PRINT));
+        }
     }
-
-    // Process only if event is "agent_thought" and thought is not empty
-    if (isset($response['event']) && $response['event'] === 'agent_thought' && !empty(trim($response['thought']))) {
-        log_message("Dados recebidos do Dify: " . $data);
-        $completed_file_path = $completed_dir . $id . '.json';
-        $combined_data = array_merge($pending_data, $response);
-        file_put_contents($completed_file_path, json_encode($combined_data, JSON_PRETTY_PRINT));
-        log_message("Dados de 'agent_thought' salvos em: $completed_file_path");
-        $thought_found = true;
-    }
-
-    return $original_length; // Return the length of the original data to avoid cURL error
+    return strlen($data);
 });
 
 $result = curl_exec($ch);
@@ -128,7 +121,7 @@ curl_close($ch);
 
 // Verifica se o arquivo de resposta foi criado
 $completed_file_path = $completed_dir . $id . '.json';
-if (!$thought_found || !file_exists($completed_file_path)) {
+if (empty($agent_thoughts) || !file_exists($completed_file_path)) {
     log_message("Falha ao obter resposta de Dify para id: $id");
 
     // Call retry.php internally
@@ -163,12 +156,31 @@ log_message("Arquivo pendente removido com sucesso para id: $id");
 log_message("Iniciando integração com generate-audio.php para mensagem $id.");
 
 // Prepara o payload
-$response_data = json_decode(file_get_contents($completed_file_path), true);
-$mensagemDeVoz = json_decode($response_data['thought'], true)['mensagemDeVoz'] ?? 'Sem resposta disponível';
+$mensagemDeVoz = '';
+foreach ($agent_thoughts as $thought) {
+    $thought_text = $thought['thought'] ?? '';
+    if (!$thought_text) {
+        log_message("Pensamento vazio ou inválido para id: $id, pensamento: " . json_encode($thought));
+        continue;
+    }
+    $parsed_thought = json_decode($thought_text, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message("Erro ao decodificar o pensamento para id: $id, posição: " . ($thought['position'] ?? 'desconhecida'));
+        continue;
+    }
+    $mensagemDeVoz .= ($parsed_thought['mensagemDeVoz'] ?? '') . "\n";
+    log_message("mensagemDeVoz atualizada: " . $mensagemDeVoz);
+}
+$mensagemDeVoz = trim($mensagemDeVoz) ?: 'Sem resposta disponível';
+
+log_message("mensagemDeVoz final: " . $mensagemDeVoz);
+
 $audio_payload = json_encode([
     'input_text' => $mensagemDeVoz,
     'id' => $id
 ]);
+
+log_message("Payload para generate-audio.php: " . $audio_payload);
 
 // Configura a requisição cURL sem bloquear
 $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
