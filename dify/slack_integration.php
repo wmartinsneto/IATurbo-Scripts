@@ -41,10 +41,16 @@ foreach ($response_data['userData'] as $key => $value) {
 }
 $slackMessage .= "PERGUNTA:\n" . ($response_data['question'] ?? 'Sem pergunta') . "\n\n";
 
-// Adiciona a resposta, se disponível
+// Processa todos os pensamentos do agente
 $decodedTextResponse = json_decode($response_data['thought'], true);
-$formattedResponse = $decodedTextResponse['mensagemDeTexto'] ?? 'Sem resposta';
-$slackMessage .= "RESPOSTA:\n" . $formattedResponse;
+$mensagemDeTexto = $decodedTextResponse['mensagemDeTexto'] ?? 'Sem resposta';
+$mensagemDeVoz = $decodedTextResponse['mensagemDeVoz'] ?? 'Sem resposta';
+$mensagemDeControle = $decodedTextResponse['mensagemDeControle'] ?? 'Sem mensagem de controle';
+
+$slackMessage .= "### Mensagem de Texto\n" . $mensagemDeTexto . "\n\n";
+$slackMessage .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
+$slackMessage .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
+$slackMessage .= "### Mensagem de Controle\n" . $mensagemDeControle . "\n\n";
 
 log_message("Mensagem para Slack: " . $slackMessage);
 
@@ -76,3 +82,4 @@ try {
 
 // Retorna 200 OK
 http_response_code(200);
+?>
