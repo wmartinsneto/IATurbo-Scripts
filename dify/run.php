@@ -4,7 +4,8 @@
  * 
  * Este script recebe um `id` (gerado pelo `request.php`), uma URL do Dify e um token de autorização via POST,
  * carrega o arquivo correspondente na pasta `./pending`, envia a pergunta para o Dify,
- * salva a resposta na pasta `./completed`, envia as informações para o Trello e retorna um status 200 OK.
+ * aguarda a resposta consultando o histórico de conversas,
+ * salva a resposta na pasta `./completed` e retorna um status 200 OK.
  */
 
 $pending_dir = './pending/';
@@ -24,20 +25,6 @@ function log_message($message) {
     global $log_file;
     $log_entry = date('Y-m-d H:i:s') . " - " . $message . "\n";
     file_put_contents($log_file, $log_entry, FILE_APPEND);
-}
-
-// Função para capturar e logar erros de stream
-function log_stream_error($url, $context) {
-    $error_message = '';
-    $error_message .= "Erro ao acessar a URL: $url\n";
-    $error_message .= "Opções de Contexto: " . print_r($context, true) . "\n";
-    
-    $error = error_get_last();
-    if ($error) {
-        $error_message .= "Detalhes do erro: " . $error['message'] . "\n";
-    }
-
-    log_message($error_message);
 }
 
 // Recebe os parâmetros do JSON de entrada
@@ -88,35 +75,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
-$thought_found = false;
-
-curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use ($id, $completed_dir, $pending_data, &$thought_found) {
-
-    // Store the length of the original data
-    $original_length = strlen($data);
-
-    // Remove the "data: " prefix if it exists
-    $data = preg_replace('/^data: /', '', $data);
-
-    $response = json_decode($data, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        //log_message("Erro ao decodificar JSON: " . json_last_error_msg());
-        return $original_length; // Return the length of the original data to avoid cURL error
-    }
-
-    // Process only if event is "agent_thought" and thought is not empty
-    if (isset($response['event']) && $response['event'] === 'agent_thought' && !empty(trim($response['thought']))) {
-        log_message("Dados recebidos do Dify: " . $data);
-        $completed_file_path = $completed_dir . $id . '.json';
-        $combined_data = array_merge($pending_data, $response);
-        file_put_contents($completed_file_path, json_encode($combined_data, JSON_PRETTY_PRINT));
-        log_message("Dados de 'agent_thought' salvos em: $completed_file_path");
-        $thought_found = true;
-    }
-
-    return $original_length; // Return the length of the original data to avoid cURL error
-});
-
+// Executa a requisição
 $result = curl_exec($ch);
 
 if ($result === FALSE) {
@@ -126,33 +85,132 @@ if ($result === FALSE) {
 
 curl_close($ch);
 
-// Verifica se o arquivo de resposta foi criado
-$completed_file_path = $completed_dir . $id . '.json';
-if (!$thought_found || !file_exists($completed_file_path)) {
-    log_message("Falha ao obter resposta de Dify para id: $id");
+// Função para obter o conversation_id caso esteja faltando
+function get_conversation_id($user, $dify_key) {
+    $url = "https://api.dify.ai/v1/conversations?user=$user&limit=1";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $dify_key
+    ]);
 
-    // Call retry.php internally
-    $retry_payload = json_encode([
-        'id' => $id,
-        'chatflow_url' => 'https://api.dify.ai/v1/messages',
-        'chatflow_key' => $dify_key
-    ]);
-    $retry_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/retry.php');
-    curl_setopt($retry_ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($retry_ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($retry_ch, CURLOPT_POST, true);
-    curl_setopt($retry_ch, CURLOPT_POSTFIELDS, $retry_payload);
-    $retry_result = curl_exec($retry_ch);
-    curl_close($retry_ch);
-    log_message("Retry result: " . $retry_result);
+    $result = curl_exec($ch);
+
+    if ($result === FALSE) {
+        log_message("Erro ao obter conversation_id para o user: $user. Erro: " . curl_error($ch));
+        return null;
+    }
+
+    curl_close($ch);
+
+    $response_data = json_decode($result, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message("Erro ao decodificar JSON ao obter conversation_id para o user: $user");
+        return null;
+    }
+
+    if (empty($response_data['data'])) {
+        log_message("Nenhuma conversa encontrada para o user: $user");
+        return null;
+    }
+
+    return $response_data['data'][0]['id'] ?? null;
 }
 
-// Log the completion
-log_message("Response saved for id: $id");
+// Recupera o user e conversation_id
+$user = urlencode($pending_data['overrideConfig']['sessionId']);
+if (empty($conversation_id)) {
+    log_message("conversation_id está faltando. Tentando obter o conversation_id para o user: $user");
+    $conversation_id = get_conversation_id($user, $dify_key);
+    if (empty($conversation_id)) {
+        log_message("Falha ao obter o conversation_id para o user: $user");
+        die(json_encode(['error' => 'Falha ao obter o conversation_id.']));
+    }
+    log_message("conversation_id obtido com sucesso: $conversation_id");
+}
 
-// Remove o da pasta pending
+// URL para consultar o histórico de conversas
+$limit = 1;
+$retry_url = "https://api.dify.ai/v1/messages?user=$user&conversation_id=$conversation_id&limit=$limit";
+
+// Função para obter o histórico de conversas
+function get_conversation_history($retry_url, $dify_key, $id, $pending_data) {
+    global $completed_dir;
+
+    $ch = curl_init($retry_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $dify_key
+    ]);
+
+    $result = curl_exec($ch);
+
+    if ($result === FALSE) {
+        log_message("Erro ao obter o histórico de conversa para id: $id. Erro: " . curl_error($ch));
+        return false;
+    }
+
+    curl_close($ch);
+
+    // Loga a resposta bruta para depuração
+    log_message("Raw response for id: $id: " . $result);
+
+    // Processa a resposta do endpoint
+    $response_data = json_decode($result, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message("Erro ao decodificar JSON da resposta para o id: $id");
+        return false;
+    }
+
+    if (empty($response_data['data'])) {
+        log_message("Nenhuma mensagem encontrada para o id: $id");
+        return false;
+    }
+
+    $latest_message = $response_data['data'][0];
+    $query = $latest_message['query'] ?? '';
+
+    if ($query !== $pending_data['question']) {
+        log_message("A pergunta na resposta não corresponde à pergunta no arquivo pendente para o id: $id");
+        return false;
+    }
+
+    // Adiciona o campo "thought" à resposta
+    $latest_message['thought'] = $latest_message['answer'];
+
+    // Combina os dados do arquivo pendente com os dados da resposta
+    $combined_data = array_merge($pending_data, $latest_message);
+
+    // Salva os dados combinados na pasta `./completed`
+    $completed_file_path = $completed_dir . $id . '.json';
+    file_put_contents($completed_file_path, json_encode($combined_data, JSON_PRETTY_PRINT));
+    log_message("Dados combinados salvos em: $completed_file_path");
+
+    return $completed_file_path;
+}
+
+// Loop de tentativas para obter a resposta
+$max_retries = 18;
+$retry_interval = 5; // segundos
+
+$completed_file_path = null;
+for ($attempt = 1; $attempt <= $max_retries; $attempt++) {
+    log_message("Tentativa $attempt de $max_retries para obter a resposta.");
+    $completed_file_path = get_conversation_history($retry_url, $dify_key, $id, $pending_data);
+    if ($completed_file_path) {
+        break;
+    }
+    sleep($retry_interval);
+}
+
+if ($attempt > $max_retries) {
+    log_message("Falha ao obter resposta de Dify após $max_retries tentativas para id: $id");
+    die(json_encode(['error' => "Falha ao obter resposta de Dify após $max_retries tentativas."]));
+}
+
+// Remove o arquivo da pasta pending
 if (!unlink($file_path)) {
     log_message("Falha ao remover o arquivo pendente para id: $id");
 }
