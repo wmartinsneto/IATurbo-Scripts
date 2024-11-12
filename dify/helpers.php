@@ -31,12 +31,14 @@ function getMensagemDeTexto($agent_thoughts) {
     return trim($mensagemDeTexto);
 }
 
-// Função para obter todas as mensagens de voz
+// Função para obter a última mensagem de voz
 function getMensagemDeVoz($agent_thoughts) {
     $mensagemDeVoz = '';
+    $max_position = -1;
     foreach ($agent_thoughts as $thought) {
         $thought_text = $thought['thought'] ?? '';
-        if (!$thought_text) {
+        $position = $thought['position'] ?? -1;
+        if (!$thought_text || $position <= $max_position) {
             continue;
         }
         $parsed_thought = json_decode($thought_text, true);
@@ -44,17 +46,20 @@ function getMensagemDeVoz($agent_thoughts) {
             log_message("helpers", "error", "Erro ao decodificar o pensamento: " . json_last_error_msg());
             continue;
         }
-        $mensagemDeVoz .= ($parsed_thought['mensagemDeVoz'] ?? '') . "\n\n";
+        $mensagemDeVoz = $parsed_thought['mensagemDeVoz'] ?? '';
+        $max_position = $position;
     }
-    return trim($mensagemDeVoz);
+    return $mensagemDeVoz;
 }
 
-// Função para obter todas as mensagens de controle
+// Função para obter a última mensagem de controle
 function getMensagemDeControle($agent_thoughts) {
     $mensagemDeControle = '';
+    $max_position = -1;
     foreach ($agent_thoughts as $thought) {
         $thought_text = $thought['thought'] ?? '';
-        if (!$thought_text) {
+        $position = $thought['position'] ?? -1;
+        if (!$thought_text || $position <= $max_position) {
             continue;
         }
         $parsed_thought = json_decode($thought_text, true);
@@ -62,8 +67,9 @@ function getMensagemDeControle($agent_thoughts) {
             log_message("helpers", "error", "Erro ao decodificar o pensamento: " . json_last_error_msg());
             continue;
         }
-        $mensagemDeControle .= ($parsed_thought['mensagemDeControle'] ?? '') . "\n\n";
+        $mensagemDeControle = $parsed_thought['mensagemDeControle'] ?? '';
+        $max_position = $position;
     }
-    return trim($mensagemDeControle);
+    return $mensagemDeControle;
 }
 ?>
