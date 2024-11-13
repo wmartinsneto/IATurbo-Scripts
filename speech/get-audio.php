@@ -29,6 +29,8 @@
  *   }
  */
 
+include 'helpers.php';
+
 // Função para verificar se o arquivo de áudio existe
 function check_audio_file($id) {
     $filename = 'audio_' . $id . '.mp3';
@@ -44,26 +46,35 @@ function get_audio_url($id) {
 
 // Verifica se o parâmetro "id" foi fornecido
 if (!isset($_GET['id'])) {
+    log_message('speech', 'error', '[get-audio] Parâmetro "id" não fornecido.');
     header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Parâmetro "id" não fornecido.']);
     exit;
 }
 
 $id = $_GET['id'];
+log_message('speech', 'info', '[get-audio] Verificação do áudio iniciada para o ID: ' . $id);
+
 $attempts = 0;
 $max_attempts = 5;
 $interval = 1; // Intervalo de 1 segundo entre as tentativas
 
 while ($attempts < $max_attempts) {
     if (check_audio_file($id)) {
+        $audio_url = get_audio_url($id);
+        log_message('speech', 'info', '[get-audio] Áudio encontrado para o ID: ' . $id . '. URL: ' . $audio_url);
         header('Content-Type: application/json');
-        echo json_encode(['status' => 'ok', 'audio_url' => get_audio_url($id)]);
+        echo json_encode(['status' => 'ok', 'audio_url' => $audio_url]);
         exit;
     }
     $attempts++;
+    log_message('speech', 'info', '[get-audio] Tentativa ' . $attempts . ' de ' . $max_attempts . ' para o ID: ' . $id);
     sleep($interval);
 }
 
 // Se o arquivo não for encontrado após 5 tentativas, retorna status "pending"
+log_message('speech', 'info', '[get-audio] Áudio não encontrado após ' . $max_attempts . ' tentativas para o ID: ' . $id);
 header('Content-Type: application/json');
 echo json_encode(['status' => 'pending']);
+
+?>

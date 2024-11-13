@@ -2,38 +2,14 @@
 
 /**
  * API de Conversão de Texto para Fala (TTS) usando OpenAI
- *
- * Esta API recebe um texto, processa-o usando o serviço de Text-to-Speech da OpenAI,
- * salva o áudio gerado em um arquivo MP3 e retorna o URL do arquivo.
- *
- * ## Entrada:
- * - `input_text` (string): O texto que será convertido em áudio.
- * - `id` (string): O ID que será usado para nomear o arquivo de áudio gerado.
- *
- * ## Saída:
- * - Retorna um JSON com a URL do áudio gerado.
- *   Exemplo:
- *   ```json
- *   {
- *       "audio_url": "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_[ID].mp3"
- *   }
- *   ```
- *
- * ## Logs:
- * - `logs/success.log`: Registra logs de sucesso.
- * - `logs/error.log`: Registra logs de erros.
- *
- * ## Erros:
- * - Se a API da OpenAI falhar ou se houver algum problema na geração do áudio, 
- *   será retornado um JSON com a chave `error` e uma mensagem explicativa.
  */
+
+include 'helpers.php';
 
 // Configurações
 $api_key = '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';
 $save_dir = './output/';
 $log_dir = './logs/';
-$error_log_file = $log_dir . 'error.log';
-$success_log_file = $log_dir . 'success.log';
 
 // Configurações fixas de modelo e voz
 $model = "tts-1";
@@ -42,32 +18,27 @@ $voice = "shimmer";
 // Verifica se a pasta de destino e de logs existem, caso contrário, cria
 if (!is_dir($save_dir)) {
     mkdir($save_dir, 0777, true);
+    log_message('speech', 'info', '[generate-audio] Diretório ' . $save_dir . ' criado.');
 }
 if (!is_dir($log_dir)) {
     mkdir($log_dir, 0777, true);
-}
-
-// Função para registrar logs
-function log_message($message, $type = 'info') {
-    global $error_log_file, $success_log_file;
-    $file_path = ($type === 'error') ? $error_log_file : $success_log_file;
-    $log_entry = date('Y-m-d H:i:s') . " [{$type}] {$message}\n";
-    file_put_contents($file_path, $log_entry, FILE_APPEND);
+    log_message('speech', 'info', '[generate-audio] Diretório ' . $log_dir . ' criado.');
 }
 
 // Recebe o payload JSON da requisição
 $payload = json_decode(file_get_contents('php://input'), true);
-log_message("Payload recebido: " . json_encode($payload), 'info');
+log_message('speech', 'info', '[generate-audio] Payload recebido: ' . json_encode($payload));
 
 // Valida se todos os campos necessários estão presentes
 if (!isset($payload['input_text'], $payload['id'])) {
-    log_message("Payload inválido: " . json_encode($payload), 'error');
+    log_message('speech', 'error', '[generate-audio] Payload inválido: ' . json_encode($payload));
     die(json_encode(['error' => 'Payload inválido']));
 }
 
 // Dados do payload
 $input_text = $payload['input_text'];
 $id = $payload['id'];  // Parâmetro que será usado para nomear o arquivo
+log_message('speech', 'info', '[generate-audio] Processando áudio para o ID: ' . $id);
 
 // URL da API de Text-to-Speech da OpenAI
 $url = 'https://api.openai.com/v1/audio/speech';
@@ -78,7 +49,7 @@ $data = [
     'input' => $input_text,
     'voice' => $voice
 ];
-log_message("Dados para a requisição: " . json_encode($data), 'info');
+log_message('speech', 'info', '[generate-audio] Dados para a requisição: ' . json_encode($data));
 
 // Configurações da requisição
 $options = [
@@ -91,25 +62,35 @@ $options = [
 ];
 
 $context  = stream_context_create($options);
+
+// Faz a requisição para a API da OpenAI
+log_message('speech', 'info', '[generate-audio] Enviando requisição para a API da OpenAI.');
 $response = file_get_contents($url, false, $context);
 
 if ($response === FALSE) {
-    log_message("Falha na requisição para a API da OpenAI", 'error');
+    log_message('speech', 'error', '[generate-audio] Falha na requisição para a API da OpenAI.');
     die(json_encode(['error' => 'Falha na requisição para a API da OpenAI']));
 }
 
-log_message("Resposta da API recebida", 'info');
+log_message('speech', 'info', '[generate-audio] Resposta da API recebida com sucesso.');
 
 // Gera um nome para o arquivo MP3 com base no ID recebido
 $filename = 'audio_' . $id . '.mp3';
 $file_path = $save_dir . $filename;
 
 // Salva o conteúdo do áudio como um arquivo MP3
-file_put_contents($file_path, $response);
+$result = file_put_contents($file_path, $response);
+
+if ($result === FALSE) {
+    log_message('speech', 'error', '[generate-audio] Falha ao salvar o arquivo de áudio: ' . $file_path);
+    die(json_encode(['error' => 'Falha ao salvar o arquivo de áudio']));
+}
+
+log_message('speech', 'info', '[generate-audio] Arquivo de áudio salvo com sucesso: ' . $file_path);
 
 // Verifica se o arquivo foi criado com sucesso
 if (!file_exists($file_path) || filesize($file_path) == 0) {
-    log_message("Falha ao salvar o arquivo de áudio: {$file_path}", 'error');
+    log_message('speech', 'error', '[generate-audio] O arquivo de áudio não foi criado corretamente: ' . $file_path);
     die(json_encode(['error' => 'Falha ao salvar o arquivo de áudio']));
 }
 
@@ -117,7 +98,9 @@ if (!file_exists($file_path) || filesize($file_path) == 0) {
 $audio_url = 'https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/' . $filename;
 
 // Retorna o JSON com a URL do áudio
-log_message("Áudio gerado com sucesso: {$audio_url}", 'success');
-echo json_encode(['audio_url' => $audio_url]);
+$response_data = ['audio_url' => $audio_url];
+log_message('speech', 'info', '[generate-audio] Processamento concluído com sucesso. Dados de resposta: ' . json_encode($response_data));
+
+echo json_encode($response_data);
 
 ?>
