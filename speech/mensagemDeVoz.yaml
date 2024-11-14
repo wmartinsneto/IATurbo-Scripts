@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: API de Geração de Áudio e Player
+  description: Esta API recebe um texto, processa-o usando o serviço de Text-to-Speech da OpenAI, salva o áudio gerado em um arquivo MP3 e retorna um HTML com um player de áudio.
+  version: 1.0.0
+servers:
+  - url: https://iaturbo.com.br/wp-content/uploads/scripts/speech
+paths:
+  /mensagemDeVoz.php:
+    post:
+      summary: Gera um áudio a partir de um texto e retorna um player de áudio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                input_text:
+                  type: string
+                  description: O texto que será convertido em áudio.
+                  example: "Olá, este é um teste de conversão de texto para fala."
+                voice:
+                  type: string
+                  description: A voz que será usada para a conversão de texto para fala.
+                  example: "shimmer"
+                model:
+                  type: string
+                  description: O modelo de TTS que será usado.
+                  example: "tts-1"
+              required:
+                - input_text
+                - voice
+                - model
+      responses:
+        '200':
+          description: HTML com o player de áudio
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html_audio:
+                    type: string
+                    description: HTML do player de áudio
+                    example: "<audio controls autoplay><source src='https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/unique_id.mp3' type='audio/mp3'></audio>"
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Payload inválido"
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Falha na requisição para a API da OpenAI"
