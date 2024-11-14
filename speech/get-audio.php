@@ -1,7 +1,7 @@
 <?php
 
 /**
- * API para Verificação de Arquivo de Áudio
+ * API para Obtenção de Arquivo de Áudio
  *
  * Este script verifica se um arquivo de áudio MP3 correspondente a um ID fornecido existe.
  * Se o arquivo não for encontrado, o script tenta novamente a cada 1 segundo, por até 5 vezes.
@@ -53,7 +53,7 @@ if (!isset($_GET['id'])) {
 }
 
 $id = $_GET['id'];
-log_message('speech', 'info', '[get-audio] Verificação do áudio iniciada para o ID: ' . $id);
+log_message('speech', 'info', '[get-audio] Obtenção do áudio iniciada para o ID: ' . $id);
 
 $attempts = 0;
 $max_attempts = 5;

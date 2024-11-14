@@ -11,5 +11,11 @@ function log_message($origin, $level, $message) {
     $timestamp = date('Y-m-d H:i:s');
     $log_entry = "$timestamp [$level] - $message\n";
     file_put_contents($log_file, $log_entry, FILE_APPEND);
+
+    // Se o nível for error ou warning, também salva em arquivos separados
+    if ($level === 'error' || $level === 'warning') {
+        $error_log_file = $log_dir . $origin . '.' . $level . '.log';
+        file_put_contents($error_log_file, $log_entry, FILE_APPEND);
+    }
 }
 ?>
