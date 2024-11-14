@@ -207,40 +207,45 @@ if (!unlink($file_path)) {
 
 log_message('run', 'info', "Arquivo pendente removido com sucesso para id: $id");
 
-// Integração com generate-audio.php
-log_message('run', 'info', "Iniciando integração com generate-audio.php para mensagem $id.");
-
 // Lê os dados do arquivo completado
 $response_data = json_decode(file_get_contents($completed_file_path), true);
-$agent_thoughts = $response_data['agent_thoughts'] ?? [];
-$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
-$audio_payload = json_encode([
-    'input_text' => $mensagemDeVoz,
-    'id' => $id
-]);
 
-// Configura a requisição cURL sem bloquear
-$audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
-curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
-curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-curl_setopt($audio_ch, CURLOPT_POST, true);
-curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, false);
-curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50);
-curl_setopt($audio_ch, CURLOPT_FORBID_REUSE, true);
-curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
+// Verifica o source e decide se deve chamar o generate-audio.php
+$source = $response_data['source'] ?? 'Desconhecido';
+if ($source === 'Telegram') {
+    log_message('run', 'info', "Source é Telegram. Chamada ao generate-audio.php não será feita para id: $id.");
+} else {
+    // Integração com generate-audio.php
+    log_message('run', 'info', "Iniciando integração com generate-audio.php para mensagem $id.");
 
-curl_exec($audio_ch);
-curl_close($audio_ch);
+    $agent_thoughts = $response_data['agent_thoughts'] ?? [];
+    $mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+    $audio_payload = json_encode([
+        'input_text' => $mensagemDeVoz,
+        'id' => $id
+    ]);
 
-log_message('run', 'info', "Chamada para generate-audio.php enviada para id: $id.");
+    // Configura a requisição cURL sem bloquear
+    $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
+    curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
+    curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($audio_ch, CURLOPT_POST, true);
+    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, false);
+    curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50);
+    curl_setopt($audio_ch, CURLOPT_FORBID_REUSE, true);
+    curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
+
+    curl_exec($audio_ch);
+    curl_close($audio_ch);
+
+    log_message('run', 'info', "Chamada para generate-audio.php enviada para id: $id.");
+}
 
 // Integração com trello_integration.php
 log_message('run', 'info', "Iniciando integração com trello_integration.php para mensagem $id.");
 
 // Prepara o payload
-$trello_payload = json_encode([
-    'id' => $id
-]);
+$trello_payload = json_encode(['id' => $id]);
 
 // Configura a requisição cURL sem bloquear
 $trello_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/trello_integration.php');
@@ -261,9 +266,7 @@ log_message('run', 'info', "Chamada para trello_integration.php enviada para id:
 log_message('run', 'info', "Iniciando integração com slack_integration.php para mensagem $id.");
 
 // Prepara o payload
-$slack_payload = json_encode([
-    'id' => $id
-]);
+$slack_payload = json_encode(['id' => $id]);
 
 // Configura a requisição cURL sem bloquear
 $slack_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/slack_integration.php');
