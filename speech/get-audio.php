@@ -73,7 +73,7 @@ while ($attempts < $max_attempts) {
 }
 
 // Se o arquivo não for encontrado após 5 tentativas, retorna status "pending"
-log_message('speech', 'info', '[get-audio] Áudio não encontrado após ' . $max_attempts . ' tentativas para o ID: ' . $id);
+log_message('speech', 'error', '[get-audio] Áudio não encontrado após ' . $max_attempts . ' tentativas para o ID: ' . $id);
 header('Content-Type: application/json');
 echo json_encode(['status' => 'pending']);
 
