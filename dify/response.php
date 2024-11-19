@@ -6,6 +6,8 @@
  * e retorna o conteúdo do arquivo JSON ou um status de pendente.
  */
 
+$start_time = microtime(true);
+
 $completed_dir = './completed/';
 
 include 'helpers.php';
@@ -53,7 +55,9 @@ $completed_data['mensagemDeControle'] = $mensagemDeControle;
 $completed_data['status'] = 'completed';
 
 // Log da conclusão
-log_message('response', 'info', "Resposta completada para o id: $id");
+$end_time = microtime(true);
+$execution_time = round(($end_time - $start_time) * 1000, 2);
+log_message('response', 'info', "Resposta completada para o id: $id. Tempo total de execução: {$execution_time}ms.");
 
 // Retorna a resposta JSON
 header('Content-Type: application/json');

@@ -29,6 +29,8 @@
  *   }
  */
 
+$start_time = microtime(true);
+
 include 'helpers.php';
 
 // Função para verificar se o arquivo de áudio existe
@@ -65,6 +67,11 @@ while ($attempts < $max_attempts) {
         log_message('speech', 'info', '[get-audio] Áudio encontrado para o ID: ' . $id . '. URL: ' . $audio_url);
         header('Content-Type: application/json');
         echo json_encode(['status' => 'ok', 'audio_url' => $audio_url]);
+
+        // Calcula o tempo total de execução
+        $execution_time = round((microtime(true) - $start_time) * 1000);
+        log_message('speech', 'info', "[get-audio] Tempo total de execução: {$execution_time}ms");
+
         exit;
     }
     $attempts++;
@@ -76,5 +83,9 @@ while ($attempts < $max_attempts) {
 log_message('speech', 'error', '[get-audio] Áudio não encontrado após ' . $max_attempts . ' tentativas para o ID: ' . $id);
 header('Content-Type: application/json');
 echo json_encode(['status' => 'pending']);
+
+// Calcula o tempo total de execução
+$execution_time = round((microtime(true) - $start_time) * 1000);
+log_message('speech', 'info', "[get-audio] Tempo total de execução: {$execution_time}ms");
 
 ?>

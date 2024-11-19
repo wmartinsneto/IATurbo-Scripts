@@ -33,6 +33,8 @@
  * - A pasta de log será criada automaticamente, se não existir.
  */
 
+$start_time = microtime(true);
+
 $pending_dir = './pending/';
 
 include 'helpers.php';
@@ -56,6 +58,10 @@ $request_id = 'id_' . date('Ymd_His') . '_' . uniqid();
 file_put_contents($pending_dir . $request_id . '.json', json_encode($data));
 log_message('request', 'info', "ID gerado: $request_id - Dados salvos em ./pending/$request_id.json");
 
+// Calcula o tempo total de execução
+$execution_time = round((microtime(true) - $start_time) * 1000);
+
 // Retorna o id para que o processo possa ser monitorado
+log_message('request', 'info', "Processamento concluído para id: $request_id. Tempo total de execução: {$execution_time}ms");
 echo json_encode(['id' => $request_id]);
 ?>

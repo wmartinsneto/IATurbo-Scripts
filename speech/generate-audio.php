@@ -4,6 +4,8 @@
  * API de Conversão de Texto para Fala (TTS) usando OpenAI
  */
 
+$start_time = microtime(true);
+
 include 'helpers.php';
 
 // Configurações
@@ -101,6 +103,10 @@ $audio_url = 'https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/' 
 $response_data = ['audio_url' => $audio_url];
 log_message('speech', 'info', '[generate-audio] Processamento concluído com sucesso. Dados de resposta: ' . json_encode($response_data));
 
+// Calcula o tempo total de execução
+$execution_time = round((microtime(true) - $start_time) * 1000);
+
+log_message('speech', 'info', "[generate-audio] Tempo total de execução: {$execution_time}ms");
 echo json_encode($response_data);
 
 ?>

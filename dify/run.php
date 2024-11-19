@@ -8,6 +8,8 @@
  * salva a resposta na pasta `./completed` e retorna um status 200 OK.
  */
 
+$start_time = microtime(true);
+
 $pending_dir = './pending/';
 $completed_dir = './completed/';
 
@@ -225,20 +227,25 @@ if ($source === 'Telegram') {
         'id' => $id
     ]);
 
-    // Configura a requisição cURL sem bloquear
+    // Configura a requisição cURL de forma síncrona
     $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
     curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
     curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($audio_ch, CURLOPT_POST, true);
-    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, false);
-    curl_setopt($audio_ch, CURLOPT_TIMEOUT_MS, 50);
-    curl_setopt($audio_ch, CURLOPT_FORBID_REUSE, true);
-    curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
+    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, true); // Aguarda a resposta
+    curl_setopt($audio_ch, CURLOPT_TIMEOUT, 30); // Timeout de 30 segundos
+    curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT, 10); // Timeout de conexão de 10 segundos
 
-    curl_exec($audio_ch);
+    $audio_response = curl_exec($audio_ch);
+    $audio_error = curl_error($audio_ch);
+    $audio_errno = curl_errno($audio_ch);
     curl_close($audio_ch);
 
-    log_message('run', 'info', "Chamada para generate-audio.php enviada para id: $id.");
+    if ($audio_response === false) {
+        log_message('run', 'error', "Falha ao chamar generate-audio.php para id: $id. Erro: [$audio_errno] $audio_error");
+    } else {
+        log_message('run', 'info', "Chamada para generate-audio.php concluída para id: $id. Resposta: $audio_response");
+    }
 }
 
 // Integração com trello_integration.php
@@ -281,9 +288,8 @@ curl_setopt($slack_ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
 curl_exec($slack_ch);
 curl_close($slack_ch);
 
-log_message('run', 'info', "Chamada para slack_integration.php enviada para id: $id.");
+$end_time = microtime(true);
+$execution_time = round(($end_time - $start_time) * 1000, 2);
 
-// Retorna 200 OK
-http_response_code(200);
-log_message('run', 'info', "Processamento concluído para id: $id.");
+log_message('run', 'info', "Processamento concluído para id: $id. Tempo total de execução: {$execution_time}ms.");
 ?>
