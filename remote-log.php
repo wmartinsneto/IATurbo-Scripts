@@ -39,7 +39,7 @@ function logMessage($message, $type, $source) {
 
     // Gera o nome do arquivo de log com o source
     $today = date("Y-m-d");
-    $filename = "./logs/remote-log-{$source}-{$today}.log";
+    $filename = "./logs/remote-log_{$today}_{$source}.log";
 
     // Monta o conteúdo do log
     $logEntry = "[" . date("Y-m-d H:i:s") . "] [$type] $message" . PHP_EOL;
