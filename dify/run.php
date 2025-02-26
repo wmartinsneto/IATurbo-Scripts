@@ -58,7 +58,7 @@ $payload = [
 log_message('run', 'info', "Payload preparado para Dify: " . json_encode($payload));
 
 // Envia a pergunta para o Dify
-$ch = curl_init($dify_url);
+$ch = curl_init($dify_url . "/chat-messages");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
@@ -78,8 +78,8 @@ if ($result === FALSE) {
 curl_close($ch);
 
 // Função para obter o conversation_id caso esteja faltando
-function get_conversation_id($user, $dify_key) {
-    $url = "https://api.dify.ai/v1/conversations?user=$user&limit=1";
+function get_conversation_id($user, $dify_url, $dify_key) {
+    $url = "$dify_url/conversations?user=$user&limit=1";
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -114,7 +114,7 @@ function get_conversation_id($user, $dify_key) {
 $user = urlencode($pending_data['overrideConfig']['sessionId']);
 if (empty($conversation_id)) {
     log_message('run', 'info', "conversation_id está faltando. Tentando obter o conversation_id para o user: $user");
-    $conversation_id = get_conversation_id($user, $dify_key);
+    $conversation_id = get_conversation_id($user, $dify_url, $dify_key);
     if (empty($conversation_id)) {
         log_message('run', 'error', "Falha ao obter o conversation_id para o user: $user");
         die(json_encode(['error' => 'Falha ao obter o conversation_id.']));
@@ -124,7 +124,7 @@ if (empty($conversation_id)) {
 
 // URL para consultar o histórico de conversas
 $limit = 1;
-$retry_url = "https://api.dify.ai/v1/messages?user=$user&conversation_id=$conversation_id&limit=$limit";
+$retry_url = "$dify_url/messages?user=$user&conversation_id=$conversation_id&limit=$limit";
 
 // Função para obter o histórico de conversas
 function get_conversation_history($retry_url, $dify_key, $id, $pending_data) {
