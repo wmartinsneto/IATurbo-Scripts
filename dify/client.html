@@ -65,6 +65,17 @@
             flex-direction: column;
             font-family: Arial, sans-serif;
             color: #333;
+            scrollbar-width: thin;
+            scrollbar-color: #43d9ea #f1f1f1;
+        }
+
+        #chatWindow::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chatWindow::-webkit-scrollbar-thumb {
+            background-color: #43d9ea;
+            border-radius: 10px;
         }
 
         #chatHeader {
@@ -193,6 +204,7 @@
             userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
             chatWindow.appendChild(userMessage);
             chatWindow.style.display = 'flex';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
 
             // Limpa o campo de entrada e desabilita
             chatInput.value = '';
@@ -211,6 +223,7 @@
                 botMessage.className = 'message';
                 botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage">${response}</div>`;
                 chatWindow.appendChild(botMessage);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
             } catch (error) {
                 logError('Erro ao processar a pergunta: ' + error.message);
             } finally {
