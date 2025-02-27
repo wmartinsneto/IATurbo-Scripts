@@ -82,6 +82,9 @@
     justify-content: space-between;
     align-items: center;
     color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensure it stays above other content */
 }
 
 #chatHeader button {
