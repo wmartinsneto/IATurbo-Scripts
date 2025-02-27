@@ -1,0 +1,178 @@
+/* Estilos para o chatbot */
+#chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    border-radius: 50px;
+    padding: 10px;
+    color: #ccc;
+    cursor: pointer;
+    transition: width 0.3s ease;
+    width: 250px;
+    text-align: center;
+    animation: pulse-animation 2s infinite;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+#chatbot.expanded {
+    width: 300px;
+}
+
+#chatbot input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: transparent;
+    color: #ccc;
+    margin-right: 10px;
+    transition: opacity 0.3s ease;
+}
+
+#sendButton {
+    background-color: #43d9ea;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+#chatWindow {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    color: #333;
+    scrollbar-width: thin;
+    scrollbar-color: #43d9ea #f1f1f1;
+    z-index: 1000;
+}
+
+#chatWindow::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chatWindow::-webkit-scrollbar-thumb {
+    background-color: #43d9ea;
+    border-radius: 10px;
+}
+
+#chatHeader {
+    background-color: #43d9ea;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+#chatHeader button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#chatWindow .message {
+    padding: 10px;
+    display: flex;
+    align-items: flex-start; /* Alinha ao topo */
+}
+
+.userMessage {
+    background-color: #e0f7fa;
+    border-radius: 15px;
+    padding: 10px;
+    margin-right: 10px;
+    flex: 1;
+    order: 1;
+}
+
+.botMessage {
+    background-color: #f1f1f1;
+    border-radius: 15px;
+    padding: 10px;
+    margin-left: 10px;
+    flex: 1;
+    order: 1;
+    min-height: 30px; /* Ajuste da altura mínima */
+    display: flex;
+    align-items: center;
+}
+
+.userIcon, .botIcon {
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+}
+
+.botIcon {
+    background-image: url('https://iaturbo.com.br/wp-content/uploads/2024/01/happy-robot-1.png');
+    order: 0;
+}
+
+.userIcon {
+    order: 2;
+}
+
+@keyframes pulse-animation {
+    0% {
+        box-shadow: 0 0 0 0px rgba(67, 217, 234, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(67, 217, 234, 0);
+    }
+}
+
+.fade {
+    transition: opacity 0.5s ease-in-out;
+}
+
+#searching-ellipsis {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #43d9ea;
+}
+
+#searching-ellipsis span {
+    animation-name: opacity;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+#searching-ellipsis span:nth-child(2) {
+    animation-delay: 100ms;
+}
+
+#searching-ellipsis span:nth-child(3) {
+    animation-delay: 300ms;
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
