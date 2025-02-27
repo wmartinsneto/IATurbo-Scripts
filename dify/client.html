@@ -9,15 +9,18 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #43d9ea;
+            background-color: #333;
             border-radius: 50px;
-            padding: 10px 20px;
-            color: white;
+            padding: 10px;
+            color: #ccc;
             cursor: pointer;
             transition: width 0.3s ease;
-            width: 200px;
+            width: 250px;
             text-align: center;
             animation: pulse-animation 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         #chatbot.expanded {
@@ -25,16 +28,27 @@
         }
 
         #chatbot input {
-            width: 100%;
+            flex: 1;
             border: none;
             padding: 10px;
             border-radius: 25px;
-            margin-top: 10px;
-            display: none;
+            background-color: transparent;
+            color: #ccc;
+            margin-right: 10px;
+            transition: opacity 0.3s ease;
         }
 
-        #chatbot.expanded input {
-            display: block;
+        #sendButton {
+            background-color: #43d9ea;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
         }
 
         #chatWindow {
@@ -44,7 +58,7 @@
             width: 300px;
             max-height: 400px;
             overflow-y: auto;
-            background-color: #fff;
+            background-color: #333;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: none;
@@ -53,23 +67,28 @@
 
         #chatWindow .message {
             padding: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #444;
+            color: #ccc;
         }
 
         @keyframes pulse-animation {
             0% {
-                box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 0 0 0px rgba(67, 217, 234, 0.5);
             }
             100% {
-                box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+                box-shadow: 0 0 0 20px rgba(67, 217, 234, 0);
             }
+        }
+
+        .fade {
+            transition: opacity 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
     <div id="chatbot">
-        Precisa de ajuda?
-        <input type="text" id="chatInput" placeholder="Digite sua pergunta...">
+        <input type="text" id="chatInput" placeholder="Precisa de ajuda?">
+        <button id="sendButton">➤</button>
     </div>
     <div id="chatWindow"></div>
 
@@ -77,43 +96,58 @@
         const chatbot = document.getElementById('chatbot');
         const chatInput = document.getElementById('chatInput');
         const chatWindow = document.getElementById('chatWindow');
+        const sendButton = document.getElementById('sendButton');
 
-        chatbot.addEventListener('click', () => {
-            chatbot.classList.toggle('expanded');
+        let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
+        let currentPlaceholder = 0;
+
+        setInterval(() => {
+            chatInput.classList.add('fade');
+            setTimeout(() => {
+                currentPlaceholder = (currentPlaceholder + 1) % placeholders.length;
+                chatInput.placeholder = placeholders[currentPlaceholder];
+                chatInput.classList.remove('fade');
+            }, 500);
+        }, 3000);
+
+        chatbot.addEventListener('mouseenter', () => {
+            chatbot.classList.add('expanded');
             chatInput.focus();
         });
 
-        chatInput.addEventListener('keypress', async (e) => {
-            if (e.key === 'Enter') {
-                const question = chatInput.value;
-                if (question.trim() === '') return;
+        chatbot.addEventListener('mouseleave', () => {
+            chatbot.classList.remove('expanded');
+        });
 
-                // Exibe a pergunta no chat
-                const userMessage = document.createElement('div');
-                userMessage.className = 'message';
-                userMessage.textContent = `Você: ${question}`;
-                chatWindow.appendChild(userMessage);
-                chatWindow.style.display = 'flex';
+        sendButton.addEventListener('click', async () => {
+            const question = chatInput.value;
+            if (question.trim() === '') return;
 
-                // Limpa o campo de entrada
-                chatInput.value = '';
+            // Exibe a pergunta no chat
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message';
+            userMessage.textContent = `Você: ${question}`;
+            chatWindow.appendChild(userMessage);
+            chatWindow.style.display = 'flex';
 
-                // Envia a pergunta para a API
-                const sessionId = localStorage.getItem('sessionId') || generateSessionId();
-                localStorage.setItem('sessionId', sessionId);
+            // Limpa o campo de entrada
+            chatInput.value = '';
 
-                try {
-                    const requestId = await sendQuestion(question, sessionId);
-                    const response = await getResponse(requestId);
+            // Envia a pergunta para a API
+            const sessionId = localStorage.getItem('sessionId') || generateSessionId();
+            localStorage.setItem('sessionId', sessionId);
 
-                    // Exibe a resposta no chat
-                    const botMessage = document.createElement('div');
-                    botMessage.className = 'message';
-                    botMessage.textContent = `Bot: ${response}`;
-                    chatWindow.appendChild(botMessage);
-                } catch (error) {
-                    logError('Erro ao processar a pergunta: ' + error.message);
-                }
+            try {
+                const requestId = await sendQuestion(question, sessionId);
+                const response = await getResponse(requestId);
+
+                // Exibe a resposta no chat
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message';
+                botMessage.textContent = `Bot: ${response}`;
+                chatWindow.appendChild(botMessage);
+            } catch (error) {
+                logError('Erro ao processar a pergunta: ' + error.message);
             }
         });
 
