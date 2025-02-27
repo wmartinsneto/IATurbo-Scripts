@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Estilos para o chatbot */
+        #chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #43d9ea;
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            transition: width 0.3s ease;
+            width: 200px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        #chatbot.expanded {
+            width: 300px;
+        }
+
+        #chatbot input {
+            width: 100%;
+            border: none;
+            padding: 10px;
+            border-radius: 25px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        #chatbot.expanded input {
+            display: block;
+        }
+
+        #chatWindow {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+        }
+
+        #chatWindow .message {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbot">
+        Precisa de ajuda?
+        <input type="text" id="chatInput" placeholder="Digite sua pergunta...">
+    </div>
+    <div id="chatWindow"></div>
+
+    <script>
+        const chatbot = document.getElementById('chatbot');
+        const chatInput = document.getElementById('chatInput');
+        const chatWindow = document.getElementById('chatWindow');
+
+        chatbot.addEventListener('click', () => {
+            chatbot.classList.toggle('expanded');
+            chatInput.focus();
+        });
+
+        chatInput.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const question = chatInput.value;
+                if (question.trim() === '') return;
+
+                // Exibe a pergunta no chat
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message';
+                userMessage.textContent = `Você: ${question}`;
+                chatWindow.appendChild(userMessage);
+                chatWindow.style.display = 'flex';
+
+                // Limpa o campo de entrada
+                chatInput.value = '';
+
+                // Envia a pergunta para a API
+                const sessionId = localStorage.getItem('sessionId') || generateSessionId();
+                localStorage.setItem('sessionId', sessionId);
+
+                const requestId = await sendQuestion(question, sessionId);
+                const response = await getResponse(requestId);
+
+                // Exibe a resposta no chat
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message';
+                botMessage.textContent = `Bot: ${response}`;
+                chatWindow.appendChild(botMessage);
+            }
+        });
+
+        function generateSessionId() {
+            return 'sess_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        async function sendQuestion(question, sessionId) {
+            const response = await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/request.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question,
+                    source: 'JS-Client',
+                    overrideConfig: { sessionId },
+                    userData: {}
+                })
+            });
+            const data = await response.json();
+            return data.id;
+        }
+
+        async function getResponse(requestId) {
+            const runResponse = await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/run.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: requestId,
+                    chatflow_url: 'https://srv673787.hstgr.cloud/v1',
+                    chatflow_key: 'app-0VZo5qBBfhWNLa3bJFw7kr3m'
+                })
+            });
+
+            let responseText = 'Aguarde...';
+            for (let i = 0; i < 5; i++) {
+                const response = await fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/dify/response.php?id=${requestId}`);
+                const data = await response.json();
+                if (data.status === 'completed') {
+                    responseText = data.mensagemDeTexto;
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            return responseText;
+        }
+    </script>
+</body>
+</html>
