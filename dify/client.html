@@ -164,6 +164,7 @@
 
         let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
         let currentPlaceholder = 0;
+        let conversationId = null;
 
         setInterval(() => {
             chatInput.classList.add('fade');
@@ -232,6 +233,7 @@
         refreshButton.addEventListener('click', () => {
             chatWindow.innerHTML = '';
             chatWindow.appendChild(document.getElementById('chatHeader'));
+            conversationId = null;
         });
 
         function getUserIcon() {
@@ -261,6 +263,7 @@
                     body: JSON.stringify({
                         question,
                         source: 'JS-Client',
+                        conversation_id: conversationId,
                         overrideConfig: { sessionId },
                         userData: {}
                     })
@@ -292,6 +295,7 @@
                     const data = await response.json();
                     if (data.status === 'completed') {
                         responseText = data.mensagemDeTexto;
+                        conversationId = data.conversation_id || conversationId;
                         logInfo('Resposta recebida com sucesso', 'response.php');
                         break;
                     }
