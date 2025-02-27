@@ -15,7 +15,7 @@
             color: #ccc;
             cursor: pointer;
             transition: width 0.3s ease;
-            width: 250px;
+            width: 235px;
             text-align: center;
             animation: pulse-animation 2s infinite;
             display: flex;
@@ -119,7 +119,7 @@
             chatbot.classList.remove('expanded');
         });
 
-        sendButton.addEventListener('click', async () => {
+        const sendMessage = async () => {
             const question = chatInput.value;
             if (question.trim() === '') return;
 
@@ -130,8 +130,9 @@
             chatWindow.appendChild(userMessage);
             chatWindow.style.display = 'flex';
 
-            // Limpa o campo de entrada
+            // Limpa o campo de entrada e desabilita
             chatInput.value = '';
+            chatInput.disabled = true;
 
             // Envia a pergunta para a API
             const sessionId = localStorage.getItem('sessionId') || generateSessionId();
@@ -148,6 +149,15 @@
                 chatWindow.appendChild(botMessage);
             } catch (error) {
                 logError('Erro ao processar a pergunta: ' + error.message);
+            } finally {
+                chatInput.disabled = false;
+            }
+        };
+
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
 
