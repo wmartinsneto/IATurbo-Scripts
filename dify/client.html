@@ -15,7 +15,7 @@
             color: #ccc;
             cursor: pointer;
             transition: width 0.3s ease;
-            width: 235px;
+            width: 250px;
             text-align: center;
             animation: pulse-animation 2s infinite;
             display: flex;
@@ -53,22 +53,76 @@
 
         #chatWindow {
             position: fixed;
-            bottom: 70px;
+            bottom: 90px;
             right: 20px;
             width: 300px;
             max-height: 400px;
             overflow-y: auto;
-            background-color: #333;
+            background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: none;
             flex-direction: column;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        #chatHeader {
+            background-color: #43d9ea;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        #chatHeader button {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
         }
 
         #chatWindow .message {
             padding: 10px;
-            border-bottom: 1px solid #444;
-            color: #ccc;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .userMessage {
+            background-color: #e0f7fa;
+            border-radius: 15px;
+            padding: 10px;
+            margin-right: 10px;
+            flex: 1;
+            order: 1;
+        }
+
+        .botMessage {
+            background-color: #f1f1f1;
+            border-radius: 15px;
+            padding: 10px;
+            margin-left: 10px;
+            flex: 1;
+            order: 1;
+        }
+
+        .userIcon, .botIcon {
+            width: 30px;
+            height: 30px;
+            background-size: cover;
+        }
+
+        .botIcon {
+            background-image: url('https://iaturbo.com.br/wp-content/uploads/2024/01/happy-robot-1.png');
+            order: 0;
+        }
+
+        .userIcon {
+            order: 2;
         }
 
         @keyframes pulse-animation {
@@ -90,13 +144,23 @@
         <input type="text" id="chatInput" placeholder="Precisa de ajuda?">
         <button id="sendButton">➤</button>
     </div>
-    <div id="chatWindow"></div>
+    <div id="chatWindow">
+        <div id="chatHeader">
+            <span>Pergunte para a IARA</span>
+            <div>
+                <button id="refreshButton">⟳</button>
+                <button id="closeButton">✖</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const chatbot = document.getElementById('chatbot');
         const chatInput = document.getElementById('chatInput');
         const chatWindow = document.getElementById('chatWindow');
         const sendButton = document.getElementById('sendButton');
+        const closeButton = document.getElementById('closeButton');
+        const refreshButton = document.getElementById('refreshButton');
 
         let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
         let currentPlaceholder = 0;
@@ -126,7 +190,7 @@
             // Exibe a pergunta no chat
             const userMessage = document.createElement('div');
             userMessage.className = 'message';
-            userMessage.textContent = `Você: ${question}`;
+            userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
             chatWindow.appendChild(userMessage);
             chatWindow.style.display = 'flex';
 
@@ -145,7 +209,7 @@
                 // Exibe a resposta no chat
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message';
-                botMessage.textContent = `Bot: ${response}`;
+                botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage">${response}</div>`;
                 chatWindow.appendChild(botMessage);
             } catch (error) {
                 logError('Erro ao processar a pergunta: ' + error.message);
@@ -160,6 +224,30 @@
                 sendMessage();
             }
         });
+
+        closeButton.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+        });
+
+        refreshButton.addEventListener('click', () => {
+            chatWindow.innerHTML = '';
+            chatWindow.appendChild(document.getElementById('chatHeader'));
+        });
+
+        function getUserIcon() {
+            return `<svg width="30" height="30" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0)">
+                    <rect width="512" height="512" rx="256" fill="#B2DDFF"></rect>
+                    <circle opacity="0.68" cx="256" cy="196" r="84" fill="white"></circle>
+                    <ellipse opacity="0.68" cx="256" cy="583.5" rx="266" ry="274.5" fill="white"></ellipse>
+                </g>
+                <defs>
+                    <clipPath id="clip0">
+                        <rect width="512" height="512" rx="256" fill="white"></rect>
+                    </clipPath>
+                </defs>
+            </svg>`;
+        }
 
         function generateSessionId() {
             return 'sess_' + Math.random().toString(36).substr(2, 9);
