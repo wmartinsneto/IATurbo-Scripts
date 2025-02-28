@@ -73,12 +73,22 @@ const sendMessage = async () => {
         // Remove a animação e prepara a área para o texto com efeito typewriter
         botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"></div>`;
         typeWriter(botMessage.querySelector('.botMessage'), response, 0, () => {
-            // Quando o typing terminar, chama o get-audio.php para obter a URL do áudio
+            // Converte o markdown em HTML utilizando Showdown ao finalizar o efeito typewriter
+            const botMessageContainer = botMessage.querySelector('.botMessage');
+            let rawText = botMessageContainer.textContent;
+            
+            // Opcional: substitua quebras de linha por <br> se não forem interpretadas
+            rawText = rawText.replace(/\n/g, '<br>');
+            
+            const converter = new showdown.Converter();
+            const formattedHTML = converter.makeHtml(rawText);
+            botMessageContainer.innerHTML = formattedHTML;
+
+            // Agora, obtém o áudio e adiciona o player abaixo da mensagem
             fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'ok') {
-                        const botMessageContainer = botMessage.querySelector('.botMessage');
                         const audioWrapper = document.createElement('div');
                         audioWrapper.className = 'audio-player';
                         audioWrapper.innerHTML = `
@@ -86,6 +96,7 @@ const sendMessage = async () => {
                               <source src="${data.audio_url}" type="audio/mpeg">
                               Seu navegador não suporta o áudio HTML5.
                             </audio>`;
+                        // Anexa o player dentro da mesma container, abaixo do texto
                         botMessageContainer.appendChild(audioWrapper);
                         chatWindow.scrollTop = chatWindow.scrollHeight;
                     }
@@ -220,7 +231,7 @@ function typeWriter(element, text, i = 0, callback) {
     if (i < text.length) {
         element.innerHTML += text.charAt(i);
         chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom
-        setTimeout(() => typeWriter(element, text, i + 1, callback), 17);
+        setTimeout(() => typeWriter(element, text, i + 1, callback), 5); // 5ms delay for 3x speed
     } else {
         if (callback) callback();
     }
