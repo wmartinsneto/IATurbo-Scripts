@@ -30,7 +30,7 @@
     background-color: transparent;
     color: #ccc;
     margin-right: 10px;
-    transition: opacity 0.3s ease;
+    transition: opacity 1s ease;
 }
 
 #sendButton {
@@ -81,7 +81,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
+    color: #000;
     position: sticky;
     top: 0;
     z-index: 10; /* Ensure it stays above other content */
@@ -90,7 +90,7 @@
 #chatHeader button {
     background: none;
     border: none;
-    color: #fff;
+    color: #000;
     cursor: pointer;
     font-size: 16px;
 }
