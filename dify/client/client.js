@@ -251,17 +251,17 @@ function setChatModeInitial() {
     clearInterval(recordingTimerInterval);
     chatInput.style.display = 'block';
     micButton.style.display = 'inline-block';
-    micButton.style.width = '30px';
+    micButton.style.width = 'auto';
     micButton.style.height = '30px';
-    micButton.style.backgroundColor = "#fff";  // Garantir visibilidade do botão
+    micButton.style.backgroundColor = "";  // Remover fundo
+    micButton.style.border = "none";         // Remover borda
     micButton.innerHTML = "";
     const img = document.createElement("img");
     img.src = "https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png";
     img.alt = "Microfone Azul";
-    img.style.width = "30px";
     img.style.height = "30px";
+    img.style.width = "21px";
     img.style.display = "block";
-    img.style.border = "1px solid #ccc";
     micButton.appendChild(img);
     micButton.disabled = false;
     sendButton.disabled = false;
