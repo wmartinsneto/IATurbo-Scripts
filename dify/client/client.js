@@ -23,7 +23,7 @@ chatbot.addEventListener('mouseenter', () => {
     chatInput.focus();
 });
 
-// NEW: Reopen chatWindow when input gains focus if it was closed.
+// Reopen chatWindow when input gains focus if it was closed.
 chatInput.addEventListener('focus', () => {
     if (chatWindow.style.display === 'none') {
         chatWindow.style.display = 'flex';
@@ -65,12 +65,36 @@ const sendMessage = async () => {
     localStorage.setItem('sessionId', sessionId);
 
     try {
+        // Envia a questão e aguarda o ID da requisição
         const requestId = await sendQuestion(question, sessionId);
+        // Aguarda a resposta final
         const response = await getResponse(requestId);
 
-        // Remove a animação e substitui pela resposta
+        // Remove a animação e prepara a área para o texto com efeito typewriter
         botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"></div>`;
-        typeWriter(botMessage.querySelector('.botMessage'), response);
+        typeWriter(botMessage.querySelector('.botMessage'), response, 0, () => {
+            // Quando o typing terminar, chama o get-audio.php para obter a URL do áudio
+            fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        const botMessageContainer = botMessage.querySelector('.botMessage');
+                        const audioWrapper = document.createElement('div');
+                        audioWrapper.className = 'audio-player';
+                        audioWrapper.innerHTML = `
+                            <audio controls autoplay>
+                              <source src="${data.audio_url}" type="audio/mpeg">
+                              Seu navegador não suporta o áudio HTML5.
+                            </audio>`;
+                        botMessageContainer.appendChild(audioWrapper);
+                        chatWindow.scrollTop = chatWindow.scrollHeight;
+                    }
+                })
+                .catch(err => console.error('Erro ao obter áudio:', err))
+                .finally(() => {
+                    chatInput.focus();
+                });
+        });
     } catch (error) {
         logError('Erro ao processar a pergunta: ' + error.message);
     } finally {
@@ -148,7 +172,6 @@ async function getResponse(requestId) {
                 chatflow_key: 'app-0VZo5qBBfhWNLa3bJFw7kr3m'
             })
         });
-
         let responseText = 'Aguarde...';
         for (let i = 0; i < 5; i++) {
             const response = await fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/dify/response.php?id=${requestId}`);
@@ -192,10 +215,13 @@ async function logError(message, source) {
     });
 }
 
-function typeWriter(element, text, i = 0) {
+/* Updated typeWriter function that accepts a callback when finished */
+function typeWriter(element, text, i = 0, callback) {
     if (i < text.length) {
         element.innerHTML += text.charAt(i);
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-        setTimeout(() => typeWriter(element, text, i + 1), 17);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom
+        setTimeout(() => typeWriter(element, text, i + 1, callback), 17);
+    } else {
+        if (callback) callback();
     }
 }

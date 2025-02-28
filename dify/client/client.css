@@ -119,7 +119,8 @@
     order: 1;
     min-height: 30px; /* Ajuste da altura mínima */
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Stack text and audio vertically */
+    align-items: flex-start; /* Left align the content */
 }
 
 .userIcon, .botIcon {
@@ -154,7 +155,7 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    color: black;
+    color: #353535;
 }
 
 #searching-ellipsis span {
@@ -178,4 +179,20 @@
     100% {
         opacity: 0;
     }
+}
+
+/* Adicione este bloco ao final do arquivo ou onde preferir */
+.audio-player {
+    margin-top: 10px;
+    width: 100%;
+    background: #f9f9f9;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: block; /* Ensure proper block-level sizing */
+}
+.audio-player audio {
+    width: 100%;
+    height: 32px; /* Adjust height as needed for usability */
+    outline: none;
 }
