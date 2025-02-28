@@ -23,6 +23,13 @@ chatbot.addEventListener('mouseenter', () => {
     chatInput.focus();
 });
 
+// NEW: Reopen chatWindow when input gains focus if it was closed.
+chatInput.addEventListener('focus', () => {
+    if (chatWindow.style.display === 'none') {
+        chatWindow.style.display = 'flex';
+    }
+});
+
 chatbot.addEventListener('mouseleave', () => {
     chatbot.classList.remove('expanded');
 });
