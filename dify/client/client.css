@@ -205,7 +205,12 @@
     }
 }
 
-/* Adicione este bloco ao final do arquivo ou onde preferir */
+/* Adicionado regra para garantir tamanho e visibilidade do micButton */
+#micButton {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
 .audio-player {
     margin-top: 10px;
     width: 100%;
