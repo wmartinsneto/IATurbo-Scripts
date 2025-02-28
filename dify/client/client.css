@@ -9,7 +9,7 @@
     color: #ccc;
     cursor: pointer;
     transition: width 0.3s ease;
-    width: 240px;
+    width: 300px;
     text-align: center;
     animation: pulse-animation 2s infinite;
     display: flex;

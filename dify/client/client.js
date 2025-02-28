@@ -5,6 +5,13 @@ const sendButton = document.getElementById('sendButton');
 const closeButton = document.getElementById('closeButton');
 const refreshButton = document.getElementById('refreshButton');
 
+// NEW: Variables and elements for recording
+const micButton = document.getElementById('micButton');
+let mediaRecorder;
+let recordedChunks = [];
+let recordingStartTime;
+let recordingTimerInterval;
+
 let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
 let currentPlaceholder = 0;
 let conversationId = null;
@@ -236,3 +243,152 @@ function typeWriter(element, text, i = 0, callback) {
         if (callback) callback();
     }
 }
+
+// Container that will replace the default layout during recording.
+function showRecordingLayout() {
+    // Hide input and micButton. We keep sendButton temporarily for both stop and later cancel.
+    chatInput.style.display = 'none';
+    micButton.style.display = 'none';
+
+    // Create new recording container inside #chatbot
+    const recordingContainer = document.createElement('div');
+    recordingContainer.id = 'recordingContainer';
+    recordingContainer.style.display = 'flex';
+    recordingContainer.style.alignItems = 'center';
+    recordingContainer.style.justifyContent = 'space-around';
+    // Layout: Trash button, Recording indicator, Timer, Stop button
+
+    recordingContainer.innerHTML = `
+        <button id="trashButton" title="Cancelar" style="background: transparent; border: none; color: #ccc; font-size: 18px; cursor: pointer;">🗑️</button>
+        <span id="recordingIndicator" style="font-size: 20px; color: red; animation: blink 1s infinite;">●</span>
+        <span id="recordingTimer" style="font-family: monospace;">00:00</span>
+        <button id="stopButton" title="Parar e enviar" style="background: transparent; border: none; color: #ccc; font-size: 18px; cursor: pointer;">⏹</button>
+    `;
+    chatbot.appendChild(recordingContainer);
+    
+    // Start a timer to update recordingTimer every second.
+    recordingStartTime = Date.now();
+    recordingTimerInterval = setInterval(() => {
+        const elapsed = Date.now() - recordingStartTime;
+        const seconds = Math.floor(elapsed / 1000) % 60;
+        const minutes = Math.floor(elapsed / 60000);
+        document.getElementById('recordingTimer').textContent =
+            (minutes < 10 ? '0' + minutes : minutes) + ':' +
+            (seconds < 10 ? '0' + seconds : seconds);
+    }, 1000);
+}
+
+function resetChatbotLayout() {
+    // Remove recording container if exists
+    const recContainer = document.getElementById('recordingContainer');
+    if (recContainer) {
+        recContainer.parentNode.removeChild(recContainer);
+    }
+    clearInterval(recordingTimerInterval);
+    // Restore input and mic button visibility
+    chatInput.style.display = 'block';
+    micButton.style.display = 'inline-block';
+    chatInput.focus();
+}
+
+// Function to send recording (audio blob) to speechToText.php
+function sendRecording(blob) {
+    let formData = new FormData();
+    formData.append('audio', blob, 'recording.webm'); // Adjust extension/type as needed
+    
+    // Change layout to "Transcrevendo..." with ellipsis animation.
+    chatInput.style.display = 'none';
+    const transcribingContainer = document.createElement('div');
+    transcribingContainer.id = 'transcribingContainer';
+    transcribingContainer.style.display = 'flex';
+    transcribingContainer.style.alignItems = 'center';
+    transcribingContainer.innerHTML = `<span id="transcribingText">Transcrevendo<span id="ellipsis"></span></span>
+    <button id="cancelTranscription" title="Cancelar" style="background: transparent; border: none; color: #ccc; font-size: 18px; cursor: pointer;">✖</button>`;
+    chatbot.appendChild(transcribingContainer);
+    
+    // Animate ellipsis text
+    let ellipsisInterval = setInterval(() => {
+        const ellipsis = document.getElementById('ellipsis');
+        ellipsis.textContent = ellipsis.textContent.length < 3 ? ellipsis.textContent + '.' : '';
+    }, 500);
+    
+    // Listen to cancel transcription
+    document.getElementById('cancelTranscription').addEventListener('click', () => {
+        clearInterval(ellipsisInterval);
+        transcribingContainer.parentNode.removeChild(transcribingContainer);
+        resetChatbotLayout();
+    });
+    
+    // Send the recording to backend
+    fetch('https://iaturbo.com.br/wp-content/uploads/scripts/speech/speechToText.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        clearInterval(ellipsisInterval);
+        transcribingContainer.parentNode.removeChild(transcribingContainer);
+        if (data.error) {
+            alert('Erro na transcrição: ' + data.error);
+            resetChatbotLayout();
+        } else if (data.text || data.transcription) {
+            // Insere a transcrição no input e simula o envio
+            chatInput.value = data.text || data.transcription;
+            resetChatbotLayout();
+            sendMessage(); // dispara o fluxo de envio
+        }
+    })
+    .catch(err => {
+        clearInterval(ellipsisInterval);
+        alert('Erro na transcrição: ' + err);
+        resetChatbotLayout();
+    });
+}
+
+// Set up the microphone recording functionality
+micButton.addEventListener('click', () => {
+    // Prepare layout for recording
+    showRecordingLayout();
+    
+    // Start recording using MediaRecorder
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            recordedChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            mediaRecorder.onstop = () => {
+                // Stop all tracks of the stream.
+                stream.getTracks().forEach(track => track.stop());
+                // Create a blob from the recorded data.
+                const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+                // Reset layout and send the recording.
+                sendRecording(audioBlob);
+            };
+            mediaRecorder.start();
+        })
+        .catch(err => {
+            console.error('Erro ao capturar áudio: ', err);
+            resetChatbotLayout();
+        });
+});
+
+// Handling the trash and stop buttons inside the recording layout.
+document.addEventListener('click', function(e) {
+    if(e.target && e.target.id === 'trashButton') {
+        // Cancel recording, stop MediaRecorder and reset layout.
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        resetChatbotLayout();
+    }
+    if(e.target && e.target.id === 'stopButton') {
+        // User stops the recording and sends it.
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+    }
+});
