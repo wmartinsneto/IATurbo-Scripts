@@ -28,6 +28,9 @@ chatbot.addEventListener('mouseleave', () => {
 });
 
 const sendMessage = async () => {
+    // Prevent duplicate sends if input is already disabled
+    if (chatInput.disabled) return;
+
     const question = chatInput.value;
     if (question.trim() === '') return;
 
@@ -59,7 +62,7 @@ const sendMessage = async () => {
         const response = await getResponse(requestId);
 
         // Remove a animação e substitui pela resposta
-        botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage">${response}</div>`;
+        botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"></div>`;
         typeWriter(botMessage.querySelector('.botMessage'), response);
     } catch (error) {
         logError('Erro ao processar a pergunta: ' + error.message);
@@ -71,6 +74,7 @@ const sendMessage = async () => {
 sendButton.addEventListener('click', sendMessage);
 chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        e.preventDefault();
         sendMessage();
     }
 });
@@ -184,6 +188,7 @@ async function logError(message, source) {
 function typeWriter(element, text, i = 0) {
     if (i < text.length) {
         element.innerHTML += text.charAt(i);
-        setTimeout(() => typeWriter(element, text, i + 1), 17); // Triplo da velocidade
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+        setTimeout(() => typeWriter(element, text, i + 1), 17);
     }
 }
