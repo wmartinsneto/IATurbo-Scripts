@@ -9,28 +9,34 @@
     color: #ccc;
     cursor: pointer;
     transition: width 0.3s ease;
-    width: 250px;
+    width: 240px;
     text-align: center;
     animation: pulse-animation 2s infinite;
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 1000;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 #chatbot.expanded {
-    width: 300px;
+    width:350px;
 }
 
 #chatbot input {
     flex: 1;
     border: none;
-    padding: 10px;
+    padding: 10px 12px !important;
     border-radius: 25px;
     background-color: transparent;
     color: #ccc;
     margin-right: 10px;
     transition: opacity 1s ease;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 #sendButton {
@@ -44,6 +50,9 @@
     align-items: center;
     justify-content: center;
     color: #333;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 #chatWindow {
@@ -58,7 +67,9 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: none;
     flex-direction: column;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
     color: #333;
     scrollbar-width: thin;
     scrollbar-color: #43d9ea #f1f1f1;
@@ -85,6 +96,9 @@
     position: sticky;
     top: 0;
     z-index: 10; /* Ensure it stays above other content */
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 #chatHeader button {
@@ -93,6 +107,13 @@
     color: #000;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+#chatHeader span {
+    padding: 5px 10px !important;
 }
 
 #chatWindow .message {
@@ -156,6 +177,9 @@
     align-items: center;
     font-size: 16px;
     color: #353535;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 #searching-ellipsis span {
