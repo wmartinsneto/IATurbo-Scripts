@@ -42,6 +42,7 @@ window.addEventListener('load', () => {
     if (storedMessages && storedMessages.trim() !== "") {
         messagesContainer.innerHTML = storedMessages;
         chatWindow.style.display = 'flex';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
         chatbot.classList.add('expanded');
     }
 });
@@ -63,11 +64,15 @@ chatbot.addEventListener('mouseenter', () => {
     // Se houver mensagens armazenadas, garante que o chatWindow permaneça aberto
     if (messagesContainer.innerHTML.trim() !== "") {
         chatWindow.style.display = 'flex';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 });
+
+// Eventos para alternar a expansão do chatbot
 chatbot.addEventListener('mouseleave', () => {
-    // Remove expanded somente se o chatWindow estiver fechado
-    if (chatWindow.style.display === 'none') {
+
+    // Remove "expanded" somente se não estivermos gravando
+    if (chatMode !== 'recording') {
         chatbot.classList.remove('expanded');
     }
 });
