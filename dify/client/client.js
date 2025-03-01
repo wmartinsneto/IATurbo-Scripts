@@ -241,20 +241,33 @@ function typeWriter(element, text, i = 0, callback) {
     }
 }
 
-// Modo Inicial: Exibe input, micButton (azul) e sendButton; remove containers extras.
 function setChatModeInitial() {
     chatMode = "initial";
+    // Remove any temporary containers (recording or transcribing)
     const recContainer = document.getElementById('recordingContainer');
     if (recContainer) recContainer.remove();
     const transcribingContainer = document.getElementById('transcribingContainer');
     if (transcribingContainer) transcribingContainer.remove();
     clearInterval(recordingTimerInterval);
+    
+    // Ensure chatbot contains the initial elements in proper order: chatInput, micButton, sendButton.
+    while(chatbot.firstChild) {
+        chatbot.removeChild(chatbot.firstChild);
+    }
+    chatbot.appendChild(chatInput);
+    chatbot.appendChild(micButton);
+    chatbot.appendChild(sendButton);
+    
+    // Restore styles for initial mode.
     chatInput.style.display = 'block';
     micButton.style.display = 'inline-block';
+    sendButton.style.display = 'inline-block';
+    
+    // Restore micButton to its normal (blue) state.
     micButton.style.width = 'auto';
     micButton.style.height = '30px';
-    micButton.style.backgroundColor = "";  // Remover fundo
-    micButton.style.border = "none";         // Remover borda
+    micButton.style.backgroundColor = "";
+    micButton.style.border = "none";
     micButton.innerHTML = "";
     const img = document.createElement("img");
     img.src = "https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png";
@@ -263,21 +276,22 @@ function setChatModeInitial() {
     img.style.width = "21px";
     img.style.display = "block";
     micButton.appendChild(img);
+    
     micButton.disabled = false;
     sendButton.disabled = false;
     micButton.style.opacity = 1;
     sendButton.style.opacity = 1;
+    
     chatInput.focus();
 }
 
-// Modo Gravando: Esconde o input e o micButton originais; cria container com trashButton, timer e micButton vermelho com efeito pulse.
-// O sendButton, neste modo, passa a atuar para encerrar a gravação.
+// Modo Gravando: Atualizado para exibir a ordem: trashButton, timer, micButton (vermelho) e sendButton.
 function setChatModeRecording() {
     chatMode = "recording";
-    chatInput.style.display = 'none';
+    //chatInput.style.display = 'none';
+    // Esconde o micButton do modo inicial
     micButton.style.display = 'none';
     
-    // Reseta flag de cancelamento
     cancelRecording = false;
     
     const recordingContainer = document.createElement('div');
@@ -285,14 +299,21 @@ function setChatModeRecording() {
     recordingContainer.style.display = 'flex';
     recordingContainer.style.alignItems = 'center';
     recordingContainer.style.justifyContent = 'space-around';
+    // Cria container com trashButton e timer
     recordingContainer.innerHTML = `
         <button id="trashButton" title="Cancelar Gravação" style="background: transparent; border: none; color: #ccc; font-size: 18px; cursor: pointer;">🗑️</button>
         <span id="recordingTimer" style="font-family: monospace;">00:00</span>
-        <button id="redMicButton" title="Gravando" style="background: transparent; border: none; cursor: pointer;">
-            <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" style="width:30px; height:30px; animation: pulse-animation 2s infinite;">
-        </button>
     `;
+    // Atualiza o micButton para o estado de gravação (vermelho) e o exibe
+    micButton.style.display = 'inline-block';
+    micButton.innerHTML = '<img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" style="width:auto; height:30px; animation: pulse-animation 2s infinite;">';
+    // Remove sendButton de seu container atual (se houver) e depois anexa micButton e sendButton, nesta ordem.
+    if(sendButton.parentElement) sendButton.parentElement.removeChild(sendButton);
+    recordingContainer.appendChild(micButton);
+    recordingContainer.appendChild(sendButton);
+    
     chatbot.appendChild(recordingContainer);
+    
     const trashButton = recordingContainer.querySelector('#trashButton');
     if (trashButton) {
         trashButton.addEventListener('click', () => {
@@ -326,7 +347,6 @@ function setChatModeRecording() {
             mediaRecorder.onstop = () => {
                 stream.getTracks().forEach(track => track.stop());
                 if (cancelRecording) {
-                    // Se cancelado, descarta a gravação e volta para o modo inicial.
                     setChatModeInitial();
                     return;
                 }
@@ -342,8 +362,7 @@ function setChatModeRecording() {
         });
 }
 
-// Modo Transcrevendo: Remove container de gravação e exibe container de transcrição com animação de reticências.
-// Os botões ficam desabilitados enquanto aguarda a resposta da transcrição.
+// Modo Transcrevendo: Atualizado para exibir "Transcrevendo..." fixo à esquerda, seguido por micButton e sendButton à direita.
 function setChatModeTranscribing() {
     chatMode = "transcribing";
     const recContainer = document.getElementById('recordingContainer');
@@ -355,7 +374,11 @@ function setChatModeTranscribing() {
     transcribingContainer.id = 'transcribingContainer';
     transcribingContainer.style.display = 'flex';
     transcribingContainer.style.alignItems = 'center';
-    transcribingContainer.innerHTML = `<span id="transcribingText">Transcrevendo<span id="ellipsis"></span></span>`;
+    // Cria área fixa à esquerda para o texto "Transcrevendo..."
+    transcribingContainer.innerHTML = `<div id="transcribingLeft" style="flex:1; text-align: left;">Transcrevendo<span id="ellipsis"></span></div>`;
+    // Reanexa micButton e sendButton à direita
+    transcribingContainer.appendChild(micButton);
+    transcribingContainer.appendChild(sendButton);
     chatbot.appendChild(transcribingContainer);
     micButton.disabled = true;
     sendButton.disabled = true;

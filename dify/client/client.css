@@ -60,7 +60,7 @@
     position: fixed;
     bottom: 90px;
     right: 20px;
-    width: 300px;
+    width: 350px;
     max-height: 400px;
     overflow-y: auto;
     background-color: #fff;
@@ -220,7 +220,7 @@
 #sendButton {
     width: 30px !important;
     height: 30px !important;
-    margin: 0 !important;
+    margin-left: auto !important;
 }
 
 #micButton,
