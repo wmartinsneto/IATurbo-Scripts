@@ -1,3 +1,8 @@
+// Recupera dados do localStorage (se existirem) ou gera novos
+let sessionId = localStorage.getItem('sessionId') || generateSessionId();
+localStorage.setItem('sessionId', sessionId);
+let conversationId = localStorage.getItem('conversationId') || null;
+
 const chatbot = document.getElementById('chatbot');
 const chatbotInput = document.getElementById('chatbotInput');
 const transcribingMessage = document.getElementById('transcribingMessage');
@@ -11,7 +16,7 @@ const sendButton = document.getElementById('sendButton');
 const chatWindow = document.getElementById('chatWindow');
 const refreshButton = document.getElementById('refreshButton');
 const closeButton = document.getElementById('closeButton');
-const messagesContainer = document.getElementById('messagesContainer'); // Nova declaração
+const messagesContainer = document.getElementById('messagesContainer'); // Declaração única
 
 let mediaRecorder;
 let recordedChunks = [];
@@ -19,9 +24,27 @@ let recordingStartTime;
 let recordingTimerInterval;
 let chatMode = "initial"; // "initial", "recording", "transcribing"
 let cancelRecording = false;
-let conversationId = null;
 let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
 let currentPlaceholder = 0;
+
+// Função para atualizar os dados no localStorage
+function updateLocalStorage() {
+    localStorage.setItem('sessionId', sessionId);
+    if (conversationId) {
+        localStorage.setItem('conversationId', conversationId);
+    }
+    localStorage.setItem('messages', messagesContainer.innerHTML);
+}
+
+// Restaura mensagens armazenadas (se houver) e exibe o chatWindow
+window.addEventListener('load', () => {
+    const storedMessages = localStorage.getItem('messages');
+    if (storedMessages && storedMessages.trim() !== "") {
+        messagesContainer.innerHTML = storedMessages;
+        chatWindow.style.display = 'flex';
+        chatbot.classList.add('expanded');
+    }
+});
 
 // Alterna placeholders do input
 setInterval(() => {
@@ -35,71 +58,81 @@ setInterval(() => {
 
 // Eventos para abrir o chatWindow e ajustar a expansão do chatbot
 chatbot.addEventListener('mouseenter', () => {
-    // Sempre expande o chatbot e foca no input
     chatbot.classList.add('expanded');
     chatbotInput.focus();
-    
-    // Se o messagesContainer tiver conteúdo, garante que o chatWindow permaneça aberto
+    // Se houver mensagens armazenadas, garante que o chatWindow permaneça aberto
     if (messagesContainer.innerHTML.trim() !== "") {
         chatWindow.style.display = 'flex';
     }
 });
-
-// Remove a classe expanded somente se o chatWindow estiver fechado
 chatbot.addEventListener('mouseleave', () => {
-    chatbot.classList.remove('expanded');
+    // Remove expanded somente se o chatWindow estiver fechado
+    if (chatWindow.style.display === 'none') {
+        chatbot.classList.remove('expanded');
+    }
 });
 
+// Botão X: fecha o chatWindow (o conteúdo permanece)
 closeButton.addEventListener('click', () => {
     chatWindow.style.display = 'none';
     chatbot.classList.remove('expanded');
 });
+
+// Botão Refresh: limpa a conversa e apaga os dados do localStorage
 refreshButton.addEventListener('click', (e) => {
     e.stopPropagation();
     console.log("Refresh button clicado");
-    if (messagesContainer) { // utiliza a variável já declarada no topo
-         messagesContainer.innerHTML = "";
-         console.log("container encontrado e limpo");
-        } else {
-        console.log("container não encontrado");
+    if (messagesContainer) {
+        messagesContainer.innerHTML = "";
+        console.log("container encontrado e limpo");
     }
     conversationId = null;
-    // Fecha a janela de chat
+    localStorage.removeItem('conversationId');
+    localStorage.removeItem('messages');
+    localStorage.removeItem('sessionId');
     chatWindow.style.display = 'none';
     chatbot.classList.remove('expanded');
+    // Gere novo sessionId para começar outra conversa
+    sessionId = generateSessionId();
+    localStorage.setItem('sessionId', sessionId);
 });
 
-// Função para exibir mensagens do usuário e depois mandar a pergunta
+// Função para exibir mensagens do usuário e enviar a pergunta
 const sendMessage = async () => {
     if (chatbotInput.disabled) return;
     const question = chatbotInput.value;
     if (question.trim() === '') return;
 
+    // Se o chatWindow estiver fechado, abre-o e mantém o chatbot expandido
+    if (chatWindow.style.display === 'none') {
+        chatWindow.style.display = 'flex';
+        chatbot.classList.add('expanded');
+    }
+    
     // Exibe a mensagem do usuário
     const userMessage = document.createElement('div');
     userMessage.className = 'message';
     userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
-    // Adicione ao messagesContainer em vez de chatWindow
     messagesContainer.appendChild(userMessage);
-    chatWindow.style.display = 'flex';
     chatWindow.scrollTop = chatWindow.scrollHeight;
-
+    updateLocalStorage();
+    
     // Exibe animação de "Pensando..."
     const botMessage = document.createElement('div');
     botMessage.className = 'message';
-    botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"><h4 id="searching-ellipsis">Pensando<span>.</span><span>.</span><span>.</span></h4></div>`;
-    // Adicione o botMessage ao messagesContainer
+    botMessage.innerHTML = `<div class="botIcon"></div>
+                            <div class="botMessage">
+                                <h4 id="searching-ellipsis">Pensando<span>.</span><span>.</span><span>.</span></h4>
+                            </div>`;
     messagesContainer.appendChild(botMessage);
-    chatWindow.style.display = 'flex';
     chatWindow.scrollTop = chatWindow.scrollHeight;
-
+    updateLocalStorage();
+    
     chatbotInput.value = '';
     chatbotInput.disabled = true;
 
-    const sessionId = localStorage.getItem('sessionId') || generateSessionId();
-    localStorage.setItem('sessionId', sessionId);
-
     try {
+        // Usa o sessionId já disponível
         const requestId = await sendQuestion(question, sessionId);
         const response = await getResponse(requestId);
 
@@ -111,6 +144,7 @@ const sendMessage = async () => {
             const converter = new showdown.Converter();
             const formattedHTML = converter.makeHtml(rawText);
             botMessageContainer.innerHTML = formattedHTML;
+            updateLocalStorage();
             
             fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
@@ -125,6 +159,7 @@ const sendMessage = async () => {
                             </audio>`;
                         botMessageContainer.appendChild(audioWrapper);
                         chatWindow.scrollTop = chatWindow.scrollHeight;
+                        updateLocalStorage();
                     }
                 })
                 .catch(err => console.error('Erro ao obter áudio:', err))
@@ -174,6 +209,9 @@ async function sendQuestion(question, sessionId) {
         });
         const data = await response.json();
         logInfo('Pergunta enviada com sucesso', 'request.php');
+        // Atualiza o conversationId (se retornado) e armazena localmente
+        conversationId = data.conversation_id || conversationId;
+        updateLocalStorage();
         return data.id;
     } catch (error) {
         logError('Erro ao enviar pergunta: ' + error.message, 'request.php');
@@ -200,6 +238,7 @@ async function getResponse(requestId) {
                 responseText = data.mensagemDeTexto;
                 conversationId = data.conversation_id || conversationId;
                 logInfo('Resposta recebida com sucesso', 'response.php');
+                updateLocalStorage();
                 break;
             }
             await new Promise(resolve => setTimeout(resolve, 5000));
@@ -259,10 +298,9 @@ function setChatModeInitial() {
     chatbotInput.focus();
 }
 
-// Modo RECORDING: esconde o micOffButton, mostra o container de gravação e o micOnButton
+// Modo RECORDING
 function setChatModeRecording() {
     chatMode = "recording";
-    // Mantém o input visível
     chatbotInput.style.display = 'block';
     transcribingMessage.style.display = 'none';
     
@@ -308,7 +346,7 @@ function setChatModeRecording() {
         });
 }
 
-// Modo TRANSCRIBING: esconde o input, mostra a mensagem de transcrição e desabilita os botões
+// Modo TRANSCRIBING
 function setChatModeTranscribing() {
     chatMode = "transcribing";
     chatbotInput.style.display = 'none';
