@@ -33,17 +33,26 @@ setInterval(() => {
     }, 500);
 }, 3000);
 
-// Eventos para abrir o chatWindow
+// Eventos para abrir o chatWindow e ajustar a expansão do chatbot
 chatbot.addEventListener('mouseenter', () => {
+    // Sempre expande o chatbot e foca no input
     chatbot.classList.add('expanded');
     chatbotInput.focus();
+    
+    // Se o messagesContainer tiver conteúdo, garante que o chatWindow permaneça aberto
+    if (messagesContainer.innerHTML.trim() !== "") {
+        chatWindow.style.display = 'flex';
+    }
 });
+
+// Remove a classe expanded somente se o chatWindow estiver fechado
 chatbot.addEventListener('mouseleave', () => {
     chatbot.classList.remove('expanded');
 });
 
 closeButton.addEventListener('click', () => {
     chatWindow.style.display = 'none';
+    chatbot.classList.remove('expanded');
 });
 refreshButton.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -57,6 +66,7 @@ refreshButton.addEventListener('click', (e) => {
     conversationId = null;
     // Fecha a janela de chat
     chatWindow.style.display = 'none';
+    chatbot.classList.remove('expanded');
 });
 
 // Função para exibir mensagens do usuário e depois mandar a pergunta
