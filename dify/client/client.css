@@ -40,21 +40,7 @@
     line-height: 1.4 !important;
 }
 
-#sendButton {
-    background-color: #43d9ea;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    font-family: 'Roboto', Arial, sans-serif !important;
-    font-size: 14px !important;
-    line-height: 1.4 !important;
-}
+
 
 #chatWindow {
     position: fixed;
@@ -207,31 +193,45 @@
 }
 
 /* Adicionado regra para garantir tamanho e visibilidade do micButton */
-#micButton {
-    width: auto !important;
+#micButton,
+#sendButton,
+#trashButton {
     height: 30px !important;
+    flex-shrink: 0;
     display: inline-block;
     border: none !important;
-    background: none !important;
+    cursor: pointer;
     padding: 0 !important;
+}
+
+
+#micButton {
+    width: auto !important;
+    background: none !important;
     margin-right: 5px;
+    margin-left: 5px;
 }
 
 #sendButton {
-    width: 30px !important;
-    height: 30px !important;
+    width: 30px;
+    background-color: #43d9ea;
+    border-radius: 50%;
     margin-left: auto !important;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
-#micButton,
-#sendButton {
-    flex-shrink: 0;
+#trashButton {
+    width: auto !important;
+    background: none !important;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
-#micButton,
-#sendButton {
-    flex-shrink: 0;
-}
 .audio-player {
     margin-top: 10px;
     width: 100%;

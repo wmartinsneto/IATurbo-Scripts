@@ -301,7 +301,9 @@ function setChatModeRecording() {
     recordingContainer.style.justifyContent = 'space-around';
     // Cria container com trashButton e timer
     recordingContainer.innerHTML = `
-        <button id="trashButton" title="Cancelar Gravação" style="background: transparent; border: none; color: #ccc; font-size: 18px; cursor: pointer;">🗑️</button>
+        <button id="trashButton" title="Cancelar Gravação">
+            <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" style="width:auto; height:30px; animation: pulse-animation 2s infinite;">
+        </button>
         <span id="recordingTimer" style="font-family: monospace;">00:00</span>
     `;
     // Atualiza o micButton para o estado de gravação (vermelho) e o exibe
@@ -370,12 +372,16 @@ function setChatModeTranscribing() {
         recContainer.remove();
         clearInterval(recordingTimerInterval);
     }
+
+    chatInput.style.display = 'none';
+    
     const transcribingContainer = document.createElement('div');
     transcribingContainer.id = 'transcribingContainer';
     transcribingContainer.style.display = 'flex';
     transcribingContainer.style.alignItems = 'center';
+    transcribingContainer.style.marginRight = 'auto !important';
     // Cria área fixa à esquerda para o texto "Transcrevendo..."
-    transcribingContainer.innerHTML = `<div id="transcribingLeft" style="flex:1; text-align: left;">Transcrevendo<span id="ellipsis"></span></div>`;
+    transcribingContainer.innerHTML = `<div id="transcribingLeft" style="text-align: left; width=100%;">Transcrevendo<span id="ellipsis"></span></div>`;
     // Reanexa micButton e sendButton à direita
     transcribingContainer.appendChild(micButton);
     transcribingContainer.appendChild(sendButton);
