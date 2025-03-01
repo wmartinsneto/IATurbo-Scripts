@@ -1,51 +1,64 @@
 const chatbot = document.getElementById('chatbot');
-const chatInput = document.getElementById('chatInput');
-const chatWindow = document.getElementById('chatWindow');
+const chatbotInput = document.getElementById('chatbotInput');
+const transcribingMessage = document.getElementById('transcribingMessage');
+const buttonsContainer = document.getElementById('buttonsContainer');
+const recordingContainer = document.getElementById('recordingContainer');
+const trashButton = document.getElementById('trashButton');
+const recordingTimer = document.getElementById('recordingTimer');
+const micOnButton = document.getElementById('micOnButton');
+const micOffButton = document.getElementById('micOffButton');
 const sendButton = document.getElementById('sendButton');
-const closeButton = document.getElementById('closeButton');
+const chatWindow = document.getElementById('chatWindow');
 const refreshButton = document.getElementById('refreshButton');
-const micButton = document.getElementById('micButton');
+const closeButton = document.getElementById('closeButton');
 
 let mediaRecorder;
 let recordedChunks = [];
 let recordingStartTime;
 let recordingTimerInterval;
 let chatMode = "initial"; // "initial", "recording", "transcribing"
-let cancelRecording = false; // Flag para cancelamento da gravação
-
+let cancelRecording = false;
+let conversationId = null;
 let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
 let currentPlaceholder = 0;
-let conversationId = null;
 
+// Alterna placeholders do input
 setInterval(() => {
-    chatInput.classList.add('fade');
+    chatbotInput.classList.add('fade');
     setTimeout(() => {
         currentPlaceholder = (currentPlaceholder + 1) % placeholders.length;
-        chatInput.placeholder = placeholders[currentPlaceholder];
-        chatInput.classList.remove('fade');
+        chatbotInput.placeholder = placeholders[currentPlaceholder];
+        chatbotInput.classList.remove('fade');
     }, 500);
 }, 3000);
 
+// Eventos para abrir o chatWindow
 chatbot.addEventListener('mouseenter', () => {
     chatbot.classList.add('expanded');
-    chatInput.focus();
+    chatbotInput.focus();
 });
-
-// Reabre a janela do chat quando o input recebe foco, se estava fechado.
-chatInput.addEventListener('focus', () => {
+chatbot.addEventListener('mouseleave', () => {
+    chatbot.classList.remove('expanded');
+});
+chatbotInput.addEventListener('focus', () => {
     if (chatWindow.style.display === 'none') {
         chatWindow.style.display = 'flex';
     }
 });
 
-chatbot.addEventListener('mouseleave', () => {
-    chatbot.classList.remove('expanded');
+closeButton.addEventListener('click', () => {
+    chatWindow.style.display = 'none';
+});
+refreshButton.addEventListener('click', () => {
+    chatWindow.innerHTML = '';
+    chatWindow.appendChild(document.getElementById('chatHeader'));
+    conversationId = null;
 });
 
+// Função para exibir mensagens do usuário e depois mandar a pergunta
 const sendMessage = async () => {
-    if (chatInput.disabled) return;
-
-    const question = chatInput.value;
+    if (chatbotInput.disabled) return;
+    const question = chatbotInput.value;
     if (question.trim() === '') return;
 
     // Exibe a mensagem do usuário
@@ -63,8 +76,8 @@ const sendMessage = async () => {
     chatWindow.appendChild(botMessage);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
-    chatInput.value = '';
-    chatInput.disabled = true;
+    chatbotInput.value = '';
+    chatbotInput.disabled = true;
 
     const sessionId = localStorage.getItem('sessionId') || generateSessionId();
     localStorage.setItem('sessionId', sessionId);
@@ -81,7 +94,7 @@ const sendMessage = async () => {
             const converter = new showdown.Converter();
             const formattedHTML = converter.makeHtml(rawText);
             botMessageContainer.innerHTML = formattedHTML;
-
+            
             fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
                 .then(data => {
@@ -99,42 +112,16 @@ const sendMessage = async () => {
                 })
                 .catch(err => console.error('Erro ao obter áudio:', err))
                 .finally(() => {
-                    chatInput.focus();
+                    chatbotInput.disabled = false;
+                    chatbotInput.focus();
                 });
         });
     } catch (error) {
         logError('Erro ao processar a pergunta: ' + error.message);
     } finally {
-        chatInput.disabled = false;
+        chatbotInput.disabled = false;
     }
 };
-
-sendButton.addEventListener('click', () => {
-    if (chatMode === "recording") {
-        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-            mediaRecorder.stop();
-        }
-    } else {
-        sendMessage();
-    }
-});
-
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-closeButton.addEventListener('click', () => {
-    chatWindow.style.display = 'none';
-});
-
-refreshButton.addEventListener('click', () => {
-    chatWindow.innerHTML = '';
-    chatWindow.appendChild(document.getElementById('chatHeader'));
-    conversationId = null;
-});
 
 function getUserIcon() {
     return `<svg width="30" height="30" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -241,100 +228,39 @@ function typeWriter(element, text, i = 0, callback) {
     }
 }
 
+// Modo INITIAL: mostra o input e os botões corretos
 function setChatModeInitial() {
     chatMode = "initial";
-    // Remove any temporary containers (recording or transcribing)
-    const recContainer = document.getElementById('recordingContainer');
-    if (recContainer) recContainer.remove();
-    const transcribingContainer = document.getElementById('transcribingContainer');
-    if (transcribingContainer) transcribingContainer.remove();
-    clearInterval(recordingTimerInterval);
-    
-    // Ensure chatbot contains the initial elements in proper order: chatInput, micButton, sendButton.
-    while(chatbot.firstChild) {
-        chatbot.removeChild(chatbot.firstChild);
-    }
-    chatbot.appendChild(chatInput);
-    chatbot.appendChild(micButton);
-    chatbot.appendChild(sendButton);
-    
-    // Restore styles for initial mode.
-    chatInput.style.display = 'block';
-    micButton.style.display = 'inline-block';
+    chatbotInput.style.display = 'block';
+    transcribingMessage.style.display = 'none';
+    recordingContainer.style.display = 'none';
+    micOnButton.style.display = 'none';
+    micOffButton.style.display = 'inline-block';
     sendButton.style.display = 'inline-block';
-    
-    // Restore micButton to its normal (blue) state.
-    micButton.style.width = 'auto';
-    micButton.style.height = '30px';
-    micButton.style.backgroundColor = "";
-    micButton.style.border = "none";
-    micButton.innerHTML = "";
-    const img = document.createElement("img");
-    img.src = "https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png";
-    img.alt = "Microfone Azul";
-    img.style.height = "30px";
-    img.style.width = "21px";
-    img.style.display = "block";
-    micButton.appendChild(img);
-    
-    micButton.disabled = false;
+    micOffButton.disabled = false;
     sendButton.disabled = false;
-    micButton.style.opacity = 1;
-    sendButton.style.opacity = 1;
-    
-    chatInput.focus();
+    chatbotInput.focus();
 }
 
-// Modo Gravando: Atualizado para exibir a ordem: trashButton, timer, micButton (vermelho) e sendButton.
+// Modo RECORDING: esconde o micOffButton, mostra o container de gravação e o micOnButton
 function setChatModeRecording() {
     chatMode = "recording";
-    //chatInput.style.display = 'none';
-    // Esconde o micButton do modo inicial
-    micButton.style.display = 'none';
+    // Mantém o input visível
+    chatbotInput.style.display = 'block';
+    transcribingMessage.style.display = 'none';
+    
+    micOffButton.style.display = 'none';
+    recordingContainer.style.display = 'flex';
+    micOnButton.style.display = 'inline-block';
+    sendButton.style.display = 'inline-block';
     
     cancelRecording = false;
-    
-    const recordingContainer = document.createElement('div');
-    recordingContainer.id = 'recordingContainer';
-    recordingContainer.style.display = 'flex';
-    recordingContainer.style.alignItems = 'center';
-    recordingContainer.style.justifyContent = 'space-around';
-    // Cria container com trashButton e timer
-    recordingContainer.innerHTML = `
-        <button id="trashButton" title="Cancelar Gravação">
-            <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" style="width:auto; height:30px; animation: pulse-animation 2s infinite;">
-        </button>
-        <span id="recordingTimer" style="font-family: monospace;">00:00</span>
-    `;
-    // Atualiza o micButton para o estado de gravação (vermelho) e o exibe
-    micButton.style.display = 'inline-block';
-    micButton.innerHTML = '<img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" style="width:auto; height:30px; animation: pulse-animation 2s infinite;">';
-    // Remove sendButton de seu container atual (se houver) e depois anexa micButton e sendButton, nesta ordem.
-    if(sendButton.parentElement) sendButton.parentElement.removeChild(sendButton);
-    recordingContainer.appendChild(micButton);
-    recordingContainer.appendChild(sendButton);
-    
-    chatbot.appendChild(recordingContainer);
-    
-    const trashButton = recordingContainer.querySelector('#trashButton');
-    if (trashButton) {
-        trashButton.addEventListener('click', () => {
-            cancelRecording = true;
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-            } else {
-                setChatModeInitial();
-            }
-        });
-    }
-    
     recordingStartTime = Date.now();
     recordingTimerInterval = setInterval(() => {
         const elapsed = Date.now() - recordingStartTime;
         const seconds = Math.floor(elapsed / 1000) % 60;
         const minutes = Math.floor(elapsed / 60000);
-        document.getElementById('recordingTimer').textContent =
-            (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        recordingTimer.textContent = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
     }, 1000);
     
     navigator.mediaDevices.getUserMedia({ audio: true })
@@ -347,6 +273,7 @@ function setChatModeRecording() {
                 }
             };
             mediaRecorder.onstop = () => {
+                clearInterval(recordingTimerInterval);
                 stream.getTracks().forEach(track => track.stop());
                 if (cancelRecording) {
                     setChatModeInitial();
@@ -364,43 +291,32 @@ function setChatModeRecording() {
         });
 }
 
-// Modo Transcrevendo: Atualizado para exibir "Transcrevendo..." fixo à esquerda, seguido por micButton e sendButton à direita.
+// Modo TRANSCRIBING: esconde o input, mostra a mensagem de transcrição e desabilita os botões
 function setChatModeTranscribing() {
     chatMode = "transcribing";
-    const recContainer = document.getElementById('recordingContainer');
-    if (recContainer) {
-        recContainer.remove();
-        clearInterval(recordingTimerInterval);
-    }
-
-    chatInput.style.display = 'none';
-    
-    const transcribingContainer = document.createElement('div');
-    transcribingContainer.id = 'transcribingContainer';
-    transcribingContainer.style.display = 'flex';
-    transcribingContainer.style.alignItems = 'center';
-    transcribingContainer.style.marginRight = 'auto !important';
-    // Cria área fixa à esquerda para o texto "Transcrevendo..."
-    transcribingContainer.innerHTML = `<div id="transcribingLeft" style="text-align: left; width=100%;">Transcrevendo<span id="ellipsis"></span></div>`;
-    // Reanexa micButton e sendButton à direita
-    transcribingContainer.appendChild(micButton);
-    transcribingContainer.appendChild(sendButton);
-    chatbot.appendChild(transcribingContainer);
-    micButton.disabled = true;
+    chatbotInput.style.display = 'none';
+    transcribingMessage.style.display = 'block';
+    transcribingMessage.innerHTML = `Transcrevendo<span id="ellipsis"></span>`;
+    recordingContainer.style.display = 'none';
+    micOnButton.style.display = 'inline-block';
+    micOffButton.style.display = 'none';
+    micOnButton.disabled = true;
     sendButton.disabled = true;
-    micButton.style.opacity = 0.5;
-    sendButton.style.opacity = 0.5;
     
     setInterval(() => {
         const ellipsis = document.getElementById('ellipsis');
         if(ellipsis) {
-            ellipsis.textContent = ellipsis.textContent.length < 3 ? ellipsis.textContent + '.' : '';
+            if(ellipsis.textContent.length < 3){
+                ellipsis.textContent += '.';
+            } else {
+                ellipsis.textContent = '';
+            }
         }
     }, 500);
 }
 
 function sendRecording(blob) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('audio', blob, 'recording.webm');
     
     fetch('https://iaturbo.com.br/wp-content/uploads/scripts/speech/speechToText.php', {
@@ -409,27 +325,48 @@ function sendRecording(blob) {
     })
     .then(res => res.json())
     .then(data => {
-        const transcribingContainer = document.getElementById('transcribingContainer');
-        if(transcribingContainer) transcribingContainer.remove();
         if (data.error) {
             alert('Erro na transcrição: ' + data.error);
             setChatModeInitial();
         } else if (data.text || data.transcription) {
-            chatInput.value = data.text || data.transcription;
+            chatbotInput.value = data.text || data.transcription;
             setChatModeInitial();
             sendMessage();
         }
     })
     .catch(err => {
-        const transcribingContainer = document.getElementById('transcribingContainer');
-        if(transcribingContainer) transcribingContainer.remove();
         alert('Erro na transcrição: ' + err);
         setChatModeInitial();
     });
 }
 
-// Evento para iniciar gravação ao clicar no micButton (modo inicial)
-micButton.addEventListener('click', () => {
+// Eventos dos botões
+micOffButton.addEventListener('click', () => {
     setChatModeRecording();
 });
+sendButton.addEventListener('click', () => {
+    if (chatMode === "recording" && mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    } else {
+        sendMessage();
+    }
+});
+trashButton.addEventListener('click', () => {
+    cancelRecording = true;
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    } else {
+        setChatModeInitial();
+    }
+});
+
+// Envia a mensagem ao pressionar Enter
+chatbotInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Inicia no modo INITIAL
 setChatModeInitial();

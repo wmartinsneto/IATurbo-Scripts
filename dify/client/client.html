@@ -9,9 +9,27 @@
 </head>
 <body>
     <div id="chatbot">
-        <input id="chatInput" type="text" placeholder="Precisa de ajuda?">
-        <button id="micButton" title="Gravar" class="micButton"></button>
-        <button id="sendButton">➤</button>
+        <div id="textContainer">
+            <input id="chatbotInput" type="text" placeholder="Precisa de ajuda?">
+            <div id="transcribingMessage" style="display:none;">
+                Transcrevendo<span id="ellipsis"></span>
+            </div>
+        </div>
+        <div id="buttonsContainer">
+            <div id="recordingContainer" style="display:none;">
+                <button id="trashButton" title="Cancelar Gravação">
+                    <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" alt="Trash" style="height:30px; width:auto; animation: pulse-animation 2s infinite;">
+                </button>
+                <span id="recordingTimer" style="font-family: monospace;">00:00</span>
+            </div>
+            <button id="micOnButton" style="display:none;">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" alt="Microfone Vermelho" style="height:30px; width:auto;">
+            </button>
+            <button id="micOffButton">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png" alt="Microfone Azul" style="height:30px; width:auto;">
+            </button>
+            <button id="sendButton">➤</button>
+        </div>
     </div>
     <div id="chatWindow">
         <div id="chatHeader">
@@ -22,7 +40,6 @@
             </div>
         </div>
     </div>
-
     <script src="client.js"></script>
 </body>
 </html>

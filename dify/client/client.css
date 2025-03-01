@@ -10,16 +10,63 @@
     cursor: pointer;
     transition: width 0.3s ease;
     width: 300px;
-    text-align: center;
-    animation: pulse-animation 2s infinite;
     display: flex;
     align-items: center;
-    gap: 5px;
-    justify-content: space-between;
-    z-index: 1000;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    z-index: 1000;
+}
+
+/* Área de texto à esquerda */
+#textContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Input de texto */
+#chatbotInput {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 25px;
+    background-color: transparent;
+    color: #ccc;
+    transition: opacity 1s ease;
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* Mensagem de transcrição */
+#transcribingMessage {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    color: #ccc;
+}
+
+/* Área de botões à direita */
+#buttonsContainer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Container de gravação (exibe trashButton e timer) */
+#recordingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* Botões de microfone e envio */
+#micOnButton, #micOffButton, #sendButton, #trashButton {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 #chatbot.expanded {
@@ -39,8 +86,6 @@
     font-size: 14px !important;
     line-height: 1.4 !important;
 }
-
-
 
 #chatWindow {
     position: fixed;
