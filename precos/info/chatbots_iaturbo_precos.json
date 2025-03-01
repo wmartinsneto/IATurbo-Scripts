@@ -8,8 +8,8 @@
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Personalização máxima para interações detalhadas e focadas no usuário, usando dados em tempo real para respostas precisas e complexas, como consultas específicas e suporte técnico avançado. Ideal para quem quer um chatbot que seja praticamente um assistente digital.",
-        "Custo": 4800,
-        "Tempo": 40
+        "Custo": 2880,
+        "Tempo": 24
       }
     },
     "SuporteMelhoriaContinua": {
@@ -18,8 +18,8 @@
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com resposta em até 1 hora no horário comercial. Além do acompanhamento em eventos críticos, como lançamentos e campanhas, este nível inclui treinamentos contínuos para aprimorar o chatbot, adaptando respostas e funções conforme as necessidades específicas do negócio.",
-        "Custo": 1440,
-        "Tempo": 12
+        "Custo": 1200,
+        "Tempo": 10
       }
     }
   },
@@ -32,26 +32,26 @@
       "WhatsApp": {
         "Nome": "Integração com WhatsApp",
         "Descricao": "Permite que o chatbot interaja diretamente com usuários no WhatsApp, o app de mensagens mais utilizado.",
-        "Custo": 960,
-        "Tempo": 8
+        "Custo": 480,
+        "Tempo": 4
       },
       "Facebook": {
         "Nome": "Integração com Facebook",
         "Descricao": "Inclui o Messenger e respostas automáticas a comentários em posts, ideal para interagir com seguidores e clientes na rede social.",
-        "Custo": 960,
-        "Tempo": 8
+        "Custo": 480,
+        "Tempo": 4
       },
       "Instagram": {
         "Nome": "Integração com Instagram",
         "Descricao": "Permite que o chatbot responda a DMs e comentários em Stories e Reels, promovendo engajamento direto na plataforma.",
-        "Custo": 960,
-        "Tempo": 8
+        "Custo": 480,
+        "Tempo": 4
       },
       "Telegram": {
         "Nome": "Integração com Telegram",
         "Descricao": "Permite que o chatbot interaja em grupos e canais do Telegram, ideal para atender uma base de usuários em expansão.",
-        "Custo": 960,
-        "Tempo": 8
+        "Custo": 480,
+        "Tempo": 4
       }
     },
     "APIPublica": {
@@ -86,8 +86,8 @@
       "Avancado": {
         "Nome": "Avançado",
         "Descricao": "Suporte 24/7 via e-mail e WhatsApp, com tempo de resposta de até 1 hora no horário comercial. Inclui monitoramento constante e aprimoramentos contínuos, além de um suporte proativo em eventos e períodos críticos, garantindo que o chatbot esteja sempre atualizado e adaptado às necessidades do negócio.",
-        "Custo": 1440,
-        "Tempo": 12
+        "Custo": 1200,
+        "Tempo": 10
       }
     }
   },
@@ -99,8 +99,8 @@
       "AudicaoAtiva": {
         "Nome": "Audição Ativa (Voz ➡ Texto)",
         "Descricao": "Com a Audição Ativa, o chatbot “escuta” comandos de voz e os converte em texto, ideal para quem prefere falar em vez de digitar ou tem limitações com o teclado. Um jeito rápido e inclusivo de se comunicar.",
-        "Custo": 960,
-        "Tempo": 8
+        "Custo": 480,
+        "Tempo": 4
       },
       "VozPersonalizada": {
         "Nome": "Voz Personalizada (Texto ➡ Voz)",

@@ -11,6 +11,7 @@ const sendButton = document.getElementById('sendButton');
 const chatWindow = document.getElementById('chatWindow');
 const refreshButton = document.getElementById('refreshButton');
 const closeButton = document.getElementById('closeButton');
+const messagesContainer = document.getElementById('messagesContainer'); // Nova declaração
 
 let mediaRecorder;
 let recordedChunks = [];
@@ -40,19 +41,22 @@ chatbot.addEventListener('mouseenter', () => {
 chatbot.addEventListener('mouseleave', () => {
     chatbot.classList.remove('expanded');
 });
-chatbotInput.addEventListener('focus', () => {
-    if (chatWindow.style.display === 'none') {
-        chatWindow.style.display = 'flex';
-    }
-});
 
 closeButton.addEventListener('click', () => {
     chatWindow.style.display = 'none';
 });
-refreshButton.addEventListener('click', () => {
-    chatWindow.innerHTML = '';
-    chatWindow.appendChild(document.getElementById('chatHeader'));
+refreshButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    console.log("Refresh button clicado");
+    if (messagesContainer) { // utiliza a variável já declarada no topo
+         messagesContainer.innerHTML = "";
+         console.log("container encontrado e limpo");
+        } else {
+        console.log("container não encontrado");
+    }
     conversationId = null;
+    // Fecha a janela de chat
+    chatWindow.style.display = 'none';
 });
 
 // Função para exibir mensagens do usuário e depois mandar a pergunta
@@ -65,7 +69,8 @@ const sendMessage = async () => {
     const userMessage = document.createElement('div');
     userMessage.className = 'message';
     userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
-    chatWindow.appendChild(userMessage);
+    // Adicione ao messagesContainer em vez de chatWindow
+    messagesContainer.appendChild(userMessage);
     chatWindow.style.display = 'flex';
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
@@ -73,7 +78,9 @@ const sendMessage = async () => {
     const botMessage = document.createElement('div');
     botMessage.className = 'message';
     botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"><h4 id="searching-ellipsis">Pensando<span>.</span><span>.</span><span>.</span></h4></div>`;
-    chatWindow.appendChild(botMessage);
+    // Adicione o botMessage ao messagesContainer
+    messagesContainer.appendChild(botMessage);
+    chatWindow.style.display = 'flex';
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
     chatbotInput.value = '';
