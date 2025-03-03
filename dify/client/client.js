@@ -43,7 +43,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 2 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 4 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -195,7 +195,6 @@ const sendMessage = async () => {
                 })
                 .finally(() => {
                     chatbotInput.disabled = false;
-                    chatbotInput.focus();
                 });
         });
     } catch (error) {
