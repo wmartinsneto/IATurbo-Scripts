@@ -48,6 +48,8 @@
     font-size: 14px !important;
     line-height: 1.4 !important;
     color: #ccc;
+    padding: 10px 12px;
+    border: none;
 }
 
 /* Área de botões à direita */
@@ -201,6 +203,11 @@
     100% {
         box-shadow: 0 0 0 20px rgba(67, 217, 234, 0);
     }
+}
+
+/* Classe para efeito de pulso */
+.pulse {
+    animation: pulse-animation 2s infinite;
 }
 
 .fade {
