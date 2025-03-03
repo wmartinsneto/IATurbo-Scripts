@@ -5,41 +5,66 @@
     right: 20px;
     background-color: #333;
     border-radius: 50px;
-    padding: 10px;
-    padding-right: 15px;
+    padding: 8px 12px; /* Reduzido para diminuir o tamanho */
     color: #ccc;
     cursor: pointer;
-    transition: width 0.3s ease;
+    transition: all 0.3s ease;
     animation: pulse-animation 2s infinite;
-    width: 280px;
+    width: auto; /* Alterado para auto para ser o menor possível quando inativo */
+    min-width: 180px; /* Tamanho mínimo para garantir que os botões caibam */
+    max-width: 90vw; /* Limita a largura máxima para não exceder a tela */
     display: flex;
     flex-direction: row; /* garante itens lado a lado */
     align-items: center;
+    justify-content: space-between; /* Distribui o espaço entre o input e os botões */
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
     z-index: 1000;
+    margin-left: auto; /* Centraliza à direita */
+    box-sizing: border-box;
 }
 
 /* Área de texto à esquerda */
 #textContainer {
-    flex: 1;
+    flex: 1; /* Alterado para 1 para crescer e ocupar o espaço disponível */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 120px; /* Largura mínima para o texto */
+    max-width: calc(100% - 85px); /* Ajustado para dar mais espaço aos botões */
+    overflow: visible; /* Alterado para visible para mostrar a borda completa */
+    transition: all 0.3s ease; /* Adiciona transição suave */
+    padding: 0; /* Remove o padding que estava causando problemas */
+    margin-right: 10px; /* Adiciona margem à direita para separar dos botões */
 }
 
 /* Input de texto */
 #chatbotInput {
-    flex: 1;
+    width: 100%;
     border: none;
     border-radius: 25px;
+    margin-left: 5px;
+    margin-right: 0; /* Remove a margem direita que estava causando problemas */
     background-color: transparent;
     color: white;
-    transition: opacity 1s ease;
+    transition: all 0.3s ease;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px 10px; /* Mantém o padding horizontal para afastar o placeholder da borda */
+    outline: none; /* Remove o outline padrão */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+}
+
+/* Estilo para o input quando está com foco */
+#chatbotInput:focus {
+    border: 1px solid rgba(67, 217, 234, 0.4); /* Borda ciano claro com transparência */
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente mais claro */
+    /* Removido o box-shadow que estava causando o brilho cortado */
 }
 
 /* Mensagem de transcrição */
@@ -47,8 +72,11 @@
     font-size: 14px !important;
     line-height: 1.4 !important;
     color: #ccc;
-    padding: 10px 12px;
+    padding: 5px 10px; /* Ajustado para manter consistência com o input */
     border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Área de botões à direita */
@@ -56,13 +84,17 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-shrink: 0; /* Impede que os botões encolham */
+    margin-left: 0; /* Remove a margem esquerda para evitar espaçamento extra */
 }
 
 /* Container de gravação (exibe trashButton e timer) */
 #recordingContainer {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-end; /* Alinha à direita */
+    flex-shrink: 0;
+    margin-right: 5px;
 }
 
 /* Botões de microfone e envio */
@@ -71,24 +103,34 @@
     background: none;
     cursor: pointer;
     padding: 0;
+    flex-shrink: 0;
 }
 
 #chatbot.expanded {
-    width:350px;
+    width: 350px;
+    max-width: 90vw; /* Limita a largura máxima para não exceder a tela */
+    left: auto; /* Garante que não toque a margem esquerda */
+}
+
+/* Quando o chatbot está expandido, o textContainer também se expande */
+#chatbot.expanded #textContainer {
+    flex: 1;
+    max-width: calc(100% - 85px); /* Ajustado para dar mais espaço aos botões */
 }
 
 #chatbot input {
-    flex: 1;
+    width: 100%;
     border: none;
-    padding: 10px 12px !important;
+    padding: 5px 10px !important; /* Ajustado para manter consistência */
     border-radius: 25px;
     background-color: transparent;
     color: #ccc;
-    margin-right: 10px;
-    transition: opacity 1s ease;
+    transition: all 0.3s ease;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    outline: none; /* Remove o outline padrão */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
 }
 
 #chatWindow {
@@ -276,32 +318,39 @@
     padding: 0 !important;
 }
 
-
-#micButton {
+#micOnButton, #micOffButton {
     width: auto !important;
     background: none !important;
     margin-right: 5px;
-    margin-left: 5px;
+    flex-shrink: 0;
 }
 
 #sendButton {
     width: 30px;
+    height: 30px;
     background-color: #43d9ea;
     border-radius: 50%;
-    margin-left: auto !important;
+    display: flex;
     align-items: center;
     justify-content: center;
     color: #333;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    flex-shrink: 0;
 }
 
 #trashButton {
     width: auto !important;
     background: none !important;
     margin-right: 5px;
-    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+#recordingTimer {
+    margin: 0 5px;
+    font-size: 12px;
+    flex-shrink: 0;
 }
 
 /* Customização do componente de áudio inspirado no Tron */
