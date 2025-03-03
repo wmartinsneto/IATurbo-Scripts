@@ -43,7 +43,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 4 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 6 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -54,6 +54,8 @@ function updateLocalStorage() {
         localStorage.setItem('conversationId', conversationId);
     }
     localStorage.setItem('messages', messagesContainer.innerHTML);
+    debugLog("LocalStorage atualizado.");
+
 }
 
 // Restaura mensagens armazenadas e exibe o chatWindow
@@ -65,8 +67,9 @@ window.addEventListener('load', () => {
         chatWindow.scrollTop = chatWindow.scrollHeight;
         chatbot.classList.add('expanded');
         debugLog("Window load: mensagens restauradas do localStorage.");
+    } else {
+        debugLog("Window load: mensagens não restauradas do localStorage.");
     }
-    debugLog("Window load: mensagens não restauradas do localStorage.");
 });
 
 // Alterna placeholders do input
@@ -292,6 +295,7 @@ function typeWriter(element, text, i = 0, callback) {
 function setChatModeInitial() {
     chatMode = "initial";
     chatbotInput.style.display = 'block';
+    placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
     transcribingMessage.style.display = 'none';
     recordingContainer.style.display = 'none';
     micOnButton.style.display = 'none';
@@ -310,6 +314,8 @@ function setChatModeRecording() {
     chatMode = "recording";
     chatbotInput.style.display = 'block';
     transcribingMessage.style.display = 'none';
+
+    placeholders = ["Gravando...", "Estou te ouvindo..."];
     
     micOffButton.style.display = 'none';
     recordingContainer.style.display = 'flex';
