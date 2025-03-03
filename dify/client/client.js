@@ -302,7 +302,6 @@ function setChatModeInitial() {
     
     micOffButton.disabled = false;
     sendButton.disabled = false;
-    chatbotInput.focus();
     debugLog("Modo INITIAL ativado");
 }
 
