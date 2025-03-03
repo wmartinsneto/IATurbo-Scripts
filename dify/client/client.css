@@ -296,7 +296,7 @@
 
 /* Customização do componente de áudio inspirado no Tron */
 .audio-player {
-    border: 2px solid #43d9ea;     /* Borda ciano */
+    border: none;
     border-radius: 30px;
     margin-top: 10px;
     width: 100%; /* Ocupa toda a largura disponível */
