@@ -17,26 +17,28 @@
         </div>
         <div id="buttonsContainer">
             <div id="recordingContainer" style="display:none;">
-                <button id="trashButton" title="Cancelar Gravação">
-                    <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" alt="Trash" style="height:30px; width:auto; animation: pulse-animation 2s infinite;">
+                <button id="trashButton" data-tooltip="Cancelar gravação">
+                    <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" alt="Cancelar gravação" style="height:30px; width:auto; animation: pulse-animation 2s infinite;">
                 </button>
                 <span id="recordingTimer" style="font-family: monospace;">00:00</span>
             </div>
             <button id="micOnButton" style="display:none;">
-                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" alt="Microfone Vermelho" style="height:30px; width:auto;">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" alt="Microfone Gravando" style="height:30px; width:auto;">
             </button>
-            <button id="micOffButton">
-                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png" alt="Microfone Azul" style="height:30px; width:auto;">
+            <button id="micOffButton" data-tooltip="Clique para falar">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png" alt="Ativar microfone" style="height:30px; width:auto;">
             </button>
-            <button id="sendButton">➤</button>
+            <button id="sendButton" data-tooltip="Enviar mensagem">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/03/sendButton.png" alt="Enviar mensagem" style="height:30px; width:auto;">                
+            </button>
         </div>
     </div>
     <div id="chatWindow">
         <div id="chatHeader">
             <span>Pergunte para a IARA</span>
             <div>
-                <button id="refreshButton">⟳</button>
-                <button id="closeButton">✖</button>
+                <button id="refreshButton" data-tooltip="Limpar conversa">⟳</button>
+                <button id="closeButton" data-tooltip="Fechar janela">✖</button>
             </div>
         </div>
         <!-- Novo container para as mensagens -->

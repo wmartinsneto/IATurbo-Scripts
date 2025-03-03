@@ -98,12 +98,100 @@
 }
 
 /* Botões de microfone e envio */
-#micOnButton, #micOffButton, #sendButton, #trashButton {
+#micOnButton, #micOffButton, #sendButton, #trashButton, #refreshButton, #closeButton {
     border: none;
     background: none;
     cursor: pointer;
     padding: 0;
     flex-shrink: 0;
+    position: relative;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Efeito de hover para os botões */
+#micOnButton:hover, #micOffButton:hover, #sendButton:hover, #trashButton:hover, #refreshButton:hover, #closeButton:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+/* Tooltip personalizado para botões do chatbot */
+#chatbot [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
+    margin-bottom: 5px;
+    max-width: 200px;
+    text-align: center;
+    /* Garantir que o tooltip não saia da tela */
+    right: auto;
+}
+
+/* Seta do tooltip para botões do chatbot */
+#chatbot [data-tooltip]:hover::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+    margin-bottom: 0;
+    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
+}
+
+/* Tooltip personalizado para botões do header (abaixo dos botões) */
+#chatHeader [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%; /* Posiciona abaixo do botão */
+    bottom: auto; /* Remove o posicionamento bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
+    margin-top: 5px; /* Espaço entre o botão e o tooltip */
+}
+
+/* Seta do tooltip para botões do header */
+#chatHeader [data-tooltip]:hover::before {
+    content: "";
+    position: absolute;
+    top: 100%; /* Posiciona abaixo do botão */
+    bottom: auto; /* Remove o posicionamento bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent; /* Inverte a direção da seta */
+    margin-top: 0;
+}
+
+/* Ajuste especial para o botão de enviar (último à direita) */
+#sendButton[data-tooltip]:hover::after {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+#sendButton[data-tooltip]:hover::before {
+    left: auto;
+    right: 10px;
+    transform: none;
 }
 
 #chatbot.expanded {
