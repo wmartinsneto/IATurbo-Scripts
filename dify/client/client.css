@@ -97,7 +97,6 @@
     right: 20px;
     width: 350px;
     max-height: 400px;
-    overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -107,16 +106,24 @@
     font-size: 14px !important;
     line-height: 1.4 !important;
     color: #333;
-    scrollbar-width: thin;
-    scrollbar-color: #43d9ea #f1f1f1;
     z-index: 1000;
+    overflow: hidden; /* Impede que o chatWindow tenha scrollbar */
 }
 
-#chatWindow::-webkit-scrollbar {
+/* Estilo para o container de mensagens com scrollbar */
+#messagesContainer {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(400px - 50px); /* Altura máxima menos a altura do header */
+    scrollbar-width: thin;
+    scrollbar-color: #43d9ea #f1f1f1;
+}
+
+#messagesContainer::-webkit-scrollbar {
     width: 8px;
 }
 
-#chatWindow::-webkit-scrollbar-thumb {
+#messagesContainer::-webkit-scrollbar-thumb {
     background-color: #43d9ea;
     border-radius: 10px;
 }
@@ -135,6 +142,9 @@
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 16px !important;
     line-height: 1.4 !important;
+    min-height: 20px; /* Altura mínima para o header */
+    width: 100%; /* Garante que ocupe toda a largura */
+    box-sizing: border-box; /* Inclui padding na largura */
 }
 
 #chatHeader button {

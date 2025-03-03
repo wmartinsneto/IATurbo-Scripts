@@ -64,7 +64,7 @@ window.addEventListener('load', () => {
     if (storedMessages && storedMessages.trim() !== "") {
         messagesContainer.innerHTML = storedMessages;
         chatWindow.style.display = 'flex';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         chatbot.classList.add('expanded');
         debugLog("Window load: mensagens restauradas do localStorage.");
     } else {
@@ -89,7 +89,7 @@ chatbot.addEventListener('mouseenter', () => {
     debugLog("chatbot mouseenter - chatbot expandido e chatbotInput focado.");
     if (messagesContainer.innerHTML.trim() !== "") {
         chatWindow.style.display = 'flex';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         debugLog("chatbot mouseenter - chatWindow exibido com conteúdo.");
     }
 });
@@ -142,7 +142,7 @@ const sendMessage = async () => {
     userMessage.className = 'message';
     userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
     messagesContainer.appendChild(userMessage);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
     updateLocalStorage();
     
     const botMessage = document.createElement('div');
@@ -152,7 +152,7 @@ const sendMessage = async () => {
                                 <h4 id="searching-ellipsis">Pensando<span>.</span><span>.</span><span>.</span></h4>
                             </div>`;
     messagesContainer.appendChild(botMessage);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
     updateLocalStorage();
     
     chatbotInput.value = '';
@@ -189,7 +189,7 @@ const sendMessage = async () => {
                             </audio>`;
                         // Adiciona o audio-player diretamente ao message (container pai), não ao botMessage
                         botMessage.appendChild(audioWrapper);
-                        chatWindow.scrollTop = chatWindow.scrollHeight;
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         updateLocalStorage();
                     }
                 })
@@ -285,7 +285,7 @@ async function getResponse(requestId) {
 function typeWriter(element, text, i = 0, callback) {
     if (i < text.length) {
         element.innerHTML += text.charAt(i);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         setTimeout(() => typeWriter(element, text, i + 1, callback), 5);
     } else {
         if (callback) callback();
