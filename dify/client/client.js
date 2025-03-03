@@ -1,3 +1,7 @@
+// Constantes de configuração
+const DEBUG_MODE = true;
+const LOG_SOURCE = "IATurboJSClient_Chatbots_LP";
+
 // Recupera dados do localStorage (se existirem) ou gera novos
 let sessionId = localStorage.getItem('sessionId') || generateSessionId();
 localStorage.setItem('sessionId', sessionId);
@@ -27,7 +31,23 @@ let cancelRecording = false;
 let placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
 let currentPlaceholder = 0;
 
-// Função para atualizar os dados no localStorage
+// Função única para log (usando a nova versão do remote-log.php)
+async function log(message, source, type) {
+    await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/remote-log.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, type, source })
+    });
+}
+
+// Função para logs detalhados quando DEBUG_MODE está ativo
+function debugLog(message) {
+    if (DEBUG_MODE) {
+        log(message, LOG_SOURCE, "DEBUG");
+    }
+}
+
+// Atualiza localStorage
 function updateLocalStorage() {
     localStorage.setItem('sessionId', sessionId);
     if (conversationId) {
@@ -36,7 +56,7 @@ function updateLocalStorage() {
     localStorage.setItem('messages', messagesContainer.innerHTML);
 }
 
-// Restaura mensagens armazenadas (se houver) e exibe o chatWindow
+// Restaura mensagens armazenadas e exibe o chatWindow
 window.addEventListener('load', () => {
     const storedMessages = localStorage.getItem('messages');
     if (storedMessages && storedMessages.trim() !== "") {
@@ -45,6 +65,7 @@ window.addEventListener('load', () => {
         chatWindow.scrollTop = chatWindow.scrollHeight;
         chatbot.classList.add('expanded');
     }
+    debugLog("Window load: mensagens restauradas se existentes.");
 });
 
 // Alterna placeholders do input
@@ -61,35 +82,32 @@ setInterval(() => {
 chatbot.addEventListener('mouseenter', () => {
     chatbot.classList.add('expanded');
     chatbotInput.focus();
-    // Se houver mensagens armazenadas, garante que o chatWindow permaneça aberto
+    debugLog("chatbot mouseenter ativado.");
     if (messagesContainer.innerHTML.trim() !== "") {
         chatWindow.style.display = 'flex';
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 });
 
-// Eventos para alternar a expansão do chatbot
 chatbot.addEventListener('mouseleave', () => {
-
-    // Remove "expanded" somente se não estivermos gravando
     if (chatMode !== 'recording') {
         chatbot.classList.remove('expanded');
+        debugLog("chatbot mouseleave: remoção de 'expanded' (mode não é recording).");
     }
 });
 
-// Botão X: fecha o chatWindow (o conteúdo permanece)
+// Botão X: fecha o chatWindow (mantém o conteúdo)
 closeButton.addEventListener('click', () => {
     chatWindow.style.display = 'none';
     chatbot.classList.remove('expanded');
+    debugLog("closeButton clicado: chatWindow fechado.");
 });
 
 // Botão Refresh: limpa a conversa e apaga os dados do localStorage
 refreshButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    console.log("Refresh button clicado");
     if (messagesContainer) {
         messagesContainer.innerHTML = "";
-        console.log("container encontrado e limpo");
     }
     conversationId = null;
     localStorage.removeItem('conversationId');
@@ -97,24 +115,26 @@ refreshButton.addEventListener('click', (e) => {
     localStorage.removeItem('sessionId');
     chatWindow.style.display = 'none';
     chatbot.classList.remove('expanded');
-    // Gere novo sessionId para começar outra conversa
     sessionId = generateSessionId();
     localStorage.setItem('sessionId', sessionId);
+    debugLog("refreshButton clicado: conversa limpa, novo sessionId gerado.");
 });
 
-// Função para exibir mensagens do usuário e enviar a pergunta
+// Função para exibir mensagens e enviar a pergunta
 const sendMessage = async () => {
     if (chatbotInput.disabled) return;
     const question = chatbotInput.value;
     if (question.trim() === '') return;
+    
+    // Log da entrada do lead
+    await log("Entrada do lead: " + question, LOG_SOURCE, "INFO");
 
-    // Se o chatWindow estiver fechado, abre-o e mantém o chatbot expandido
     if (chatWindow.style.display === 'none') {
         chatWindow.style.display = 'flex';
         chatbot.classList.add('expanded');
+        debugLog("sendMessage: chatWindow aberto devido a nova mensagem.");
     }
     
-    // Exibe a mensagem do usuário
     const userMessage = document.createElement('div');
     userMessage.className = 'message';
     userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
@@ -122,7 +142,6 @@ const sendMessage = async () => {
     chatWindow.scrollTop = chatWindow.scrollHeight;
     updateLocalStorage();
     
-    // Exibe animação de "Pensando..."
     const botMessage = document.createElement('div');
     botMessage.className = 'message';
     botMessage.innerHTML = `<div class="botIcon"></div>
@@ -135,12 +154,14 @@ const sendMessage = async () => {
     
     chatbotInput.value = '';
     chatbotInput.disabled = true;
-
+    
     try {
-        // Usa o sessionId já disponível
         const requestId = await sendQuestion(question, sessionId);
+        await log("Pergunta enviada. requestId: " + requestId, LOG_SOURCE, "INFO");
+        
         const response = await getResponse(requestId);
-
+        await log("Resposta da API de texto: " + response, LOG_SOURCE, "INFO");
+        
         botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"></div>`;
         typeWriter(botMessage.querySelector('.botMessage'), response, 0, () => {
             const botMessageContainer = botMessage.querySelector('.botMessage');
@@ -153,8 +174,9 @@ const sendMessage = async () => {
             
             fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
-                .then(data => {
+                .then(async data => {
                     if (data.status === 'ok') {
+                        await log("Resposta da API de áudio recebida: " + JSON.stringify(data), LOG_SOURCE, "INFO");
                         const audioWrapper = document.createElement('div');
                         audioWrapper.className = 'audio-player';
                         audioWrapper.innerHTML = `
@@ -167,14 +189,17 @@ const sendMessage = async () => {
                         updateLocalStorage();
                     }
                 })
-                .catch(err => console.error('Erro ao obter áudio:', err))
+                .catch(err => {
+                    console.error('Erro ao obter áudio:', err);
+                    log("Erro ao obter áudio: " + err, LOG_SOURCE, "ERROR");
+                })
                 .finally(() => {
                     chatbotInput.disabled = false;
                     chatbotInput.focus();
                 });
         });
     } catch (error) {
-        logError('Erro ao processar a pergunta: ' + error.message);
+        log("Erro ao processar a pergunta: " + error.message, LOG_SOURCE, "ERROR");
     } finally {
         chatbotInput.disabled = false;
     }
@@ -213,13 +238,12 @@ async function sendQuestion(question, sessionId) {
             })
         });
         const data = await response.json();
-        logInfo('Pergunta enviada com sucesso', 'request.php');
-        // Atualiza o conversationId (se retornado) e armazena localmente
+        await log("Pergunta enviada com sucesso. Dados: " + JSON.stringify(data), LOG_SOURCE, "INFO");
         conversationId = data.conversation_id || conversationId;
         updateLocalStorage();
         return data.id;
     } catch (error) {
-        logError('Erro ao enviar pergunta: ' + error.message, 'request.php');
+        await log("Erro ao enviar pergunta: " + error.message, LOG_SOURCE, "ERROR");
         throw error;
     }
 }
@@ -242,7 +266,7 @@ async function getResponse(requestId) {
             if (data.status === 'completed') {
                 responseText = data.mensagemDeTexto;
                 conversationId = data.conversation_id || conversationId;
-                logInfo('Resposta recebida com sucesso', 'response.php');
+                await log("Resposta recebida com sucesso: " + responseText, LOG_SOURCE, "INFO");
                 updateLocalStorage();
                 break;
             }
@@ -250,33 +274,9 @@ async function getResponse(requestId) {
         }
         return responseText;
     } catch (error) {
-        logError('Erro ao obter resposta: ' + error.message, 'response.php');
+        await log("Erro ao obter resposta: " + error.message, LOG_SOURCE, "ERROR");
         throw error;
     }
-}
-
-async function logInfo(message, source) {
-    await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/remote-log.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            message,
-            type: 'INFO',
-            source
-        })
-    });
-}
-
-async function logError(message, source) {
-    await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/remote-log.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            message,
-            type: 'ERROR',
-            source
-        })
-    });
 }
 
 function typeWriter(element, text, i = 0, callback) {
@@ -289,7 +289,7 @@ function typeWriter(element, text, i = 0, callback) {
     }
 }
 
-// Modo INITIAL: mostra o input e os botões corretos
+// Modo INITIAL: Remove a classe 'pulse' do sendButton para quitar o efeito
 function setChatModeInitial() {
     chatMode = "initial";
     chatbotInput.style.display = 'block';
@@ -298,12 +298,18 @@ function setChatModeInitial() {
     micOnButton.style.display = 'none';
     micOffButton.style.display = 'inline-block';
     sendButton.style.display = 'inline-block';
+    
+    sendButton.classList.remove('pulse');
+    
     micOffButton.disabled = false;
     sendButton.disabled = false;
     chatbotInput.focus();
+    if (DEBUG_MODE) {
+        debugLog("Modo INITIAL ativado");
+    }
 }
 
-// Modo RECORDING
+// Modo RECORDING: Adiciona a classe 'pulse' ao sendButton para o efeito de pulso
 function setChatModeRecording() {
     chatMode = "recording";
     chatbotInput.style.display = 'block';
@@ -313,6 +319,8 @@ function setChatModeRecording() {
     recordingContainer.style.display = 'flex';
     micOnButton.style.display = 'inline-block';
     sendButton.style.display = 'inline-block';
+    
+    sendButton.classList.add('pulse');
     
     cancelRecording = false;
     recordingStartTime = Date.now();
@@ -344,6 +352,9 @@ function setChatModeRecording() {
                 sendRecording(audioBlob);
             };
             mediaRecorder.start();
+            if (DEBUG_MODE) {
+                debugLog("Modo RECORDING ativado: gravação iniciada");
+            }
         })
         .catch(err => {
             console.error('Erro ao capturar áudio: ', err);
@@ -365,14 +376,17 @@ function setChatModeTranscribing() {
     
     setInterval(() => {
         const ellipsis = document.getElementById('ellipsis');
-        if(ellipsis) {
-            if(ellipsis.textContent.length < 3){
+        if (ellipsis) {
+            if (ellipsis.textContent.length < 3) {
                 ellipsis.textContent += '.';
             } else {
                 ellipsis.textContent = '';
             }
         }
     }, 500);
+    if (DEBUG_MODE) {
+        debugLog("Modo TRANSCRIBING ativado");
+    }
 }
 
 function sendRecording(blob) {
@@ -403,6 +417,7 @@ function sendRecording(blob) {
 // Eventos dos botões
 micOffButton.addEventListener('click', () => {
     setChatModeRecording();
+    debugLog("micOffButton clicado: setChatModeRecording");
 });
 sendButton.addEventListener('click', () => {
     if (chatMode === "recording" && mediaRecorder && mediaRecorder.state !== 'inactive') {
@@ -418,6 +433,7 @@ trashButton.addEventListener('click', () => {
     } else {
         setChatModeInitial();
     }
+    debugLog("trashButton clicado: gravação cancelada");
 });
 
 // Envia a mensagem ao pressionar Enter
