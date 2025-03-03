@@ -180,6 +180,14 @@
     align-items: flex-start; /* Left align the content */
 }
 
+/* Container para a mensagem do bot */
+#chatWindow .message {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap; /* Permite que os elementos quebrem para a próxima linha */
+    align-items: flex-start; /* Alinha ao topo */
+}
+
 .userIcon, .botIcon {
     width: 30px;
     height: 30px;
@@ -291,8 +299,14 @@
     border: 2px solid #43d9ea;     /* Borda ciano */
     border-radius: 30px;
     margin-top: 10px;
+    width: 100%; /* Ocupa toda a largura disponível */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    order: 2; /* Posiciona abaixo do botIcon e botMessage */
+    margin-left: 0; /* Remove margem à esquerda */
+    margin-right: 0; /* Remove margem à direita */
 }
 
 .audio-player audio {
     outline: none;
+    width: 100%; /* Garante que o áudio ocupe toda a largura do player */
 }

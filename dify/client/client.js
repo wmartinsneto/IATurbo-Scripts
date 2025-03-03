@@ -187,7 +187,8 @@ const sendMessage = async () => {
                               <source src="${data.audio_url}" type="audio/mpeg">
                               Seu navegador não suporta o áudio HTML5.
                             </audio>`;
-                        botMessageContainer.appendChild(audioWrapper);
+                        // Adiciona o audio-player diretamente ao message (container pai), não ao botMessage
+                        botMessage.appendChild(audioWrapper);
                         chatWindow.scrollTop = chatWindow.scrollHeight;
                         updateLocalStorage();
                     }
