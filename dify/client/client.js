@@ -64,8 +64,9 @@ window.addEventListener('load', () => {
         chatWindow.style.display = 'flex';
         chatWindow.scrollTop = chatWindow.scrollHeight;
         chatbot.classList.add('expanded');
+        debugLog("Window load: mensagens restauradas do localStorage.");
     }
-    debugLog("Window load: mensagens restauradas se existentes.");
+    debugLog("Window load: mensagens não restauradas do localStorage.");
 });
 
 // Alterna placeholders do input
@@ -82,10 +83,11 @@ setInterval(() => {
 chatbot.addEventListener('mouseenter', () => {
     chatbot.classList.add('expanded');
     chatbotInput.focus();
-    debugLog("chatbot mouseenter ativado.");
+    debugLog("chatbot mouseenter - chatbot expandido e chatbotInput focado.");
     if (messagesContainer.innerHTML.trim() !== "") {
         chatWindow.style.display = 'flex';
         chatWindow.scrollTop = chatWindow.scrollHeight;
+        debugLog("chatbot mouseenter - chatWindow exibido com conteúdo.");
     }
 });
 
@@ -304,9 +306,7 @@ function setChatModeInitial() {
     micOffButton.disabled = false;
     sendButton.disabled = false;
     chatbotInput.focus();
-    if (DEBUG_MODE) {
-        debugLog("Modo INITIAL ativado");
-    }
+    debugLog("Modo INITIAL ativado");
 }
 
 // Modo RECORDING: Adiciona a classe 'pulse' ao sendButton para o efeito de pulso
@@ -352,9 +352,7 @@ function setChatModeRecording() {
                 sendRecording(audioBlob);
             };
             mediaRecorder.start();
-            if (DEBUG_MODE) {
-                debugLog("Modo RECORDING ativado: gravação iniciada");
-            }
+            debugLog("Modo RECORDING ativado: gravação iniciada");
         })
         .catch(err => {
             console.error('Erro ao capturar áudio: ', err);
@@ -384,9 +382,7 @@ function setChatModeTranscribing() {
             }
         }
     }, 500);
-    if (DEBUG_MODE) {
-        debugLog("Modo TRANSCRIBING ativado");
-    }
+    debugLog("Modo TRANSCRIBING ativado");
 }
 
 function sendRecording(blob) {
@@ -428,12 +424,15 @@ sendButton.addEventListener('click', () => {
 });
 trashButton.addEventListener('click', () => {
     cancelRecording = true;
+    debugLog("trashButton clicado: cancelRecording = true");
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
+        debugLog("trashButton clicado: gravação cancelada");
+
     } else {
         setChatModeInitial();
+        debugLog("trashButton clicado: setChatModeInitial");
     }
-    debugLog("trashButton clicado: gravação cancelada");
 });
 
 // Envia a mensagem ao pressionar Enter
@@ -441,6 +440,7 @@ chatbotInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         e.preventDefault();
         sendMessage();
+        debugLog("chatbotInput Enter pressionado: sendMessage");
     }
 });
 
