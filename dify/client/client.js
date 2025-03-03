@@ -291,7 +291,7 @@ function typeWriter(element, text, i = 0, callback) {
     }
 }
 
-// Modo INITIAL: Remove a classe 'pulse' do sendButton para quitar o efeito
+// Modo INITIAL: Exibe o input com placeholder cinza escuro.
 function setChatModeInitial() {
     chatMode = "initial";
     chatbotInput.style.display = 'block';
@@ -306,16 +306,17 @@ function setChatModeInitial() {
     
     micOffButton.disabled = false;
     sendButton.disabled = false;
+    updatePlaceholderStyle('initial');  // Atualiza o placeholder para o modo inicial
     debugLog("Modo INITIAL ativado");
 }
 
-// Modo RECORDING: Adiciona a classe 'pulse' ao sendButton para o efeito de pulso
+// Modo RECORDING: Exibe o placeholder com efeito de piscar vermelho.
 function setChatModeRecording() {
     chatMode = "recording";
     chatbotInput.style.display = 'block';
     transcribingMessage.style.display = 'none';
-
     placeholders = ["Gravando...", "Estou te ouvindo..."];
+    updatePlaceholderStyle('recording');  // Atualiza o placeholder para o modo recording
     
     micOffButton.style.display = 'none';
     recordingContainer.style.display = 'flex';
@@ -448,3 +449,49 @@ chatbotInput.addEventListener('keypress', (e) => {
 
 // Inicia no modo INITIAL
 setChatModeInitial();
+
+/**
+ * updatePlaceholderStyle(mode)
+ * Injeta ou atualiza uma regra de estilo para o placeholder do chatbotInput e
+ * altera imediatamente seu valor.
+ * @param {string} mode - 'initial' para placeholder cinza escuro ou 'recording' para placeholder vermelho piscando.
+ */
+function updatePlaceholderStyle(mode) {
+    let styleEl = document.getElementById('chatbotInputPlaceholderStyle');
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'chatbotInputPlaceholderStyle';
+        document.head.appendChild(styleEl);
+    }
+    if (mode === 'initial') {
+        styleEl.innerHTML = `
+            #chatbotInput::placeholder { color: #999; }
+            #chatbotInput::-webkit-input-placeholder { color: #999; }
+            #chatbotInput:-ms-input-placeholder { color: #999; }
+        `;
+        // Atualiza imediatamente o placeholder para o modo inicial.
+        chatbotInput.placeholder = "Precisa de ajuda?";
+    } else if (mode === 'recording') {
+        styleEl.innerHTML = `
+            @keyframes blink {
+                0% { opacity: 1; }
+                50% { opacity: 0; }
+                100% { opacity: 1; }
+            }
+            #chatbotInput::placeholder { 
+                color: red; 
+                animation: blink 1s infinite; 
+            }
+            #chatbotInput::-webkit-input-placeholder { 
+                color: red; 
+                animation: blink 1s infinite; 
+            }
+            #chatbotInput:-ms-input-placeholder { 
+                color: red; 
+                animation: blink 1s infinite; 
+            }
+        `;
+        // Atualiza imediatamente o placeholder para o modo recording.
+        chatbotInput.placeholder = "Gravando...";
+    }
+}
