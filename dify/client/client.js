@@ -43,7 +43,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log(message, LOG_SOURCE, "DEBUG");
+        log("VERSION 2 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -131,11 +131,9 @@ const sendMessage = async () => {
     // Log da entrada do lead
     await log("Entrada do lead: " + question, LOG_SOURCE, "INFO");
 
-    if (chatWindow.style.display === 'none') {
-        chatWindow.style.display = 'flex';
-        chatbot.classList.add('expanded');
-        debugLog("sendMessage: chatWindow aberto devido a nova mensagem.");
-    }
+    chatWindow.style.display = 'flex';
+    chatbot.classList.add('expanded');
+    debugLog("sendMessage: chatWindow aberto devido a nova mensagem.");
     
     const userMessage = document.createElement('div');
     userMessage.className = 'message';

@@ -10,7 +10,7 @@
     color: #ccc;
     cursor: pointer;
     transition: width 0.3s ease;
-    width: 300px;
+    width: 280px;
     display: flex;
     flex-direction: row; /* garante itens lado a lado */
     align-items: center;
@@ -26,13 +26,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-right: 5px;
 }
 
 /* Input de texto */
 #chatbotInput {
     flex: 1;
-    padding: 10px 12px;
     border: none;
     border-radius: 25px;
     background-color: transparent;
