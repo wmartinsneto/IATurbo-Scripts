@@ -95,6 +95,7 @@
 #buttonsContainer {
     display: flex;
     align-items: center;
+    justify-content: center; /* Centraliza os botões verticalmente */
     gap: 5px; /* Reduzido para diminuir espaçamento */
     flex-shrink: 0; /* Impede que os botões encolham */
     margin-left: 0; /* Remove a margem esquerda para evitar espaçamento extra */
@@ -136,7 +137,7 @@
 }
 
 /* Tooltip personalizado para botões do chatbot */
-#chatbot [data-tooltip]:hover::after {
+#chatbot [data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
@@ -154,10 +155,13 @@
     text-align: center;
     /* Garantir que o tooltip não saia da tela */
     right: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Seta do tooltip para botões do chatbot */
-#chatbot [data-tooltip]:hover::before {
+#chatbot [data-tooltip]::before {
     content: "";
     position: absolute;
     bottom: 100%;
@@ -168,10 +172,27 @@
     border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
     margin-bottom: 0;
     z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Classe para mostrar o tooltip */
+#chatbot [data-tooltip].show-tooltip::after,
+#chatbot [data-tooltip].show-tooltip::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Mantém o comportamento de hover para os tooltips */
+#chatbot [data-tooltip]:hover::after,
+#chatbot [data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Tooltip personalizado para botões do header (abaixo dos botões) */
-#chatHeader [data-tooltip]:hover::after {
+#chatHeader [data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     top: 100%; /* Posiciona abaixo do botão */
@@ -186,10 +207,13 @@
     white-space: nowrap;
     z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
     margin-top: 5px; /* Espaço entre o botão e o tooltip */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Seta do tooltip para botões do header */
-#chatHeader [data-tooltip]:hover::before {
+#chatHeader [data-tooltip]::before {
     content: "";
     position: absolute;
     top: 100%; /* Posiciona abaixo do botão */
@@ -200,6 +224,23 @@
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent; /* Inverte a direção da seta */
     margin-top: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Classe para mostrar o tooltip */
+#chatHeader [data-tooltip].show-tooltip::after,
+#chatHeader [data-tooltip].show-tooltip::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Mantém o comportamento de hover para os tooltips */
+#chatHeader [data-tooltip]:hover::after,
+#chatHeader [data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Ajuste especial para o botão de enviar (último à direita) */

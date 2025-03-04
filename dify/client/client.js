@@ -102,10 +102,28 @@ function toggleAudio() {
     debugLog(`Áudio ${audioEnabled ? 'ativado' : 'desativado'}`);
 }
 
+/**
+ * Mostra o tooltip temporariamente e depois o esconde com uma transição suave
+ * @param {HTMLElement} element - O elemento que contém o tooltip
+ * @param {number} duration - Duração em milissegundos que o tooltip ficará visível
+ */
+function showTemporaryTooltip(element, duration = 2000) {
+    if (!element || !element.hasAttribute('data-tooltip')) return;
+    
+    // Adiciona a classe para mostrar o tooltip
+    element.classList.add('show-tooltip');
+    
+    // Remove a classe após o tempo especificado
+    setTimeout(() => {
+        element.classList.remove('show-tooltip');
+    }, duration);
+}
+
 // Event listener para o botão de toggle de áudio
 audioToggleButton.addEventListener('click', (e) => {
     e.stopPropagation();
     toggleAudio();
+    showTemporaryTooltip(audioToggleButton, 1500);
 });
 
 // Restaura mensagens armazenadas e exibe o chatWindow
@@ -158,12 +176,14 @@ chatbot.addEventListener('mouseleave', () => {
 closeButton.addEventListener('click', () => {
     chatWindow.style.display = 'none';
     chatbot.classList.remove('expanded');
+    showTemporaryTooltip(closeButton, 1500);
     debugLog("closeButton clicado: chatWindow fechado.");
 });
 
 // Botão Refresh: limpa a conversa e apaga os dados do localStorage
 refreshButton.addEventListener('click', (e) => {
     e.stopPropagation();
+    showTemporaryTooltip(refreshButton, 1500);
     if (messagesContainer) {
         messagesContainer.innerHTML = "";
     }
@@ -473,9 +493,11 @@ function sendRecording(blob) {
 // Eventos dos botões
 micOffButton.addEventListener('click', () => {
     setChatModeRecording();
+    showTemporaryTooltip(micOffButton, 1500);
     debugLog("micOffButton clicado: setChatModeRecording");
 });
 sendButton.addEventListener('click', () => {
+    showTemporaryTooltip(sendButton, 1500);
     if (chatMode === "recording" && mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
     } else {
@@ -484,6 +506,7 @@ sendButton.addEventListener('click', () => {
 });
 trashButton.addEventListener('click', () => {
     cancelRecording = true;
+    showTemporaryTooltip(trashButton, 1500);
     debugLog("trashButton clicado: cancelRecording = true");
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
