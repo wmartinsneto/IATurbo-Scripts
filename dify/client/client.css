@@ -3,10 +3,10 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #333;
+    background-color: rgba(18, 18, 18, 0.9); /* Fundo escuro semi-transparente */
     border-radius: 50px;
-    padding: 8px 12px; /* Reduzido para diminuir o tamanho */
-    color: #ccc;
+    padding: 8px 15px; /* Ajustado para dar mais espaço */
+    color: #fff; /* Texto branco para melhor contraste */
     cursor: pointer;
     transition: all 0.3s ease;
     animation: pulse-animation 2s infinite;
@@ -23,6 +23,10 @@
     z-index: 1000;
     margin-left: auto; /* Centraliza à direita */
     box-sizing: border-box;
+    border: 1px solid rgba(67, 217, 234, 0.3); /* Borda ciano sutil */
+    box-shadow: 0 0 15px rgba(67, 217, 234, 0.3); /* Brilho ciano */
+    backdrop-filter: blur(5px); /* Efeito de desfoque */
+    -webkit-backdrop-filter: blur(5px); /* Suporte para Safari */
 }
 
 /* Área de texto à esquerda */
@@ -226,27 +230,35 @@
     bottom: 90px;
     right: 20px;
     width: 350px;
+    max-width: 95vw; /* Limita a largura máxima para evitar overflow em telas pequenas */
     max-height: 400px;
-    background-color: #fff;
+    background-color: #121212; /* Fundo escuro para combinar com o tema do site */
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(67, 217, 234, 0.3); /* Brilho ciano ao redor do chatWindow */
+    border: 1px solid rgba(67, 217, 234, 0.2); /* Borda sutil ciano */
     display: none;
     flex-direction: column;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
-    color: #333;
+    color: #f1f1f1; /* Texto claro para melhor contraste */
     z-index: 1000;
     overflow: hidden; /* Impede que o chatWindow tenha scrollbar */
+    backdrop-filter: blur(5px); /* Efeito de desfoque para um visual mais moderno */
+    -webkit-backdrop-filter: blur(5px); /* Suporte para Safari */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
 }
 
 /* Estilo para o container de mensagens com scrollbar */
 #messagesContainer {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden; /* Impede scrollbar horizontal */
     max-height: calc(400px - 50px); /* Altura máxima menos a altura do header */
     scrollbar-width: thin;
     scrollbar-color: #43d9ea #f1f1f1;
+    width: 100%; /* Garante que ocupe toda a largura */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
 }
 
 #messagesContainer::-webkit-scrollbar {
@@ -259,79 +271,141 @@
 }
 
 #chatHeader {
-    background-color: #43d9ea;
-    padding: 10px;
+    background-color: #1a1a1a; /* Fundo escuro para combinar com o tema do site */
+    padding: 12px 15px; /* Aumentado para dar mais espaço */
     border-radius: 10px 10px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #434343;
+    color: white; /* Texto branco para melhor contraste */
     position: sticky;
     top: 0;
-    z-index: 10; /* Ensure it stays above other content */
+    z-index: 10;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 16px !important;
     line-height: 1.4 !important;
-    min-height: 20px; /* Altura mínima para o header */
-    width: 100%; /* Garante que ocupe toda a largura */
-    box-sizing: border-box; /* Inclui padding na largura */
+    min-height: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(67, 217, 234, 0.2); /* Linha divisória sutil */
+    box-shadow: 0 0 10px rgba(67, 217, 234, 0.2); /* Brilho ciano sutil */
 }
 
 #chatHeader button {
     background: none;
     border: none;
-    color: #434343;
+    color: #43d9ea; /* Cor ciano para os botões */
     cursor: pointer;
     font-size: 16px;
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    margin-left: 12px; /* Espaçamento entre os botões */
+    padding: 5px; /* Área de clique maior */
+    border-radius: 4px; /* Bordas levemente arredondadas */
+    transition: all 0.2s ease;
+}
+
+#chatHeader button:hover {
+    background-color: rgba(67, 217, 234, 0.1); /* Fundo sutil ao passar o mouse */
 }
 
 #chatHeader span {
-    padding: 5px 10px !important;
+    padding: 5px 0 !important; /* Removido padding horizontal excessivo */
+    font-weight: 500; /* Um pouco mais de destaque */
+    letter-spacing: 0.5px; /* Espaçamento entre letras para estilo futurista */
+}
+
+/* Container para os botões do header */
+#chatHeader > div {
+    display: flex;
+    align-items: center;
 }
 
 #chatWindow .message {
-    padding: 10px;
+    padding: 8px; /* Reduzido para economizar espaço */
     display: flex;
     align-items: flex-start; /* Alinha ao topo */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    max-width: 100%; /* Impede que exceda a largura do container */
+    width: 100%; /* Garante que ocupe toda a largura disponível */
 }
 
 .userMessage {
-    background-color: #e0f7fa;
+    background-color: rgba(67, 217, 234, 0.1); /* Fundo ciano transparente */
+    border: 1px solid rgba(67, 217, 234, 0.3); /* Borda ciano sutil */
     border-radius: 15px;
-    padding: 10px;
-    margin-right: 10px;
+    padding: 10px; /* Reduzido para economizar espaço */
+    margin-right: 8px; /* Reduzido para economizar espaço */
     flex: 1;
     order: 1;
+    color: #fff; /* Texto branco */
+    box-shadow: 0 0 5px rgba(67, 217, 234, 0.1); /* Brilho sutil */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    max-width: calc(100% - 40px); /* Impede que exceda a largura do container menos o ícone */
 }
 
 .botMessage {
-    background-color: #f1f1f1;
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo branco muito transparente */
+    border: 1px solid rgba(67, 217, 234, 0.2); /* Borda ciano mais sutil */
     border-radius: 15px;
-    padding: 10px;
-    margin-left: 10px;
+    padding: 10px; /* Reduzido para economizar espaço */
+    margin-left: 8px; /* Reduzido para economizar espaço */
     flex: 1;
     order: 1;
     min-height: 30px; /* Ajuste da altura mínima */
     display: flex;
     flex-direction: column; /* Stack text and audio vertically */
     align-items: flex-start; /* Left align the content */
+    color: #fff; /* Texto branco */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    max-width: calc(100% - 40px); /* Impede que exceda a largura do container menos o ícone */
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Quebra palavras longas */
 }
 
 /* Container para a mensagem do bot */
 #chatWindow .message {
-    padding: 10px;
+    padding: 8px; /* Reduzido para economizar espaço */
     display: flex;
     flex-wrap: wrap; /* Permite que os elementos quebrem para a próxima linha */
     align-items: flex-start; /* Alinha ao topo */
+    width: 100%; /* Garante que ocupe toda a largura */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    max-width: 100%; /* Impede que exceda a largura do container */
+}
+
+/* Estilo específico para o container da mensagem do bot */
+#chatWindow .message:has(.botIcon) {
+    display: grid;
+    grid-template-columns: 30px 1fr; /* Tamanho fixo para o ícone */
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+        "icon message"
+        "audio audio";
+    gap: 8px; /* Reduzido para economizar espaço */
+    overflow: hidden; /* Impede overflow */
+}
+
+/* Posicionamento dos elementos dentro da mensagem do bot */
+#chatWindow .message:has(.botIcon) .botIcon {
+    grid-area: icon;
+}
+
+#chatWindow .message:has(.botIcon) .botMessage {
+    grid-area: message;
+}
+
+#chatWindow .message:has(.botIcon) .audio-player {
+    grid-area: audio;
+    width: 100%;
 }
 
 .userIcon, .botIcon {
     width: 30px;
     height: 30px;
     background-size: cover;
+    flex-shrink: 0; /* Impede que o ícone encolha */
 }
 
 .botIcon {
@@ -345,10 +419,13 @@
 
 @keyframes pulse-animation {
     0% {
-        box-shadow: 0 0 0 0px rgba(67, 217, 234, 0.5);
+        box-shadow: 0 0 0 0px rgba(67, 217, 234, 0.5), 0 0 10px rgba(67, 217, 234, 0.3) inset;
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(67, 217, 234, 0.2), 0 0 15px rgba(67, 217, 234, 0.4) inset;
     }
     100% {
-        box-shadow: 0 0 0 20px rgba(67, 217, 234, 0);
+        box-shadow: 0 0 0 20px rgba(67, 217, 234, 0), 0 0 10px rgba(67, 217, 234, 0.3) inset;
     }
 }
 
@@ -365,7 +442,7 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    color: #353535;
+    color: #a0a0a0; /* Cor mais clara para melhor contraste */
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
@@ -421,11 +498,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
+    color: #121212; /* Cor escura para contraste */
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
     flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(67, 217, 234, 0.5); /* Brilho ciano */
+    transition: all 0.3s ease;
+}
+
+#sendButton:hover {
+    background-color: #5ae0ef; /* Cor um pouco mais clara no hover */
+    box-shadow: 0 0 12px rgba(67, 217, 234, 0.7); /* Brilho mais intenso no hover */
 }
 
 #trashButton {
@@ -443,17 +527,63 @@
 
 /* Customização do componente de áudio inspirado no Tron */
 .audio-player {
-    border: none;
+    border: 1px solid rgba(67, 217, 234, 0.3); /* Borda ciano sutil */
     border-radius: 30px;
-    margin-top: 10px;
+    margin-top: 10px; /* Reduzido para economizar espaço */
     width: 100%; /* Ocupa toda a largura disponível */
     box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
-    order: 2; /* Posiciona abaixo do botIcon e botMessage */
     margin-left: 0; /* Remove margem à esquerda */
     margin-right: 0; /* Remove margem à direita */
+    background-color: rgba(67, 217, 234, 0.05); /* Fundo ciano muito transparente */
+    padding: 3px; /* Reduzido para economizar espaço */
+    box-shadow: 0 0 8px rgba(67, 217, 234, 0.2); /* Brilho ciano */
+    grid-area: audio; /* Para o layout de grid */
+    max-width: 100%; /* Impede que exceda a largura do container */
 }
 
 .audio-player audio {
     outline: none;
     width: 100%; /* Garante que o áudio ocupe toda a largura do player */
+    filter: hue-rotate(180deg); /* Ajusta a cor dos controles para combinar com o tema */
+    max-width: 100%; /* Impede que exceda a largura do container */
+}
+
+/* Estilo para links nas mensagens */
+.botMessage a, .userMessage a {
+    color: #43d9ea; /* Links em ciano */
+    text-decoration: none;
+    border-bottom: 1px dotted #43d9ea;
+    transition: all 0.2s ease;
+}
+
+.botMessage a:hover, .userMessage a:hover {
+    filter: brightness(1.2);
+    border-bottom: 1px solid #43d9ea;
+}
+
+/* Estilo para código nas mensagens */
+.botMessage code {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    color: #43d9ea;
+}
+
+/* Estilo para blocos de código nas mensagens */
+.botMessage pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #43d9ea;
+    overflow-x: auto;
+    margin: 10px 0;
+    max-width: 100%; /* Impede que exceda a largura do container */
+}
+
+.botMessage pre code {
+    background-color: transparent;
+    padding: 0;
+    color: #f1f1f1;
 }

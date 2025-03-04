@@ -202,7 +202,7 @@ const sendMessage = async () => {
     botMessage.className = 'message';
     botMessage.innerHTML = `<div class="botIcon"></div>
                             <div class="botMessage">
-                                <h4 id="searching-ellipsis">Pensando<span>.</span><span>.</span><span>.</span></h4>
+                                <h4 id="searching-ellipsis" style="color: #a0a0a0;">Pensando<span>.</span><span>.</span><span>.</span></h4>
                             </div>`;
     messagesContainer.appendChild(botMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
