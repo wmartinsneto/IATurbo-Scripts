@@ -613,3 +613,29 @@
     padding: 0;
     color: #f1f1f1;
 }
+
+/* Estilos para os ícones SVG */
+.icon-svg {
+    fill: #43d9ea; /* Cor ciano para os ícones */
+    width: 20px;
+    height: 20px;
+    transition: all 0.2s ease;
+}
+
+/* Efeito de brilho nos ícones ao passar o mouse */
+button:hover .icon-svg {
+    filter: drop-shadow(0 0 2px rgba(67, 217, 234, 0.5));
+}
+
+/* Classe para os botões de entrada */
+.input-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.input-button:hover img {
+    filter: drop-shadow(0 0 5px rgba(67, 217, 234, 0.7));
+    transform: scale(1.05);
+}
