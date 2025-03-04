@@ -98,7 +98,7 @@
 }
 
 /* Botões de microfone e envio */
-#micOnButton, #micOffButton, #sendButton, #trashButton, #refreshButton, #closeButton {
+#micOnButton, #micOffButton, #sendButton, #trashButton, #refreshButton, #closeButton, #audioToggleButton {
     border: none;
     background: none;
     cursor: pointer;
@@ -109,7 +109,7 @@
 }
 
 /* Efeito de hover para os botões */
-#micOnButton:hover, #micOffButton:hover, #sendButton:hover, #trashButton:hover, #refreshButton:hover, #closeButton:hover {
+#micOnButton:hover, #micOffButton:hover, #sendButton:hover, #trashButton:hover, #refreshButton:hover, #closeButton:hover, #audioToggleButton:hover {
     transform: scale(1.1);
     filter: brightness(1.2);
 }

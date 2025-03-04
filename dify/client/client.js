@@ -7,6 +7,9 @@ let sessionId = localStorage.getItem('sessionId') || generateSessionId();
 localStorage.setItem('sessionId', sessionId);
 let conversationId = localStorage.getItem('conversationId') || null;
 
+// Controle de áudio - recupera a preferência do usuário ou define como ligado por padrão
+let audioEnabled = localStorage.getItem('audioEnabled') !== 'false'; // true por padrão
+
 const chatbot = document.getElementById('chatbot');
 const chatbotInput = document.getElementById('chatbotInput');
 const transcribingMessage = document.getElementById('transcribingMessage');
@@ -20,6 +23,9 @@ const sendButton = document.getElementById('sendButton');
 const chatWindow = document.getElementById('chatWindow');
 const refreshButton = document.getElementById('refreshButton');
 const closeButton = document.getElementById('closeButton');
+const audioToggleButton = document.getElementById('audioToggleButton');
+const soundOnIcon = document.getElementById('soundOnIcon');
+const soundOffIcon = document.getElementById('soundOffIcon');
 const messagesContainer = document.getElementById('messagesContainer'); // Declaração única
 
 let mediaRecorder;
@@ -54,9 +60,53 @@ function updateLocalStorage() {
         localStorage.setItem('conversationId', conversationId);
     }
     localStorage.setItem('messages', messagesContainer.innerHTML);
+    localStorage.setItem('audioEnabled', audioEnabled.toString());
     debugLog("LocalStorage atualizado.");
-
 }
+
+// Função para atualizar a interface de acordo com o estado do áudio
+function updateAudioToggleUI() {
+    if (audioEnabled) {
+        soundOnIcon.style.display = 'inline';
+        soundOffIcon.style.display = 'none';
+        audioToggleButton.setAttribute('data-tooltip', 'Desativar áudio');
+    } else {
+        soundOnIcon.style.display = 'none';
+        soundOffIcon.style.display = 'inline';
+        audioToggleButton.setAttribute('data-tooltip', 'Ativar áudio');
+    }
+}
+
+// Função para controlar o áudio (mutar/desmutar existentes e configurar autoplay para novos)
+function toggleAudio() {
+    audioEnabled = !audioEnabled;
+    
+    // Atualiza todos os players de áudio existentes
+    const audioPlayers = document.querySelectorAll('.audio-player audio');
+    audioPlayers.forEach(audio => {
+        if (!audioEnabled) {
+            audio.pause(); // Pausa a reprodução
+            audio.muted = true; // Muta o áudio
+        } else {
+            audio.muted = false; // Desmuta o áudio
+            // Não retoma a reprodução automaticamente
+        }
+    });
+    
+    // Atualiza a interface
+    updateAudioToggleUI();
+    
+    // Salva a preferência
+    updateLocalStorage();
+    
+    debugLog(`Áudio ${audioEnabled ? 'ativado' : 'desativado'}`);
+}
+
+// Event listener para o botão de toggle de áudio
+audioToggleButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleAudio();
+});
 
 // Restaura mensagens armazenadas e exibe o chatWindow
 window.addEventListener('load', () => {
@@ -70,6 +120,9 @@ window.addEventListener('load', () => {
     } else {
         debugLog("Window load: mensagens não restauradas do localStorage.");
     }
+    
+    // Inicializa a interface de áudio
+    updateAudioToggleUI();
 });
 
 // Alterna placeholders do input
@@ -183,7 +236,7 @@ const sendMessage = async () => {
                         const audioWrapper = document.createElement('div');
                         audioWrapper.className = 'audio-player';
                         audioWrapper.innerHTML = `
-                            <audio controls autoplay>
+                            <audio controls ${audioEnabled ? 'autoplay' : ''} ${audioEnabled ? '' : 'muted'}>
                               <source src="${data.audio_url}" type="audio/mpeg">
                               Seu navegador não suporta o áudio HTML5.
                             </audio>`;
