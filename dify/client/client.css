@@ -3,15 +3,15 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: rgba(18, 18, 18, 0.9); /* Fundo escuro semi-transparente */
+    background-color: rgba(18, 18, 18, 0.85); /* Fundo escuro semi-transparente */
     border-radius: 50px;
-    padding: 8px 15px; /* Ajustado para dar mais espaço */
+    padding: 8px 12px; /* Reduzido para deixar mais fino */
     color: #fff; /* Texto branco para melhor contraste */
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease; /* Transição mais suave */
     animation: pulse-animation 2s infinite;
     width: auto; /* Alterado para auto para ser o menor possível quando inativo */
-    min-width: 180px; /* Tamanho mínimo para garantir que os botões caibam */
+    min-width: 170px; /* Tamanho mínimo reduzido */
     max-width: 90vw; /* Limita a largura máxima para não exceder a tela */
     display: flex;
     flex-direction: row; /* garante itens lado a lado */
@@ -23,8 +23,8 @@
     z-index: 1000;
     margin-left: auto; /* Centraliza à direita */
     box-sizing: border-box;
-    border: 1px solid rgba(67, 217, 234, 0.3); /* Borda ciano sutil */
-    box-shadow: 0 0 15px rgba(67, 217, 234, 0.3); /* Brilho ciano */
+    border: 1px solid rgba(67, 217, 234, 0.4); /* Borda ciano mais visível */
+    box-shadow: 0 0 15px rgba(67, 217, 234, 0.4), 0 0 30px rgba(67, 217, 234, 0.2); /* Brilho ciano duplo */
     backdrop-filter: blur(5px); /* Efeito de desfoque */
     -webkit-backdrop-filter: blur(5px); /* Suporte para Safari */
 }
@@ -35,12 +35,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-width: 120px; /* Largura mínima para o texto */
-    max-width: calc(100% - 85px); /* Ajustado para dar mais espaço aos botões */
+    min-width: 110px; /* Largura mínima reduzida */
+    max-width: calc(100% - 80px); /* Ajustado para dar mais espaço aos botões */
     overflow: visible; /* Alterado para visible para mostrar a borda completa */
-    transition: all 0.3s ease; /* Adiciona transição suave */
+    transition: all 0.4s ease; /* Transição mais suave */
     padding: 0; /* Remove o padding que estava causando problemas */
-    margin-right: 10px; /* Adiciona margem à direita para separar dos botões */
+    margin-right: 8px; /* Reduzido para diminuir espaçamento */
 }
 
 /* Input de texto */
@@ -52,42 +52,50 @@
     margin-right: 0; /* Remove a margem direita que estava causando problemas */
     background-color: transparent;
     color: white;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease; /* Transição mais suave */
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 5px 10px; /* Mantém o padding horizontal para afastar o placeholder da borda */
+    padding: 6px 10px; /* Reduzido para economizar espaço */
     outline: none; /* Remove o outline padrão */
     box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    letter-spacing: 0.5px; /* Espaçamento entre letras para estilo futurista */
 }
 
 /* Estilo para o input quando está com foco */
 #chatbotInput:focus {
-    border: 1px solid rgba(67, 217, 234, 0.4); /* Borda ciano claro com transparência */
-    background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente mais claro */
-    /* Removido o box-shadow que estava causando o brilho cortado */
+    border: 1px solid rgba(67, 217, 234, 0.6); /* Borda ciano mais visível */
+    background-color: rgba(67, 217, 234, 0.08); /* Fundo ciano muito sutil */
+    box-shadow: 0 0 8px rgba(67, 217, 234, 0.3) inset; /* Brilho interno sutil */
+}
+
+/* Estilo para o input desabilitado */
+#chatbotInput:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* Mensagem de transcrição */
 #transcribingMessage {
     font-size: 14px !important;
     line-height: 1.4 !important;
-    color: #ccc;
-    padding: 5px 10px; /* Ajustado para manter consistência com o input */
+    color: #43d9ea; /* Cor ciano para destacar */
+    padding: 6px 10px; /* Reduzido para economizar espaço */
     border: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    letter-spacing: 0.5px; /* Espaçamento entre letras para estilo futurista */
 }
 
 /* Área de botões à direita */
 #buttonsContainer {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 5px; /* Reduzido para diminuir espaçamento */
     flex-shrink: 0; /* Impede que os botões encolham */
     margin-left: 0; /* Remove a margem esquerda para evitar espaçamento extra */
 }
@@ -98,7 +106,7 @@
     align-items: center;
     justify-content: flex-end; /* Alinha à direita */
     flex-shrink: 0;
-    margin-right: 5px;
+    margin-right: 5px; /* Reduzido para diminuir espaçamento */
 }
 
 /* Botões de microfone e envio */
@@ -106,16 +114,25 @@
     border: none;
     background: none;
     cursor: pointer;
-    padding: 0;
+    padding: 3px; /* Reduzido para diminuir tamanho */
     flex-shrink: 0;
     position: relative;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition: all 0.2s ease;
+    border-radius: 50%; /* Forma circular para os botões */
 }
 
 /* Efeito de hover para os botões */
-#micOnButton:hover, #micOffButton:hover, #sendButton:hover, #trashButton:hover, #refreshButton:hover, #closeButton:hover, #audioToggleButton:hover {
+#micOnButton:hover, #micOffButton:hover, #trashButton:hover, #refreshButton:hover, #closeButton:hover, #audioToggleButton:hover {
     transform: scale(1.1);
-    filter: brightness(1.2);
+    filter: brightness(1.2) drop-shadow(0 0 5px rgba(67, 217, 234, 0.7));
+    background-color: rgba(67, 217, 234, 0.1); /* Fundo sutil ao passar o mouse */
+}
+
+/* Efeito especial para o botão de enviar */
+#sendButton:hover {
+    transform: scale(1.1);
+    filter: brightness(1.3);
+    box-shadow: 0 0 12px rgba(67, 217, 234, 0.8); /* Brilho mais intenso */
 }
 
 /* Tooltip personalizado para botões do chatbot */
@@ -202,27 +219,30 @@
     width: 350px;
     max-width: 90vw; /* Limita a largura máxima para não exceder a tela */
     left: auto; /* Garante que não toque a margem esquerda */
+    transition: all 0.4s ease; /* Transição mais suave */
 }
 
 /* Quando o chatbot está expandido, o textContainer também se expande */
 #chatbot.expanded #textContainer {
     flex: 1;
-    max-width: calc(100% - 85px); /* Ajustado para dar mais espaço aos botões */
+    max-width: calc(100% - 80px); /* Ajustado para dar mais espaço aos botões */
+    transition: all 0.4s ease; /* Transição mais suave */
 }
 
 #chatbot input {
     width: 100%;
     border: none;
-    padding: 5px 10px !important; /* Ajustado para manter consistência */
+    padding: 6px 10px !important; /* Reduzido para economizar espaço */
     border-radius: 25px;
     background-color: transparent;
-    color: #ccc;
-    transition: all 0.3s ease;
+    color: #fff; /* Alterado para branco para melhor contraste */
+    transition: all 0.4s ease; /* Transição mais suave */
     font-family: 'Roboto', Arial, sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
     outline: none; /* Remove o outline padrão */
     box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
+    letter-spacing: 0.5px; /* Espaçamento entre letras para estilo futurista */
 }
 
 #chatWindow {
@@ -475,7 +495,7 @@
 #micButton,
 #sendButton,
 #trashButton {
-    height: 30px !important;
+    height: 30px !important; /* Reduzido para diminuir tamanho */
     flex-shrink: 0;
     display: inline-block;
     border: none !important;
@@ -486,13 +506,13 @@
 #micOnButton, #micOffButton {
     width: auto !important;
     background: none !important;
-    margin-right: 5px;
+    margin-right: 3px; /* Reduzido para diminuir espaçamento */
     flex-shrink: 0;
 }
 
 #sendButton {
-    width: 30px;
-    height: 30px;
+    width: 30px; /* Reduzido para diminuir tamanho */
+    height: 30px; /* Reduzido para diminuir tamanho */
     background-color: #43d9ea;
     border-radius: 50%;
     display: flex;
@@ -503,26 +523,32 @@
     font-size: 14px !important;
     line-height: 1.4 !important;
     flex-shrink: 0;
-    box-shadow: 0 0 8px rgba(67, 217, 234, 0.5); /* Brilho ciano */
+    box-shadow: 0 0 10px rgba(67, 217, 234, 0.6), 0 0 20px rgba(67, 217, 234, 0.3); /* Brilho ciano duplo */
     transition: all 0.3s ease;
+    padding: 0; /* Removido padding para este botão específico */
 }
 
 #sendButton:hover {
     background-color: #5ae0ef; /* Cor um pouco mais clara no hover */
-    box-shadow: 0 0 12px rgba(67, 217, 234, 0.7); /* Brilho mais intenso no hover */
+    box-shadow: 0 0 15px rgba(67, 217, 234, 0.8), 0 0 30px rgba(67, 217, 234, 0.4); /* Brilho mais intenso no hover */
+    transform: scale(1.1);
 }
 
 #trashButton {
     width: auto !important;
     background: none !important;
-    margin-right: 5px;
+    margin-right: 5px; /* Reduzido para diminuir espaçamento */
     flex-shrink: 0;
+    animation: pulse-animation 2s infinite; /* Adicionado efeito pulse */
 }
 
 #recordingTimer {
-    margin: 0 5px;
+    margin: 0 5px; /* Reduzido para diminuir espaçamento */
     font-size: 12px;
     flex-shrink: 0;
+    color: #43d9ea; /* Cor ciano para destacar */
+    font-family: 'Consolas', monospace; /* Fonte monospace para estilo futurista */
+    letter-spacing: 1px; /* Espaçamento entre letras */
 }
 
 /* Customização do componente de áudio inspirado no Tron */

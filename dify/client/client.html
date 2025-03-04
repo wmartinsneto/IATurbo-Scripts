@@ -19,6 +19,19 @@
         button:hover .icon-svg {
             filter: drop-shadow(0 0 2px rgba(67, 217, 234, 0.5));
         }
+        
+        /* Classe para os botões de entrada */
+        .input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .input-button:hover img {
+            filter: drop-shadow(0 0 5px rgba(67, 217, 234, 0.7));
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -31,19 +44,19 @@
         </div>
         <div id="buttonsContainer">
             <div id="recordingContainer" style="display:none;">
-                <button id="trashButton" data-tooltip="Cancelar gravação">
-                    <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" alt="Cancelar gravação" style="height:30px; width:auto; animation: pulse-animation 2s infinite;">
+                <button id="trashButton" data-tooltip="Cancelar gravação" class="input-button pulse">
+                    <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Lixo2.png" alt="Cancelar gravação" style="height:30px; width:auto; filter: drop-shadow(0 0 3px rgba(67, 217, 234, 0.7));">
                 </button>
-                <span id="recordingTimer" style="font-family: monospace;">00:00</span>
+                <span id="recordingTimer" style="font-family: 'Consolas', monospace;">00:00</span>
             </div>
-            <button id="micOnButton" style="display:none;">
-                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" alt="Microfone Gravando" style="height:30px; width:auto;">
+            <button id="micOnButton" style="display:none;" class="input-button">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Vermelho.png" alt="Microfone Gravando" style="height:30px; width:auto; filter: drop-shadow(0 0 3px rgba(255, 77, 77, 0.7));">
             </button>
-            <button id="micOffButton" data-tooltip="Clique para falar">
-                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png" alt="Ativar microfone" style="height:30px; width:auto;">
+            <button id="micOffButton" data-tooltip="Clique para falar" class="input-button">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/02/Mic-Azul.png" alt="Ativar microfone" style="height:30px; width:auto; filter: drop-shadow(0 0 3px rgba(67, 217, 234, 0.7));">
             </button>
-            <button id="sendButton" data-tooltip="Enviar mensagem">
-                <img src="https://iaturbo.com.br/wp-content/uploads/2025/03/sendButton.png" alt="Enviar mensagem" style="height:30px; width:auto;">                
+            <button id="sendButton" data-tooltip="Enviar mensagem" class="input-button">
+                <img src="https://iaturbo.com.br/wp-content/uploads/2025/03/sendButton.png" alt="Enviar mensagem" style="height:30px; width:auto; filter: drop-shadow(0 0 3px rgba(67, 217, 234, 0.7));">                
             </button>
         </div>
     </div>
@@ -79,5 +92,36 @@
         <div id="messagesContainer"></div>
     </div>
     <script src="https://iaturbo.com.br/wp-content/uploads/scripts/dify/client/client.js"></script>
+    <script>
+        // Script adicional para desabilitar o input durante gravação e transcrição
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para desabilitar o input durante a gravação
+            const originalSetChatModeRecording = window.setChatModeRecording;
+            if (originalSetChatModeRecording) {
+                window.setChatModeRecording = function() {
+                    originalSetChatModeRecording.apply(this, arguments);
+                    document.getElementById('chatbotInput').disabled = true;
+                };
+            }
+            
+            // Função para desabilitar o input durante a transcrição
+            const originalSetChatModeTranscribing = window.setChatModeTranscribing;
+            if (originalSetChatModeTranscribing) {
+                window.setChatModeTranscribing = function() {
+                    originalSetChatModeTranscribing.apply(this, arguments);
+                    document.getElementById('chatbotInput').disabled = true;
+                };
+            }
+            
+            // Função para habilitar o input no modo inicial
+            const originalSetChatModeInitial = window.setChatModeInitial;
+            if (originalSetChatModeInitial) {
+                window.setChatModeInitial = function() {
+                    originalSetChatModeInitial.apply(this, arguments);
+                    document.getElementById('chatbotInput').disabled = false;
+                };
+            }
+        });
+    </script>
 </body>
 </html>

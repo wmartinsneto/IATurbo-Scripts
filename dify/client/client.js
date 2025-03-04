@@ -349,6 +349,7 @@ function typeWriter(element, text, i = 0, callback) {
 function setChatModeInitial() {
     chatMode = "initial";
     chatbotInput.style.display = 'block';
+    chatbotInput.disabled = false; // Garante que o input esteja habilitado no modo inicial
     placeholders = ["Precisa de ajuda?", "Pergunte para a IARA"];
     transcribingMessage.style.display = 'none';
     recordingContainer.style.display = 'none';
@@ -368,6 +369,7 @@ function setChatModeInitial() {
 function setChatModeRecording() {
     chatMode = "recording";
     chatbotInput.style.display = 'block';
+    chatbotInput.disabled = true; // Desabilita o input durante a gravação
     transcribingMessage.style.display = 'none';
     placeholders = ["Gravando...", "Estou te ouvindo..."];
     updatePlaceholderStyle('recording');  // Atualiza o placeholder para o modo recording
@@ -421,6 +423,7 @@ function setChatModeRecording() {
 function setChatModeTranscribing() {
     chatMode = "transcribing";
     chatbotInput.style.display = 'none';
+    chatbotInput.disabled = true; // Desabilita o input durante a transcrição
     transcribingMessage.style.display = 'block';
     transcribingMessage.innerHTML = `Transcrevendo<span id="ellipsis"></span>`;
     recordingContainer.style.display = 'none';
