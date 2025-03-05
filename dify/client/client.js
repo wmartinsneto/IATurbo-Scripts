@@ -49,7 +49,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 6 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 7 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -68,12 +68,19 @@ function updateLocalStorage() {
 function updateAudioToggleUI() {
     if (audioEnabled) {
         soundOnIcon.style.display = 'inline';
+        soundOnIcon.style.fill = '#43d9ea'; // Cor ciano padrão
         soundOffIcon.style.display = 'none';
         audioToggleButton.setAttribute('data-tooltip', 'Desativar áudio');
     } else {
         soundOnIcon.style.display = 'none';
         soundOffIcon.style.display = 'inline';
+        soundOffIcon.style.fill = '#ff4d4d'; // Cor vermelha para indicar desligado
         audioToggleButton.setAttribute('data-tooltip', 'Ativar áudio');
+    }
+    
+    // Atualiza o conteúdo do tooltip se ele já foi inicializado
+    if (tooltips[audioToggleButton.id]) {
+        tooltips[audioToggleButton.id].setContent(audioToggleButton.getAttribute('data-tooltip'));
     }
 }
 
@@ -102,23 +109,67 @@ function toggleAudio() {
     debugLog(`Áudio ${audioEnabled ? 'ativado' : 'desativado'}`);
 }
 
+// Objeto para manter referência aos tooltips
+const tooltips = {};
+
 /**
- * Mostra o tooltip temporariamente e depois o esconde com uma transição suave
+ * Inicializa os tooltips usando Tippy.js
+ */
+function initializeTooltips() {
+    // Seleciona todos os elementos com data-tooltip
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+    
+    // Inicializa Tippy para cada elemento
+    tooltipElements.forEach(element => {
+        if (!tooltips[element.id]) {
+            tooltips[element.id] = tippy(element, {
+                content: element.getAttribute('data-tooltip'),
+                arrow: true,
+                placement: element.closest('#chatHeader') ? 'bottom' : 'top',
+                theme: 'tron',
+                duration: [300, 200], // [entrada, saída]
+                trigger: 'mouseenter focus', // Mostra ao passar o mouse ou dar foco
+                hideOnClick: false,
+                appendTo: document.body,
+                zIndex: 10000,
+                animation: 'scale',
+                delay: [300, 0], // Pequeno atraso antes de aparecer, sem atraso ao sair
+                onHide(instance) {
+                    // Reseta a flag de que este tooltip está com timer pra esconder
+                    if (instance.reference._tippy_timer) {
+                        clearTimeout(instance.reference._tippy_timer);
+                        delete instance.reference._tippy_timer;
+                    }
+                }
+            });
+        }
+    });
+}
+
+/**
+ * Mostra o tooltip temporariamente e depois o esconde
  * @param {HTMLElement} element - O elemento que contém o tooltip
  * @param {number} duration - Duração em milissegundos que o tooltip ficará visível
  */
 function showTemporaryTooltip(element, duration = 2000) {
     if (!element || !element.hasAttribute('data-tooltip')) return;
     
-    // Adiciona a classe para mostrar o tooltip
-    element.classList.add('show-tooltip');
-    element.style.zIndex = '10000'; // Garante que o tooltip fique acima do chat window
+    // Garante que os tooltips foram inicializados
+    if (!tooltips[element.id]) {
+        initializeTooltips();
+    }
     
-    // Remove a classe após o tempo especificado
-    setTimeout(() => {
-        element.classList.remove('show-tooltip');
-        element.style.zIndex = ''; // Reseta o z-index após esconder o tooltip
-    }, duration);
+    // Mostra o tooltip
+    if (tooltips[element.id]) {
+        tooltips[element.id].show();
+        
+        // Esconde o tooltip após o tempo especificado
+        setTimeout(() => {
+            if (tooltips[element.id]) {
+                tooltips[element.id].hide();
+            }
+        }, duration);
+    }
 }
 
 // Event listener para o botão de toggle de áudio
@@ -143,6 +194,10 @@ window.addEventListener('load', () => {
     
     // Inicializa a interface de áudio
     updateAudioToggleUI();
+    
+    // Inicializa os tooltips
+    initializeTooltips();
+    debugLog("Window load: tooltips inicializados.");
 });
 
 // Alterna placeholders do input
@@ -381,6 +436,10 @@ function setChatModeInitial() {
     micOffButton.style.display = 'inline-flex';
     sendButton.style.display = 'inline-flex';
     
+    // Remove as classes visuais do modo de gravação
+    chatbot.classList.remove('recording-mode');
+    chatbotInput.classList.remove('recording');
+    
     sendButton.classList.remove('pulse');
     
     micOffButton.disabled = false;
@@ -397,6 +456,10 @@ function setChatModeRecording() {
     transcribingMessage.style.display = 'none';
     placeholders = ["Gravando...", "Estou te ouvindo..."];
     updatePlaceholderStyle('recording');  // Atualiza o placeholder para o modo recording
+    
+    // Adiciona as classes para os novos estilos visuais de gravação
+    chatbot.classList.add('recording-mode');
+    chatbotInput.classList.add('recording');
     
     micOffButton.style.display = 'none';
     recordingContainer.style.display = 'flex';
@@ -455,6 +518,10 @@ function setChatModeTranscribing() {
     micOffButton.style.display = 'none';
     micOnButton.disabled = true;
     sendButton.disabled = true;
+    
+    // Remove as classes visuais do modo de gravação
+    chatbot.classList.remove('recording-mode');
+    chatbotInput.classList.remove('recording');
     
     setInterval(() => {
         const ellipsis = document.getElementById('ellipsis');

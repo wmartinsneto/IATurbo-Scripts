@@ -89,6 +89,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: 0.5px; /* Espaçamento entre letras para estilo futurista */
+    text-shadow: 0 0 5px rgba(67, 217, 234, 0.7); /* Adiciona um brilho sutil */
 }
 
 /* Área de botões à direita */
@@ -136,124 +137,57 @@
     box-shadow: 0 0 12px rgba(67, 217, 234, 0.8); /* Brilho mais intenso */
 }
 
-/* Tooltip personalizado para botões do chatbot */
-#chatbot [data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
+/* Estilos personalizados para tooltips do Tippy.js */
+.tippy-box {
+    background-color: rgba(18, 18, 18, 0.95);
+    border: 1px solid rgba(67, 217, 234, 0.5);
+    color: #fff;
+    font-family: 'Roboto', Arial, sans-serif;
     font-size: 12px;
-    white-space: nowrap;
-    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
-    margin-bottom: 5px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(67, 217, 234, 0.3), 0 0 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     max-width: 200px;
     text-align: center;
-    /* Garantir que o tooltip não saia da tela */
-    right: auto;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    animation: glow-pulse 1.5s infinite alternate;
+    z-index: 99999;
 }
 
-/* Seta do tooltip para botões do chatbot */
-#chatbot [data-tooltip]::before {
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
-    margin-bottom: 0;
-    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+.tippy-box[data-theme~='tron'] {
+    background-color: rgba(18, 18, 18, 0.95);
+    border: 1px solid rgba(67, 217, 234, 0.5);
+    box-shadow: 0 0 10px rgba(67, 217, 234, 0.3), 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Classe para mostrar o tooltip */
-#chatbot [data-tooltip].show-tooltip::after,
-#chatbot [data-tooltip].show-tooltip::before {
-    opacity: 1;
-    visibility: visible;
+.tippy-box[data-theme~='tron'] .tippy-content {
+    padding: 8px 10px;
+    letter-spacing: 0.5px;
 }
 
-/* Mantém o comportamento de hover para os tooltips */
-#chatbot [data-tooltip]:hover::after,
-#chatbot [data-tooltip]:hover::before {
-    opacity: 1;
-    visibility: visible;
+.tippy-box[data-theme~='tron'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: rgba(67, 217, 234, 0.8);
 }
 
-/* Tooltip personalizado para botões do header (abaixo dos botões) */
-#chatHeader [data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: 100%; /* Posiciona abaixo do botão */
-    bottom: auto; /* Remove o posicionamento bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 9999; /* Valor muito alto para garantir que fique acima de tudo */
-    margin-top: 5px; /* Espaço entre o botão e o tooltip */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+.tippy-box[data-theme~='tron'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: rgba(67, 217, 234, 0.8);
 }
 
-/* Seta do tooltip para botões do header */
-#chatHeader [data-tooltip]::before {
-    content: "";
-    position: absolute;
-    top: 100%; /* Posiciona abaixo do botão */
-    bottom: auto; /* Remove o posicionamento bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent; /* Inverte a direção da seta */
-    margin-top: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+.tippy-box[data-theme~='tron'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: rgba(67, 217, 234, 0.8);
 }
 
-/* Classe para mostrar o tooltip */
-#chatHeader [data-tooltip].show-tooltip::after,
-#chatHeader [data-tooltip].show-tooltip::before {
-    opacity: 1;
-    visibility: visible;
+.tippy-box[data-theme~='tron'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: rgba(67, 217, 234, 0.8);
 }
 
-/* Mantém o comportamento de hover para os tooltips */
-#chatHeader [data-tooltip]:hover::after,
-#chatHeader [data-tooltip]:hover::before {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Ajuste especial para o botão de enviar (último à direita) */
-#sendButton[data-tooltip]:hover::after {
-    left: auto;
-    right: 0;
-    transform: none;
-}
-
-#sendButton[data-tooltip]:hover::before {
-    left: auto;
-    right: 10px;
-    transform: none;
+@keyframes glow-pulse {
+    0% {
+        box-shadow: 0 0 5px rgba(67, 217, 234, 0.3), 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(67, 217, 234, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+    }
 }
 
 #chatbot.expanded {
@@ -294,7 +228,7 @@
     max-width: 95vw; /* Limita a largura máxima para evitar overflow em telas pequenas */
     max-height: 400px;
     background-color: #121212; /* Fundo escuro para combinar com o tema do site */
-    border-radius: 30px 0px 0px 30px;
+    border-radius: 20px 0px 0px 20px;
     box-shadow: 0 0 15px rgba(67, 217, 234, 0.3); /* Brilho ciano ao redor do chatWindow */
     border: 1px solid rgba(67, 217, 234, 0.2); /* Borda sutil ciano */
     display: none;
@@ -420,7 +354,6 @@
     align-items: flex-start; /* Left align the content */
     color: #fff; /* Texto branco */
     box-sizing: border-box; /* Garante que padding e borda sejam incluídos na largura */
-    max-width: calc(100% - 40px); /* Impede que exceda a largura do container menos o ícone */
     word-wrap: break-word; /* Quebra palavras longas */
     overflow-wrap: break-word; /* Quebra palavras longas */
 }
@@ -679,4 +612,49 @@ button:hover .icon-svg {
 .input-button:hover img {
     filter: drop-shadow(0 0 5px rgba(67, 217, 234, 0.7));
     transform: scale(1.05);
+}
+
+/* Estilos adicionados para o modo de gravação */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Estilo especial para o chatbot durante a gravação */
+#chatbot.recording-mode {
+    background-color: rgba(30, 10, 10, 0.9); /* Fundo ligeiramente avermelhado */
+    border: 1px solid rgba(255, 77, 77, 0.5); /* Borda vermelha para indicar gravação */
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.4), 0 0 30px rgba(255, 77, 77, 0.2); /* Brilho vermelho */
+}
+
+/* Estilo para o placeholder durante gravação */
+#chatbotInput.recording::placeholder { 
+    color: #ff4d4d; /* Vermelho mais vivo */
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.7); /* Adiciona brilho ao texto */
+    animation: blink 1s infinite; 
+    font-weight: bold; /* Deixa o texto mais grosso */
+}
+
+/* Compatibilidade para o Chrome */
+#chatbotInput.recording::-webkit-input-placeholder { 
+    color: #ff4d4d;
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.7);
+    animation: blink 1s infinite; 
+    font-weight: bold;
+}
+
+/* Compatibilidade para o Edge/IE */
+#chatbotInput.recording:-ms-input-placeholder { 
+    color: #ff4d4d;
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.7);
+    animation: blink 1s infinite;
+    font-weight: bold;
+}
+
+/* Fundo especial durante gravação (container inteiro) */
+#chatbot.recording-mode #textContainer {
+    background-color: rgba(255, 77, 77, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 0 8px rgba(255, 77, 77, 0.3) inset;
 }
