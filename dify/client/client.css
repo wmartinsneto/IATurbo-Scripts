@@ -294,7 +294,7 @@
     max-width: 95vw; /* Limita a largura máxima para evitar overflow em telas pequenas */
     max-height: 400px;
     background-color: #121212; /* Fundo escuro para combinar com o tema do site */
-    border-radius: 10px;
+    border-radius: 30px 0px 0px 30px;
     box-shadow: 0 0 15px rgba(67, 217, 234, 0.3); /* Brilho ciano ao redor do chatWindow */
     border: 1px solid rgba(67, 217, 234, 0.2); /* Borda sutil ciano */
     display: none;
@@ -538,7 +538,7 @@
 #trashButton {
     height: 30px !important; /* Reduzido para diminuir tamanho */
     flex-shrink: 0;
-    display: inline-block;
+    display: inline-flex;
     border: none !important;
     cursor: pointer;
     padding: 0 !important;

@@ -112,11 +112,13 @@ function showTemporaryTooltip(element, duration = 2000) {
     
     // Adiciona a classe para mostrar o tooltip
     element.classList.add('show-tooltip');
+    element.style.zIndex = '10000'; // Garante que o tooltip fique acima do chat window
     
     // Remove a classe após o tempo especificado
     setTimeout(() => {
         element.classList.remove('show-tooltip');
     }, duration);
+    element.style.zIndex = ''; // Reseta o z-index após esconder o tooltip
 }
 
 // Event listener para o botão de toggle de áudio
@@ -209,6 +211,7 @@ const sendMessage = async () => {
 
     chatWindow.style.display = 'flex';
     chatbot.classList.add('expanded');
+    
     debugLog("sendMessage: chatWindow aberto devido a nova mensagem.");
     
     const userMessage = document.createElement('div');
@@ -228,6 +231,7 @@ const sendMessage = async () => {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     updateLocalStorage();
     
+    chatbotInput.focus();
     chatbotInput.value = '';
     chatbotInput.disabled = true;
     
@@ -374,8 +378,8 @@ function setChatModeInitial() {
     transcribingMessage.style.display = 'none';
     recordingContainer.style.display = 'none';
     micOnButton.style.display = 'none';
-    micOffButton.style.display = 'inline-block';
-    sendButton.style.display = 'inline-block';
+    micOffButton.style.display = 'inline-flex';
+    sendButton.style.display = 'inline-flex';
     
     sendButton.classList.remove('pulse');
     
@@ -396,8 +400,8 @@ function setChatModeRecording() {
     
     micOffButton.style.display = 'none';
     recordingContainer.style.display = 'flex';
-    micOnButton.style.display = 'inline-block';
-    sendButton.style.display = 'inline-block';
+    micOnButton.style.display = 'inline-flex';
+    sendButton.style.display = 'inline-flex';
     
     sendButton.classList.add('pulse');
     
@@ -447,7 +451,7 @@ function setChatModeTranscribing() {
     transcribingMessage.style.display = 'block';
     transcribingMessage.innerHTML = `Transcrevendo<span id="ellipsis"></span>`;
     recordingContainer.style.display = 'none';
-    micOnButton.style.display = 'inline-block';
+    micOnButton.style.display = 'inline-flex';
     micOffButton.style.display = 'none';
     micOnButton.disabled = true;
     sendButton.disabled = true;
