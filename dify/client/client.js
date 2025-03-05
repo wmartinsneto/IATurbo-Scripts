@@ -117,8 +117,8 @@ function showTemporaryTooltip(element, duration = 2000) {
     // Remove a classe após o tempo especificado
     setTimeout(() => {
         element.classList.remove('show-tooltip');
+        element.style.zIndex = ''; // Reseta o z-index após esconder o tooltip
     }, duration);
-    element.style.zIndex = ''; // Reseta o z-index após esconder o tooltip
 }
 
 // Event listener para o botão de toggle de áudio
