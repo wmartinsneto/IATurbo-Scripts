@@ -24,6 +24,9 @@ const chatWindow = document.getElementById('chatWindow');
 const refreshButton = document.getElementById('refreshButton');
 const closeButton = document.getElementById('closeButton');
 const audioToggleButton = document.getElementById('audioToggleButton');
+const sizeToggleButton = document.getElementById('sizeToggleButton');
+const maximizeIcon = document.getElementById('maximizeIcon');
+const minimizeIcon = document.getElementById('minimizeIcon');
 const soundOnIcon = document.getElementById('soundOnIcon');
 const soundOffIcon = document.getElementById('soundOffIcon');
 const messagesContainer = document.getElementById('messagesContainer'); // Declaração única
@@ -49,7 +52,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 7 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 8 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -596,6 +599,55 @@ chatbotInput.addEventListener('keypress', (e) => {
         sendMessage();
         debugLog("chatbotInput Enter pressionado: sendMessage");
     }
+});
+
+// Função para alternar entre os modos normal e maximizado
+function toggleSize() {
+    const isMaximized = chatWindow.classList.contains('maximized');
+    
+    if (isMaximized) {
+        // Mudar para o modo normal
+        chatWindow.classList.remove('maximized');
+        chatbot.classList.remove('maximized');
+        
+        // Atualizar ícones
+        maximizeIcon.style.display = 'inline';
+        minimizeIcon.style.display = 'none';
+        
+        // Atualizar tooltip
+        sizeToggleButton.setAttribute('data-tooltip', 'Maximizar');
+        if (tooltips[sizeToggleButton.id]) {
+            tooltips[sizeToggleButton.id].setContent('Maximizar');
+        }
+        
+        debugLog("Janela restaurada para o tamanho normal");
+    } else {
+        // Mudar para o modo maximizado
+        chatWindow.classList.add('maximized');
+        chatbot.classList.add('maximized');
+        
+        // Atualizar ícones
+        maximizeIcon.style.display = 'none';
+        minimizeIcon.style.display = 'inline';
+        
+        // Atualizar tooltip
+        sizeToggleButton.setAttribute('data-tooltip', 'Restaurar');
+        if (tooltips[sizeToggleButton.id]) {
+            tooltips[sizeToggleButton.id].setContent('Restaurar');
+        }
+        
+        debugLog("Janela maximizada");
+    }
+    
+    // Garantir que a rolagem mostre o conteúdo mais recente
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Event listener para o botão de alternar tamanho
+sizeToggleButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSize();
+    showTemporaryTooltip(sizeToggleButton, 1500);
 });
 
 // Inicia no modo INITIAL
