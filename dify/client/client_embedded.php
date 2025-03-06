@@ -13,6 +13,8 @@ $embed_code = "";
 $embed_code .= "<!-- Incluir o CSS do chatbot via @import -->\n";
 $embed_code .= "<style>\n@import url(\"https://iaturbo.com.br/wp-content/uploads/scripts/dify/client/client.css\");\n</style>\n\n";
 
+$embed_code .= "<style>\n@import url(\"https://unpkg.com/tippy.js@6/themes/light.css\");\n</style>\n\n";
+
 // Parte do HTML: extrai apenas o conteúdo dentro de <body> do client.html
 $html = getRemoteContent("https://iaturbo.com.br/wp-content/uploads/scripts/dify/client/client.html");
 $body_content = "";
@@ -28,6 +30,9 @@ $embed_code .= "<!-- Inserir a marcação HTML do chatbot -->\n" . $body_content
 // Parte do JavaScript
 $embed_code .= "<!-- Inclusão do JavaScript do chatbot -->\n";
 $embed_code .= "<script src=\"https://iaturbo.com.br/wp-content/uploads/scripts/dify/client/client.js\"></script>\n";
+$embed_code .= "<script src=\"https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js\"></script>\n";
+$embed_code .= "<script src=\"https://unpkg.com/@popperjs/core@2\"></script>\n";
+$embed_code .= "<script src=\"https://unpkg.com/tippy.js@6\"></script>\n";
 
 // Agora, exibe uma página com um textarea contendo o código embed e um botão para copiar
 ?>
