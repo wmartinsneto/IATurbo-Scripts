@@ -1,6 +1,6 @@
 // Constantes de configuração
-const DEBUG_MODE = true;
-const LOG_SOURCE = "IATurboJSClient_Chatbots_LP";
+const DEBUG_MODE = false;
+const LOG_SOURCE = "LP_ChatbotsIATurbo";
 
 // Recupera dados do localStorage (se existirem) ou gera novos
 let sessionId = localStorage.getItem('sessionId') || generateSessionId();
@@ -52,7 +52,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 8.1 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 1.0.0 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -305,7 +305,16 @@ const sendMessage = async () => {
             const botMessageContainer = botMessage.querySelector('.botMessage');
             let rawText = botMessageContainer.textContent;
             rawText = rawText.replace(/\n/g, '<br>');
-            const converter = new showdown.Converter();
+            const converter = new showdown.Converter({
+                simpleLineBreaks: true,
+                simplifiedAutoLink: true,
+                openLinksInNewWindow: true,
+                emoji: true,
+                tables: true,
+                tasklists: true,
+                underline: true,
+                metadata: true
+              });
             const formattedHTML = converter.makeHtml(rawText);
             botMessageContainer.innerHTML = formattedHTML;
             updateLocalStorage();
@@ -369,7 +378,7 @@ async function sendQuestion(question, sessionId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 question,
-                source: 'JS-Client',
+                source: 'Chatbots IATurbo - www.iaturbo.com.br',
                 conversation_id: conversationId,
                 overrideConfig: { sessionId },
                 userData: {}
