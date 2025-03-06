@@ -1,5 +1,5 @@
 // Constantes de configuração
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 const LOG_SOURCE = "LP_ChatbotsIATurbo";
 
 // Recupera dados do localStorage (se existirem) ou gera novos
@@ -52,7 +52,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 1.0.0 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 1.0.1 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
@@ -98,8 +98,8 @@ function toggleAudio() {
             audio.pause(); // Pausa a reprodução
             audio.muted = true; // Muta o áudio
         } else {
+            audio.pause(); // Pausa a reprodução
             audio.muted = false; // Desmuta o áudio
-            // Não retoma a reprodução automaticamente
         }
     });
     
@@ -403,11 +403,11 @@ async function getResponse(requestId) {
             body: JSON.stringify({
                 id: requestId,
                 chatflow_url: 'https://srv673787.hstgr.cloud/v1',
-                chatflow_key: 'app-0VZo5qBBfhWNLa3bJFw7kr3m'
+                chatflow_key: 'app-4BC8mb9ufP66tbprFUmVqC4L' //IARA CB LandingPage
             })
         });
         let responseText = 'Aguarde...';
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             const response = await fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/dify/response.php?id=${requestId}`);
             const data = await response.json();
             if (data.status === 'completed') {
