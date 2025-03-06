@@ -52,7 +52,7 @@ async function log(message, source, type) {
 // Função para logs detalhados quando DEBUG_MODE está ativo
 function debugLog(message) {
     if (DEBUG_MODE) {
-        log("VERSION 8 - " + message, LOG_SOURCE, "DEBUG");
+        log("VERSION 8.1 - " + message, LOG_SOURCE, "DEBUG");
     }
 }
 
