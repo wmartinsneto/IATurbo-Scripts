@@ -403,7 +403,7 @@ async function getResponse(requestId) {
             body: JSON.stringify({
                 id: requestId,
                 chatflow_url: 'https://srv673787.hstgr.cloud/v1',
-                chatflow_key: 'app-4BC8mb9ufP66tbprFUmVqC4L' //IARA CB LandingPage
+                chatflow_key: 'app-5VRrk4BNzHT6f9I9l15NYhGW' //IARA CB LandingPage
             })
         });
         let responseText = 'Aguarde...';
