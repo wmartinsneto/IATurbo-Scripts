@@ -2,18 +2,21 @@
 /**
  * run.php
  * 
- * Este script recebe um `id` (gerado pelo `request.php`), uma URL do Dify e um token de autorização via POST,
- * carrega o arquivo correspondente na pasta `./pending`, envia a pergunta para o Dify,
+ * Este script recebe um `id` (gerado pelo `request.php`),
+ * carrega o arquivo correspondente na pasta de pendentes, envia a pergunta para o Dify,
  * aguarda a resposta consultando o histórico de conversas,
- * salva a resposta na pasta `./completed` e retorna um status 200 OK.
+ * salva a resposta na pasta de completados e retorna um status 200 OK.
  */
 
 $start_time = microtime(true);
 
-$pending_dir = './pending/';
-$completed_dir = './completed/';
-
+// Incluir configuração centralizada
+require_once __DIR__ . '/../config.php';
 include 'helpers.php';
+
+// Obter diretórios das configurações
+$pending_dir = config('pending_dir');
+$completed_dir = config('completed_dir');
 
 if (!is_dir($completed_dir)) {
     mkdir($completed_dir, 0777, true);
@@ -22,15 +25,22 @@ if (!is_dir($completed_dir)) {
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'] ?? null;
-$dify_url = $data['chatflow_url'] ?? null;
-$dify_key = $data['chatflow_key'] ?? null;
 
-log_message('run', 'info', "Requisição recebida. ID: $id, Dify URL: $dify_url");
+$dify_url = config('dify_api_url');
+$dify_key = config('dify_api_key');
 
-// Verifica se todos os parâmetros obrigatórios estão presentes
-if (!$id || !$dify_url || !$dify_key) {
-    log_message('run', 'error', "Parâmetros faltando. id, chatflow_url e chatflow_key são obrigatórios.");
-    die(json_encode(['error' => 'Parâmetros faltando. id, chatflow_url e chatflow_key são obrigatórios.']));
+if (isset($data['chatflow_url']) && !empty($data['chatflow_url'])) {
+    $dify_url = $data['chatflow_url'];
+}
+if (isset($data['chatflow_key']) && !empty($data['chatflow_key'])) {
+    $dify_key = $data['chatflow_key'];
+}
+
+log_message('run', 'info', "Requisição recebida. ID: $id, Dify URL: $dify_url, Dify Key: [PROTECTED]");
+
+if (!$id) {
+    log_message('run', 'error', "Parâmetro ID faltando.");
+    die(json_encode(['error' => 'Parâmetro ID faltando.']));
 }
 
 $file_path = $pending_dir . $id . '.json';
@@ -217,29 +227,30 @@ $source = $response_data['source'] ?? 'Desconhecido';
 if ($source === 'Telegram') {
     log_message('run', 'info', "Source é Telegram. Chamada ao generate-audio.php não será feita para id: $id.");
 } else {
-    // Integração com generate-audio.php
-    log_message('run', 'info', "Iniciando integração com generate-audio.php para mensagem $id.");
+// Integração com generate-audio.php
+log_message('run', 'info', "Iniciando integração com generate-audio.php para mensagem $id.");
 
-    $agent_thoughts = $response_data['agent_thoughts'] ?? [];
-    $mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
-    $audio_payload = json_encode([
-        'input_text' => $mensagemDeVoz,
-        'id' => $id
-    ]);
+$agent_thoughts = $response_data['agent_thoughts'] ?? [];
+$mensagemDeVoz = getMensagemDeVoz($agent_thoughts);
+$audio_payload = json_encode([
+    'input_text' => $mensagemDeVoz,
+    'id' => $id
+]);
 
-    // Configura a requisição cURL de forma síncrona
-    $audio_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/speech/generate-audio.php');
-    curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
-    curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($audio_ch, CURLOPT_POST, true);
-    curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, true); // Aguarda a resposta
-    curl_setopt($audio_ch, CURLOPT_TIMEOUT, 30); // Timeout de 30 segundos
-    curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT, 10); // Timeout de conexão de 10 segundos
+// Usa a URL interna para chamadas dentro do container
+$base_url_internal = config('base_url_internal', 'http://localhost');
+$audio_ch = curl_init($base_url_internal . '/speech/generate-audio.php');
+curl_setopt($audio_ch, CURLOPT_POSTFIELDS, $audio_payload);
+curl_setopt($audio_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($audio_ch, CURLOPT_POST, true);
+curl_setopt($audio_ch, CURLOPT_RETURNTRANSFER, true); // Aguarda a resposta
+curl_setopt($audio_ch, CURLOPT_TIMEOUT, 30); // Timeout de 30 segundos
+curl_setopt($audio_ch, CURLOPT_CONNECTTIMEOUT, 10); // Timeout de conexão de 10 segundos
 
-    $audio_response = curl_exec($audio_ch);
-    $audio_error = curl_error($audio_ch);
-    $audio_errno = curl_errno($audio_ch);
-    curl_close($audio_ch);
+$audio_response = curl_exec($audio_ch);
+$audio_error = curl_error($audio_ch);
+$audio_errno = curl_errno($audio_ch);
+curl_close($audio_ch);
 
     if ($audio_response === false) {
         log_message('run', 'error', "Falha ao chamar generate-audio.php para id: $id. Erro: [$audio_errno] $audio_error");
@@ -255,7 +266,7 @@ log_message('run', 'info', "Iniciando integração com trello_integration.php pa
 $trello_payload = json_encode(['id' => $id]);
 
 // Configura a requisição cURL sem bloquear
-$trello_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/trello_integration.php');
+$trello_ch = curl_init(config('base_url') . '/dify/trello_integration.php');
 curl_setopt($trello_ch, CURLOPT_POSTFIELDS, $trello_payload);
 curl_setopt($trello_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($trello_ch, CURLOPT_POST, true);
@@ -276,7 +287,7 @@ log_message('run', 'info', "Iniciando integração com slack_integration.php par
 $slack_payload = json_encode(['id' => $id]);
 
 // Configura a requisição cURL sem bloquear
-$slack_ch = curl_init('https://iaturbo.com.br/wp-content/uploads/scripts/dify/slack_integration.php');
+$slack_ch = curl_init(config('base_url') . '/dify/slack_integration.php');
 curl_setopt($slack_ch, CURLOPT_POSTFIELDS, $slack_payload);
 curl_setopt($slack_ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($slack_ch, CURLOPT_POST, true);

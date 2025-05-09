@@ -5,13 +5,30 @@
  * Este script recebe um `id` via POST, carrega os dados correspondentes e envia as informações ao Trello.
  */
 
+require_once __DIR__ . '/../config.php';
 include 'helpers.php';
 
+// Verificar se a integração com Trello está habilitada
+if (!config('enable_trello', true)) {
+    log_message('trello_integration', 'info', "Integração com Trello desabilitada via configuração.");
+    http_response_code(200);
+    echo json_encode(['status' => 'disabled']);
+    exit;
+}
+
 // Chaves de API do Trello
-$apiKey = 'eede912d114a15aacb161506dd170cf5';
-$apiToken = 'ATTA3176dbbbc3c0e5a22bdb3fcba706ac35c9b4b96e930098e562d153b0a5758d6718848C8E';
-$boardId = '669eaa63f0fde49eefa7381a'; // ID do board "Chatbots IATurbo"
-$listId = '669eaa743dce7b9bf018a635'; // ID da lista "Novo Lead"
+$apiKey = config('trello_api_key');
+$apiToken = config('trello_api_token');
+$boardId = config('trello_board_id'); // ID do board "Chatbots IATurbo"
+$listId = config('trello_list_id'); // ID da lista "Novo Lead"
+
+// Verificar se as credenciais do Trello foram configuradas
+if (empty($apiKey) || empty($apiToken)) {
+    log_message('trello_integration', 'error', "Credenciais do Trello não configuradas.");
+    http_response_code(500);
+    echo json_encode(['error' => 'Credenciais do Trello não configuradas.']);
+    exit;
+}
 
 // Recebe os parâmetros do JSON de entrada
 $data = json_decode(file_get_contents('php://input'), true);
@@ -25,7 +42,7 @@ if (!$id) {
 log_message('trello_integration', 'info', "Iniciando integração com Trello para id: $id.");
 
 // Caminhos dos arquivos
-$completed_file_path = './completed/' . $id . '.json';
+$completed_file_path = config('completed_dir') . $id . '.json';
 
 // Verifica se os arquivos existem
 if (!file_exists($completed_file_path)) {
@@ -45,7 +62,7 @@ $mensagemDeControle = getMensagemDeControle($agent_thoughts);
 // Prepara os dados
 $formattedResponse = "### Mensagem de Texto\n" . $mensagemDeTexto . "\n\n";
 $formattedResponse .= "### Mensagem de Voz\n" . $mensagemDeVoz . "\n\n";
-$formattedResponse .= "https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/audio_$id.mp3 \n\n";
+$formattedResponse .= config('base_url') . "/speech/output/audio_$id.mp3 \n\n";
 $formattedResponse .= "### Mensagem de Controle\n" . $mensagemDeControle . "\n\n";
 
 // Função para criar ou atualizar um cartão no Trello

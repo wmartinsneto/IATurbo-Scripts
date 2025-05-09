@@ -6,16 +6,18 @@
 
 $start_time = microtime(true);
 
+// Incluir configuração centralizada
+require_once __DIR__ . '/../config.php';
 include 'helpers.php';
 
-// Configurações
-$api_key = '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';
-$save_dir = './output/';
-$log_dir = './logs/';
+// Obter configurações das variáveis de ambiente
+$api_key = config('openai_api_key');
+$save_dir = config('output_dir');
+$log_dir = config('logs_dir');
 
-// Configurações fixas de modelo e voz
-$model = "tts-1";
-$voice = "shimmer";
+// Configurações de modelo e voz
+$model = config('speech_model');
+$voice = config('speech_voice');
 
 // Verifica se a pasta de destino e de logs existem, caso contrário, cria
 if (!is_dir($save_dir)) {
@@ -97,7 +99,7 @@ if (!file_exists($file_path) || filesize($file_path) == 0) {
 }
 
 // URL de acesso ao arquivo MP3
-$audio_url = 'https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/' . $filename;
+$audio_url = config('base_url') . '/speech/output/' . $filename;
 
 // Retorna o JSON com a URL do áudio
 $response_data = ['audio_url' => $audio_url];

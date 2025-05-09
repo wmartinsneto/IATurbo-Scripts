@@ -5,3 +5,6 @@ precos/logs/
 test*
 wordpress/
 python/
+/logs
+/speech/input
+/speech/output

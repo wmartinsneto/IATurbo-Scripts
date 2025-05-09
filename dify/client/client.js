@@ -42,7 +42,7 @@ let currentPlaceholder = 0;
 
 // Função única para log (usando a nova versão do remote-log.php)
 async function log(message, source, type) {
-    await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/remote-log.php', {
+    await fetch('http://localhost:8080/remote-log.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, type, source })
@@ -319,7 +319,7 @@ const sendMessage = async () => {
             botMessageContainer.innerHTML = formattedHTML;
             updateLocalStorage();
             
-            fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/speech/get-audio.php?id=${requestId}`)
+            fetch(`http://localhost:8080/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
                 .then(async data => {
                     if (data.status === 'ok') {
@@ -373,7 +373,7 @@ function generateSessionId() {
 
 async function sendQuestion(question, sessionId) {
     try {
-        const response = await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/request.php', {
+        const response = await fetch('http://localhost:8080/dify/request.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -397,7 +397,7 @@ async function sendQuestion(question, sessionId) {
 
 async function getResponse(requestId) {
     try {
-        await fetch('https://iaturbo.com.br/wp-content/uploads/scripts/dify/run.php', {
+        await fetch('http://localhost:8080/dify/run.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -408,7 +408,7 @@ async function getResponse(requestId) {
         });
         let responseText = 'Aguarde...';
         for (let i = 0; i < 10; i++) {
-            const response = await fetch(`https://iaturbo.com.br/wp-content/uploads/scripts/dify/response.php?id=${requestId}`);
+            const response = await fetch(`http://localhost:8080/dify/response.php?id=${requestId}`);
             const data = await response.json();
             if (data.status === 'completed') {
                 responseText = data.mensagemDeTexto;
@@ -552,7 +552,7 @@ function sendRecording(blob) {
     const formData = new FormData();
     formData.append('audio', blob, 'recording.webm');
     
-    fetch('https://iaturbo.com.br/wp-content/uploads/scripts/speech/speechToText.php', {
+    fetch('http://localhost:8080/speech/speechToText.php', {
         method: 'POST',
         body: formData
     })

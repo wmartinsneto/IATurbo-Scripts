@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../config.php';
+
 /**
  * API para Obtenção de Arquivo de Áudio
  *
@@ -43,7 +45,7 @@ function check_audio_file($id) {
 // Função para retornar a URL do arquivo de áudio
 function get_audio_url($id) {
     $filename = 'audio_' . $id . '.mp3';
-    return 'https://iaturbo.com.br/wp-content/uploads/scripts/speech/output/' . $filename;
+    return rtrim(config('base_url'), '/') . '/speech/output/' . $filename;
 }
 
 // Verifica se o parâmetro "id" foi fornecido

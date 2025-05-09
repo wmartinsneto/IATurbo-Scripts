@@ -1,9 +1,14 @@
 <?php
 // helpers.php
 
+// Incluir configuração centralizada, se ainda não incluída
+if (!function_exists('config')) {
+    require_once __DIR__ . '/../config.php';
+}
+
 // Função para registrar logs
 function log_message($origin, $level, $message) {
-    $log_dir = './logs/';
+    $log_dir = config('logs_dir', './logs/');
     if (!is_dir($log_dir)) {
         mkdir($log_dir, 0777, true);
     }
