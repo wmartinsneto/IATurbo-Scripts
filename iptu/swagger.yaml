@@ -1,0 +1,438 @@
+openapi: 3.0.0
+info:
+  title: Sistema de Consulta de IPTU
+  description: |
+    API para consulta de boletos de IPTU por código do imóvel ou por CPF/CNPJ do proprietário.
+    Permite buscar informações detalhadas sobre imóveis, proprietários e boletos de IPTU,
+    além de gerar boletos para download.
+  version: 1.0.0
+  contact:
+    name: Suporte Técnico
+    email: suporte@exemplo.com
+
+servers:
+  - url: http://localhost:8080/iptu
+    description: Servidor de desenvolvimento local
+
+tags:
+  - name: Imóveis
+    description: Operações relacionadas a imóveis
+  - name: Proprietários
+    description: Operações relacionadas a proprietários
+  - name: Boletos
+    description: Operações relacionadas a boletos de IPTU
+
+paths:
+  /api_imovel.php:
+    get:
+      tags:
+        - Imóveis
+      summary: Consulta imóvel por código
+      description: Retorna os dados do imóvel, boleto e proprietário correspondentes ao código informado
+      operationId: consultarImovel
+      parameters:
+        - name: codigo
+          in: query
+          description: Código do imóvel
+          required: true
+          schema:
+            type: integer
+            example: 10001
+      responses:
+        '200':
+          description: Consulta realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespostaImovel'
+              example:
+                imovel:
+                  codigo: 10001
+                  endereco: "Rua das Flores, 123"
+                  bairro: "Centro"
+                  area: 120
+                  tipo: "Apartamento"
+                boleto:
+                  codigo_imovel: 10001
+                  exercicio: 2025
+                  valor: 1250.75
+                  vencimento: "2025-05-15"
+                  codigo_barras: "85810000012-5 50750000001-2 00010001202-5 50515000000-0"
+                  link_boleto: "boletos/gerar_boleto.php?codigo=10001"
+                proprietario:
+                  nome: "João da Silva"
+                  id: "123.456.789-00"
+                  tipo: "cpf"
+        '400':
+          description: Parâmetro inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Código do imóvel não fornecido"
+        '404':
+          description: Imóvel não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Imóvel não encontrado"
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Erro ao carregar dados"
+
+  /api_proprietario.php:
+    get:
+      tags:
+        - Proprietários
+      summary: Consulta imóveis por proprietário
+      description: Retorna a lista de imóveis associados ao CPF/CNPJ do proprietário informado
+      operationId: consultarProprietario
+      parameters:
+        - name: id
+          in: query
+          description: CPF ou CNPJ do proprietário
+          required: true
+          schema:
+            type: string
+            example: "123.456.789-00"
+      responses:
+        '200':
+          description: Consulta realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespostaProprietario'
+              example:
+                proprietario:
+                  nome: "João da Silva"
+                  id: "123.456.789-00"
+                  tipo: "cpf"
+                imoveis:
+                  - imovel:
+                      codigo: 10001
+                      endereco: "Rua das Flores, 123"
+                      bairro: "Centro"
+                      area: 120
+                      tipo: "Apartamento"
+                    boleto:
+                      codigo_imovel: 10001
+                      exercicio: 2025
+                      valor: 1250.75
+                      vencimento: "2025-05-15"
+                      codigo_barras: "85810000012-5 50750000001-2 00010001202-5 50515000000-0"
+                      link_boleto: "boletos/gerar_boleto.php?codigo=10001"
+                    tipo_imovel: "residencial"
+                  - imovel:
+                      codigo: 10002
+                      endereco: "Av. Principal, 456"
+                      bairro: "Jardim Europa"
+                      area: 250
+                      tipo: "Casa"
+                    boleto:
+                      codigo_imovel: 10002
+                      exercicio: 2025
+                      valor: 2350.50
+                      vencimento: "2025-05-15"
+                      codigo_barras: "85810000023-5 50500000001-2 00010002202-5 50515000000-0"
+                      link_boleto: "boletos/gerar_boleto.php?codigo=10002"
+                    tipo_imovel: "residencial"
+                total_imoveis: 2
+        '400':
+          description: Parâmetro inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "CPF/CNPJ não fornecido"
+        '404':
+          description: Proprietário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Proprietário não encontrado"
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Erro ao carregar dados"
+
+  /boletos/gerar_boleto.php:
+    get:
+      tags:
+        - Boletos
+      summary: Gera boleto para download
+      description: |
+        Gera um arquivo PDF para download contendo os dados do imóvel, boleto e proprietário.
+        O arquivo é nomeado automaticamente com o código do imóvel e a data atual.
+      operationId: gerarBoleto
+      parameters:
+        - name: codigo
+          in: query
+          description: Código do imóvel
+          required: true
+          schema:
+            type: integer
+            example: 10001
+      responses:
+        '200':
+          description: Boleto gerado com sucesso
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Parâmetro inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Código do imóvel não fornecido"
+        '404':
+          description: Imóvel, boleto ou proprietário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Imóvel não encontrado"
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: "Erro ao carregar dados"
+
+components:
+  schemas:
+    Imovel:
+      type: object
+      properties:
+        codigo:
+          type: integer
+          description: Código único do imóvel
+          example: 10001
+        endereco:
+          type: string
+          description: Endereço completo do imóvel
+          example: "Rua das Flores, 123"
+        bairro:
+          type: string
+          description: Bairro onde o imóvel está localizado
+          example: "Centro"
+        area:
+          type: number
+          description: Área do imóvel em metros quadrados
+          example: 120
+        tipo:
+          type: string
+          description: Tipo do imóvel (Apartamento, Casa, Escritório, Loja, etc.)
+          example: "Apartamento"
+      required:
+        - codigo
+        - endereco
+        - bairro
+        - area
+        - tipo
+
+    Boleto:
+      type: object
+      properties:
+        codigo_imovel:
+          type: integer
+          description: Código do imóvel associado ao boleto
+          example: 10001
+        exercicio:
+          type: integer
+          description: Ano de exercício do IPTU
+          example: 2025
+        valor:
+          type: number
+          format: float
+          description: Valor do IPTU
+          example: 1250.75
+        vencimento:
+          type: string
+          format: date
+          description: Data de vencimento do boleto
+          example: "2025-05-15"
+        codigo_barras:
+          type: string
+          description: Código de barras do boleto
+          example: "85810000012-5 50750000001-2 00010001202-5 50515000000-0"
+        link_boleto:
+          type: string
+          description: Link para download do boleto
+          example: "boletos/gerar_boleto.php?codigo=10001"
+      required:
+        - codigo_imovel
+        - exercicio
+        - valor
+        - vencimento
+        - codigo_barras
+        - link_boleto
+
+    Proprietario:
+      type: object
+      properties:
+        nome:
+          type: string
+          description: Nome do proprietário
+          example: "João da Silva"
+        id:
+          type: string
+          description: CPF ou CNPJ do proprietário
+          example: "123.456.789-00"
+        tipo:
+          type: string
+          description: Tipo de documento (cpf ou cnpj)
+          enum: [cpf, cnpj]
+          example: "cpf"
+      required:
+        - nome
+        - id
+        - tipo
+
+    RespostaImovel:
+      type: object
+      properties:
+        imovel:
+          $ref: '#/components/schemas/Imovel'
+        boleto:
+          $ref: '#/components/schemas/Boleto'
+        proprietario:
+          $ref: '#/components/schemas/Proprietario'
+      required:
+        - imovel
+        - boleto
+        - proprietario
+
+    ItemImovelProprietario:
+      type: object
+      properties:
+        imovel:
+          $ref: '#/components/schemas/Imovel'
+        boleto:
+          $ref: '#/components/schemas/Boleto'
+        tipo_imovel:
+          type: string
+          description: Categoria do imóvel (residencial ou comercial)
+          enum: [residencial, comercial]
+          example: "residencial"
+      required:
+        - imovel
+        - boleto
+        - tipo_imovel
+
+    RespostaProprietario:
+      type: object
+      properties:
+        proprietario:
+          $ref: '#/components/schemas/Proprietario'
+        imoveis:
+          type: array
+          description: Lista de imóveis associados ao proprietário
+          items:
+            $ref: '#/components/schemas/ItemImovelProprietario'
+        total_imoveis:
+          type: integer
+          description: Quantidade total de imóveis do proprietário
+          example: 2
+      required:
+        - proprietario
+        - imoveis
+        - total_imoveis
+
+    RespostaBoleto:
+      type: object
+      properties:
+        imovel:
+          $ref: '#/components/schemas/Imovel'
+        boleto:
+          type: object
+          properties:
+            codigo_imovel:
+              type: integer
+              description: Código do imóvel associado ao boleto
+              example: 10001
+            exercicio:
+              type: integer
+              description: Ano de exercício do IPTU
+              example: 2025
+            valor:
+              type: number
+              format: float
+              description: Valor do IPTU
+              example: 1250.75
+            vencimento:
+              type: string
+              format: date
+              description: Data de vencimento do boleto
+              example: "2025-05-15"
+            codigo_barras:
+              type: string
+              description: Código de barras do boleto
+              example: "85810000012-5 50750000001-2 00010001202-5 50515000000-0"
+          required:
+            - codigo_imovel
+            - exercicio
+            - valor
+            - vencimento
+            - codigo_barras
+        proprietario:
+          type: object
+          properties:
+            nome:
+              type: string
+              description: Nome do proprietário
+              example: "João da Silva"
+            id:
+              type: string
+              description: CPF ou CNPJ do proprietário
+              example: "123.456.789-00"
+            tipo:
+              type: string
+              description: Tipo de documento (cpf ou cnpj)
+              enum: [cpf, cnpj]
+              example: "cpf"
+          required:
+            - nome
+            - id
+            - tipo
+        data_geracao:
+          type: string
+          format: date-time
+          description: Data e hora de geração do boleto
+          example: "2025-05-09 11:00:00"
+      required:
+        - imovel
+        - boleto
+        - proprietario
+        - data_geracao
+
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: string
+          description: Mensagem de erro
+          example: "Imóvel não encontrado"
+      required:
+        - erro

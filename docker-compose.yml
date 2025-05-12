@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
+    networks:
+      - default
+      - iaturbo-network
     volumes:
       - ./dify/completed:/var/www/html/dify/completed
       - ./dify/pending:/var/www/html/dify/pending
@@ -22,8 +25,8 @@ services:
       - BASE_URL_INTERNAL=http://localhost
       
       # Configurações do Dify
-      - DIFY_API_URL=https://srv673787.hstgr.cloud/v1
-      - DIFY_API_KEY=app-5VRrk4BNzHT6f9I9l15NYhGW
+      - DIFY_API_URL=http://api:5001/v1
+      - DIFY_API_KEY=app-jHgWk5y5rooraLNm3N4bD7FP
       
       # Chaves de API e credenciais
       - OPENAI_API_KEY=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
@@ -56,3 +59,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+
+networks:
+  default:
+  iaturbo-network:
+    external: true

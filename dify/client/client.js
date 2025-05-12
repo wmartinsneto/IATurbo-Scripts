@@ -402,8 +402,8 @@ async function getResponse(requestId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id: requestId,
-                chatflow_url: 'https://srv673787.hstgr.cloud/v1',
-                chatflow_key: 'app-5VRrk4BNzHT6f9I9l15NYhGW' //IARA CB LandingPage
+                chatflow_url: 'http://host.docker.internal:8082/v1',
+                chatflow_key: 'app-jHgWk5y5rooraLNm3N4bD7FP' //IARA CB LandingPage
             })
         });
         let responseText = 'Aguarde...';

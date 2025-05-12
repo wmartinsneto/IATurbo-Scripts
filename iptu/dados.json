@@ -1,0 +1,645 @@
+{
+  "proprietarios": {
+    "cpf": [
+      {
+        "id": "123.456.789-00",
+        "nome": "João da Silva",
+        "imoveis": [10001, 10002]
+      },
+      {
+        "id": "987.654.321-00",
+        "nome": "Maria Oliveira",
+        "imoveis": [10003]
+      },
+      {
+        "id": "111.222.333-44",
+        "nome": "Pedro Santos",
+        "imoveis": [10004, 10005, 10006]
+      },
+      {
+        "id": "555.666.777-88",
+        "nome": "Ana Pereira",
+        "imoveis": [10007]
+      },
+      {
+        "id": "222.333.444-55",
+        "nome": "Carlos Ferreira",
+        "imoveis": [10008]
+      },
+      {
+        "id": "777.888.999-00",
+        "nome": "Mariana Costa",
+        "imoveis": [10009, 10010]
+      },
+      {
+        "id": "444.555.666-77",
+        "nome": "Roberto Almeida",
+        "imoveis": [10011]
+      },
+      {
+        "id": "888.999.000-11",
+        "nome": "Juliana Martins",
+        "imoveis": [10012, 10013]
+      },
+      {
+        "id": "333.444.555-66",
+        "nome": "Fernando Souza",
+        "imoveis": [10014]
+      },
+      {
+        "id": "666.777.888-99",
+        "nome": "Luciana Rodrigues",
+        "imoveis": [10015]
+      }
+    ],
+    "cnpj": [
+      {
+        "id": "12.345.678/0001-90",
+        "nome": "Empresa ABC Ltda",
+        "imoveis": [20001, 20002, 20003]
+      },
+      {
+        "id": "98.765.432/0001-10",
+        "nome": "Comércio XYZ S.A.",
+        "imoveis": [20004, 20005]
+      },
+      {
+        "id": "11.222.333/0001-44",
+        "nome": "Indústria Beta Ltda",
+        "imoveis": [20006]
+      },
+      {
+        "id": "55.666.777/0001-88",
+        "nome": "Construtora Omega S.A.",
+        "imoveis": [20007, 20008, 20009, 20010]
+      },
+      {
+        "id": "22.333.444/0001-55",
+        "nome": "Supermercados Delta Ltda",
+        "imoveis": [20011, 20012]
+      },
+      {
+        "id": "77.888.999/0001-00",
+        "nome": "Farmácias Gama S.A.",
+        "imoveis": [20013]
+      },
+      {
+        "id": "44.555.666/0001-77",
+        "nome": "Restaurantes Sigma Ltda",
+        "imoveis": [20014, 20015]
+      },
+      {
+        "id": "88.999.000/0001-11",
+        "nome": "Hotéis Alfa S.A.",
+        "imoveis": [20016, 20017, 20018]
+      },
+      {
+        "id": "33.444.555/0001-66",
+        "nome": "Transportes Ômega Ltda",
+        "imoveis": [20019]
+      },
+      {
+        "id": "66.777.888/0001-99",
+        "nome": "Consultoria Zeta S.A.",
+        "imoveis": [20020]
+      }
+    ]
+  },
+  "imoveis": {
+    "residenciais": [
+      {
+        "codigo": 10001,
+        "endereco": "Rua das Flores, 123",
+        "bairro": "Centro",
+        "area": 120,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10002,
+        "endereco": "Av. Principal, 456",
+        "bairro": "Jardim Europa",
+        "area": 250,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10003,
+        "endereco": "Rua dos Pinheiros, 789",
+        "bairro": "Pinheiros",
+        "area": 180,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10004,
+        "endereco": "Alameda Santos, 234",
+        "bairro": "Jardim Paulista",
+        "area": 300,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10005,
+        "endereco": "Rua Augusta, 567",
+        "bairro": "Consolação",
+        "area": 90,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10006,
+        "endereco": "Av. Paulista, 890",
+        "bairro": "Bela Vista",
+        "area": 110,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10007,
+        "endereco": "Rua Oscar Freire, 123",
+        "bairro": "Jardim América",
+        "area": 220,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10008,
+        "endereco": "Av. Brigadeiro Faria Lima, 456",
+        "bairro": "Itaim Bibi",
+        "area": 150,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10009,
+        "endereco": "Rua Haddock Lobo, 789",
+        "bairro": "Cerqueira César",
+        "area": 200,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10010,
+        "endereco": "Av. Rebouças, 234",
+        "bairro": "Pinheiros",
+        "area": 130,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10011,
+        "endereco": "Rua Pamplona, 567",
+        "bairro": "Jardim Paulista",
+        "area": 280,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10012,
+        "endereco": "Av. Nove de Julho, 890",
+        "bairro": "Bela Vista",
+        "area": 100,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10013,
+        "endereco": "Rua Bela Cintra, 123",
+        "bairro": "Consolação",
+        "area": 170,
+        "tipo": "Apartamento"
+      },
+      {
+        "codigo": 10014,
+        "endereco": "Av. Santo Amaro, 456",
+        "bairro": "Vila Nova Conceição",
+        "area": 320,
+        "tipo": "Casa"
+      },
+      {
+        "codigo": 10015,
+        "endereco": "Rua João Cachoeira, 789",
+        "bairro": "Itaim Bibi",
+        "area": 140,
+        "tipo": "Apartamento"
+      }
+    ],
+    "comerciais": [
+      {
+        "codigo": 20001,
+        "endereco": "Av. Paulista, 1000",
+        "bairro": "Bela Vista",
+        "area": 500,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20002,
+        "endereco": "Rua da Consolação, 2000",
+        "bairro": "Consolação",
+        "area": 350,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20003,
+        "endereco": "Av. Brigadeiro Faria Lima, 3000",
+        "bairro": "Itaim Bibi",
+        "area": 800,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20004,
+        "endereco": "Rua Augusta, 4000",
+        "bairro": "Cerqueira César",
+        "area": 250,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20005,
+        "endereco": "Av. Rebouças, 5000",
+        "bairro": "Pinheiros",
+        "area": 600,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20006,
+        "endereco": "Rua Oscar Freire, 6000",
+        "bairro": "Jardim Paulista",
+        "area": 300,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20007,
+        "endereco": "Av. Nove de Julho, 7000",
+        "bairro": "Bela Vista",
+        "area": 1200,
+        "tipo": "Galpão"
+      },
+      {
+        "codigo": 20008,
+        "endereco": "Rua Haddock Lobo, 8000",
+        "bairro": "Cerqueira César",
+        "area": 450,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20009,
+        "endereco": "Av. Santo Amaro, 9000",
+        "bairro": "Vila Nova Conceição",
+        "area": 700,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20010,
+        "endereco": "Rua João Cachoeira, 1000",
+        "bairro": "Itaim Bibi",
+        "area": 280,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20011,
+        "endereco": "Av. Cidade Jardim, 2000",
+        "bairro": "Jardim Europa",
+        "area": 1500,
+        "tipo": "Galpão"
+      },
+      {
+        "codigo": 20012,
+        "endereco": "Rua dos Pinheiros, 3000",
+        "bairro": "Pinheiros",
+        "area": 400,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20013,
+        "endereco": "Av. Brigadeiro Luís Antônio, 4000",
+        "bairro": "Bela Vista",
+        "area": 550,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20014,
+        "endereco": "Rua Pamplona, 5000",
+        "bairro": "Jardim Paulista",
+        "area": 320,
+        "tipo": "Loja"
+      },
+      {
+        "codigo": 20015,
+        "endereco": "Av. Paulista, 6000",
+        "bairro": "Bela Vista",
+        "area": 900,
+        "tipo": "Escritório"
+      },
+      {
+        "codigo": 20016,
+        "endereco": "Rua da Consolação, 7000",
+        "bairro": "Consolação",
+        "area": 1800,
+        "tipo": "Hotel"
+      },
+      {
+        "codigo": 20017,
+        "endereco": "Av. Brigadeiro Faria Lima, 8000",
+        "bairro": "Itaim Bibi",
+        "area": 2200,
+        "tipo": "Hotel"
+      },
+      {
+        "codigo": 20018,
+        "endereco": "Rua Augusta, 9000",
+        "bairro": "Cerqueira César",
+        "area": 1600,
+        "tipo": "Hotel"
+      },
+      {
+        "codigo": 20019,
+        "endereco": "Av. Rebouças, 1000",
+        "bairro": "Pinheiros",
+        "area": 2500,
+        "tipo": "Galpão"
+      },
+      {
+        "codigo": 20020,
+        "endereco": "Rua Oscar Freire, 2000",
+        "bairro": "Jardim Paulista",
+        "area": 750,
+        "tipo": "Escritório"
+      }
+    ]
+  },
+  "boletos": {
+    "residenciais": [
+      {
+        "codigo_imovel": 10001,
+        "exercicio": 2025,
+        "valor": 1250.75,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000012-5 50750000001-2 00010001202-5 50515000000-0",
+        "link_boleto": "boletos/gerar_boleto.php?codigo=10001"
+      },
+      {
+        "codigo_imovel": 10002,
+        "exercicio": 2025,
+        "valor": 2350.50,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000023-5 50500000001-2 00010002202-5 50515000000-0",
+        "link_boleto": "boletos/gerar_boleto.php?codigo=10002"
+      },
+      {
+        "codigo_imovel": 10003,
+        "exercicio": 2025,
+        "valor": 1850.25,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000018-5 50250000001-2 00010003202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10003_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10004,
+        "exercicio": 2025,
+        "valor": 2750.00,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000027-5 50000000001-2 00010004202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10004_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10005,
+        "exercicio": 2025,
+        "valor": 950.30,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000009-5 50300000001-2 00010005202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10005_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10006,
+        "exercicio": 2025,
+        "valor": 1150.80,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000011-5 50800000001-2 00010006202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10006_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10007,
+        "exercicio": 2025,
+        "valor": 2150.40,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000021-5 50400000001-2 00010007202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10007_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10008,
+        "exercicio": 2025,
+        "valor": 1550.60,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000015-5 50600000001-2 00010008202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10008_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10009,
+        "exercicio": 2025,
+        "valor": 1950.90,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000019-5 50900000001-2 00010009202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10009_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10010,
+        "exercicio": 2025,
+        "valor": 1350.20,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000013-5 50200000001-2 00010010202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10010_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10011,
+        "exercicio": 2025,
+        "valor": 2650.70,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000026-5 50700000001-2 00010011202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10011_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10012,
+        "exercicio": 2025,
+        "valor": 1050.45,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000010-5 50450000001-2 00010012202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10012_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10013,
+        "exercicio": 2025,
+        "valor": 1750.35,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000017-5 50350000001-2 00010013202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10013_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10014,
+        "exercicio": 2025,
+        "valor": 2950.15,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000029-5 50150000001-2 00010014202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10014_2025.pdf"
+      },
+      {
+        "codigo_imovel": 10015,
+        "exercicio": 2025,
+        "valor": 1450.55,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000014-5 50550000001-2 00010015202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/10015_2025.pdf"
+      }
+    ],
+    "comerciais": [
+      {
+        "codigo_imovel": 20001,
+        "exercicio": 2025,
+        "valor": 5250.75,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000052-5 50750000001-2 00020001202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20001_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20002,
+        "exercicio": 2025,
+        "valor": 3750.50,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000037-5 50500000001-2 00020002202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20002_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20003,
+        "exercicio": 2025,
+        "valor": 8250.25,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000082-5 50250000001-2 00020003202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20003_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20004,
+        "exercicio": 2025,
+        "valor": 2850.00,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000028-5 50000000001-2 00020004202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20004_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20005,
+        "exercicio": 2025,
+        "valor": 6350.30,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000063-5 50300000001-2 00020005202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20005_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20006,
+        "exercicio": 2025,
+        "valor": 3250.80,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000032-5 50800000001-2 00020006202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20006_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20007,
+        "exercicio": 2025,
+        "valor": 12500.40,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000125-5 00400000001-2 00020007202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20007_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20008,
+        "exercicio": 2025,
+        "valor": 4750.60,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000047-5 50600000001-2 00020008202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20008_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20009,
+        "exercicio": 2025,
+        "valor": 7350.90,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000073-5 50900000001-2 00020009202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20009_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20010,
+        "exercicio": 2025,
+        "valor": 2950.20,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000029-5 50200000001-2 00020010202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20010_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20011,
+        "exercicio": 2025,
+        "valor": 15750.70,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000157-5 50700000001-2 00020011202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20011_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20012,
+        "exercicio": 2025,
+        "valor": 4250.45,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000042-5 50450000001-2 00020012202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20012_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20013,
+        "exercicio": 2025,
+        "valor": 5850.35,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000058-5 50350000001-2 00020013202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20013_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20014,
+        "exercicio": 2025,
+        "valor": 3450.15,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000034-5 50150000001-2 00020014202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20014_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20015,
+        "exercicio": 2025,
+        "valor": 9350.55,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000093-5 50550000001-2 00020015202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20015_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20016,
+        "exercicio": 2025,
+        "valor": 18750.25,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000187-5 50250000001-2 00020016202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20016_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20017,
+        "exercicio": 2025,
+        "valor": 22500.50,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000225-5 00500000001-2 00020017202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20017_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20018,
+        "exercicio": 2025,
+        "valor": 16750.75,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000167-5 50750000001-2 00020018202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20018_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20019,
+        "exercicio": 2025,
+        "valor": 25750.60,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000257-5 50600000001-2 00020019202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20019_2025.pdf"
+      },
+      {
+        "codigo_imovel": 20020,
+        "exercicio": 2025,
+        "valor": 7850.35,
+        "vencimento": "2025-05-15",
+        "codigo_barras": "85810000078-5 50350000001-2 00020020202-5 50515000000-0",
+        "link_boleto": "http://localhost:8080/iptu/boletos/20020_2025.pdf"
+      }
+    ]
+  }
+}
