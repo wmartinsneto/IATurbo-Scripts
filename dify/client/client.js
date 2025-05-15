@@ -42,7 +42,7 @@ let currentPlaceholder = 0;
 
 // Função única para log (usando a nova versão do remote-log.php)
 async function log(message, source, type) {
-    await fetch('http://localhost:8080/remote-log.php', {
+    await fetch('http://172.16.20.237:8089/remote-log.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, type, source })
@@ -80,7 +80,7 @@ function updateAudioToggleUI() {
         soundOffIcon.style.fill = '#ff4d4d'; // Cor vermelha para indicar desligado
         audioToggleButton.setAttribute('data-tooltip', 'Ativar áudio');
     }
-    
+
     // Atualiza o conteúdo do tooltip se ele já foi inicializado
     if (tooltips[audioToggleButton.id]) {
         tooltips[audioToggleButton.id].setContent(audioToggleButton.getAttribute('data-tooltip'));
@@ -90,7 +90,7 @@ function updateAudioToggleUI() {
 // Função para controlar o áudio (mutar/desmutar existentes e configurar autoplay para novos)
 function toggleAudio() {
     audioEnabled = !audioEnabled;
-    
+
     // Atualiza todos os players de áudio existentes
     const audioPlayers = document.querySelectorAll('.audio-player audio');
     audioPlayers.forEach(audio => {
@@ -102,13 +102,13 @@ function toggleAudio() {
             audio.muted = false; // Desmuta o áudio
         }
     });
-    
+
     // Atualiza a interface
     updateAudioToggleUI();
-    
+
     // Salva a preferência
     updateLocalStorage();
-    
+
     debugLog(`Áudio ${audioEnabled ? 'ativado' : 'desativado'}`);
 }
 
@@ -121,7 +121,7 @@ const tooltips = {};
 function initializeTooltips() {
     // Seleciona todos os elementos com data-tooltip
     const tooltipElements = document.querySelectorAll('[data-tooltip]');
-    
+
     // Inicializa Tippy para cada elemento
     tooltipElements.forEach(element => {
         if (!tooltips[element.id]) {
@@ -156,16 +156,16 @@ function initializeTooltips() {
  */
 function showTemporaryTooltip(element, duration = 2000) {
     if (!element || !element.hasAttribute('data-tooltip')) return;
-    
+
     // Garante que os tooltips foram inicializados
     if (!tooltips[element.id]) {
         initializeTooltips();
     }
-    
+
     // Mostra o tooltip
     if (tooltips[element.id]) {
         tooltips[element.id].show();
-        
+
         // Esconde o tooltip após o tempo especificado
         setTimeout(() => {
             if (tooltips[element.id]) {
@@ -194,10 +194,10 @@ window.addEventListener('load', () => {
     } else {
         debugLog("Window load: mensagens não restauradas do localStorage.");
     }
-    
+
     // Inicializa a interface de áudio
     updateAudioToggleUI();
-    
+
     // Inicializa os tooltips
     initializeTooltips();
     debugLog("Window load: tooltips inicializados.");
@@ -263,22 +263,22 @@ const sendMessage = async () => {
     if (chatbotInput.disabled) return;
     const question = chatbotInput.value;
     if (question.trim() === '') return;
-    
+
     // Log da entrada do lead
     await log("Entrada do lead: " + question, LOG_SOURCE, "INFO");
 
     chatWindow.style.display = 'flex';
     chatbot.classList.add('expanded');
-    
+
     debugLog("sendMessage: chatWindow aberto devido a nova mensagem.");
-    
+
     const userMessage = document.createElement('div');
     userMessage.className = 'message';
     userMessage.innerHTML = `<div class="userMessage">${question}</div><div class="userIcon">${getUserIcon()}</div>`;
     messagesContainer.appendChild(userMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     updateLocalStorage();
-    
+
     const botMessage = document.createElement('div');
     botMessage.className = 'message';
     botMessage.innerHTML = `<div class="botIcon"></div>
@@ -288,18 +288,18 @@ const sendMessage = async () => {
     messagesContainer.appendChild(botMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     updateLocalStorage();
-    
+
     chatbotInput.focus();
     chatbotInput.value = '';
     chatbotInput.disabled = true;
-    
+
     try {
         const requestId = await sendQuestion(question, sessionId);
         await log("Pergunta enviada. requestId: " + requestId, LOG_SOURCE, "INFO");
-        
+
         const response = await getResponse(requestId);
         await log("Resposta da API de texto: " + response, LOG_SOURCE, "INFO");
-        
+
         botMessage.innerHTML = `<div class="botIcon"></div><div class="botMessage"></div>`;
         typeWriter(botMessage.querySelector('.botMessage'), response, 0, () => {
             const botMessageContainer = botMessage.querySelector('.botMessage');
@@ -318,8 +318,8 @@ const sendMessage = async () => {
             const formattedHTML = converter.makeHtml(rawText);
             botMessageContainer.innerHTML = formattedHTML;
             updateLocalStorage();
-            
-            fetch(`http://localhost:8080/speech/get-audio.php?id=${requestId}`)
+
+            fetch(`http://172.16.20.237:8089/speech/get-audio.php?id=${requestId}`)
                 .then(res => res.json())
                 .then(async data => {
                     if (data.status === 'ok') {
@@ -373,7 +373,7 @@ function generateSessionId() {
 
 async function sendQuestion(question, sessionId) {
     try {
-        const response = await fetch('http://localhost:8080/dify/request.php', {
+        const response = await fetch('http://172.16.20.237:8089/dify/request.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -397,7 +397,7 @@ async function sendQuestion(question, sessionId) {
 
 async function getResponse(requestId) {
     try {
-        await fetch('http://localhost:8080/dify/run.php', {
+        await fetch('http://172.16.20.237:8089/dify/run.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -408,7 +408,7 @@ async function getResponse(requestId) {
         });
         let responseText = 'Aguarde...';
         for (let i = 0; i < 10; i++) {
-            const response = await fetch(`http://localhost:8080/dify/response.php?id=${requestId}`);
+            const response = await fetch(`http://172.16.20.237:8089/dify/response.php?id=${requestId}`);
             const data = await response.json();
             if (data.status === 'completed') {
                 responseText = data.mensagemDeTexto;
@@ -447,13 +447,13 @@ function setChatModeInitial() {
     micOnButton.style.display = 'none';
     micOffButton.style.display = 'inline-flex';
     sendButton.style.display = 'inline-flex';
-    
+
     // Remove as classes visuais do modo de gravação
     chatbot.classList.remove('recording-mode');
     chatbotInput.classList.remove('recording');
-    
+
     sendButton.classList.remove('pulse');
-    
+
     micOffButton.disabled = false;
     sendButton.disabled = false;
     updatePlaceholderStyle('initial');  // Atualiza o placeholder para o modo inicial
@@ -468,18 +468,18 @@ function setChatModeRecording() {
     transcribingMessage.style.display = 'none';
     placeholders = ["Gravando...", "Estou te ouvindo..."];
     updatePlaceholderStyle('recording');  // Atualiza o placeholder para o modo recording
-    
+
     // Adiciona as classes para os novos estilos visuais de gravação
     chatbot.classList.add('recording-mode');
     chatbotInput.classList.add('recording');
-    
+
     micOffButton.style.display = 'none';
     recordingContainer.style.display = 'flex';
     micOnButton.style.display = 'inline-flex';
     sendButton.style.display = 'inline-flex';
-    
+
     sendButton.classList.add('pulse');
-    
+
     cancelRecording = false;
     recordingStartTime = Date.now();
     recordingTimerInterval = setInterval(() => {
@@ -488,7 +488,7 @@ function setChatModeRecording() {
         const minutes = Math.floor(elapsed / 60000);
         recordingTimer.textContent = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
     }, 1000);
-    
+
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
             recordedChunks = [];
@@ -530,11 +530,11 @@ function setChatModeTranscribing() {
     micOffButton.style.display = 'none';
     micOnButton.disabled = true;
     sendButton.disabled = true;
-    
+
     // Remove as classes visuais do modo de gravação
     chatbot.classList.remove('recording-mode');
     chatbotInput.classList.remove('recording');
-    
+
     setInterval(() => {
         const ellipsis = document.getElementById('ellipsis');
         if (ellipsis) {
@@ -551,8 +551,8 @@ function setChatModeTranscribing() {
 function sendRecording(blob) {
     const formData = new FormData();
     formData.append('audio', blob, 'recording.webm');
-    
-    fetch('http://localhost:8080/speech/speechToText.php', {
+
+    fetch('http://172.16.20.237:8089/speech/speechToText.php', {
         method: 'POST',
         body: formData
     })
@@ -613,41 +613,41 @@ chatbotInput.addEventListener('keypress', (e) => {
 // Função para alternar entre os modos normal e maximizado
 function toggleSize() {
     const isMaximized = chatWindow.classList.contains('maximized');
-    
+
     if (isMaximized) {
         // Mudar para o modo normal
         chatWindow.classList.remove('maximized');
         chatbot.classList.remove('maximized');
-        
+
         // Atualizar ícones
         maximizeIcon.style.display = 'inline';
         minimizeIcon.style.display = 'none';
-        
+
         // Atualizar tooltip
         sizeToggleButton.setAttribute('data-tooltip', 'Maximizar');
         if (tooltips[sizeToggleButton.id]) {
             tooltips[sizeToggleButton.id].setContent('Maximizar');
         }
-        
+
         debugLog("Janela restaurada para o tamanho normal");
     } else {
         // Mudar para o modo maximizado
         chatWindow.classList.add('maximized');
         chatbot.classList.add('maximized');
-        
+
         // Atualizar ícones
         maximizeIcon.style.display = 'none';
         minimizeIcon.style.display = 'inline';
-        
+
         // Atualizar tooltip
         sizeToggleButton.setAttribute('data-tooltip', 'Restaurar');
         if (tooltips[sizeToggleButton.id]) {
             tooltips[sizeToggleButton.id].setContent('Restaurar');
         }
-        
+
         debugLog("Janela maximizada");
     }
-    
+
     // Garantir que a rolagem mostre o conteúdo mais recente
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
@@ -690,17 +690,17 @@ function updatePlaceholderStyle(mode) {
                 50% { opacity: 0; }
                 100% { opacity: 1; }
             }
-            #chatbotInput::placeholder { 
-                color: red; 
-                animation: blink 1s infinite; 
+            #chatbotInput::placeholder {
+                color: red;
+                animation: blink 1s infinite;
             }
-            #chatbotInput::-webkit-input-placeholder { 
-                color: red; 
-                animation: blink 1s infinite; 
+            #chatbotInput::-webkit-input-placeholder {
+                color: red;
+                animation: blink 1s infinite;
             }
-            #chatbotInput:-ms-input-placeholder { 
-                color: red; 
-                animation: blink 1s infinite; 
+            #chatbotInput:-ms-input-placeholder {
+                color: red;
+                animation: blink 1s infinite;
             }
         `;
         // Atualiza imediatamente o placeholder para o modo recording.

@@ -1,3 +1,4 @@
+
 version: '3'
 
 services:
@@ -6,7 +7,7 @@ services:
     container_name: chatbot-iaturbo
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8089:80"
     networks:
       - default
       - iaturbo-network
@@ -21,13 +22,13 @@ services:
       - ./config.php:/var/www/html/config.php:ro
     environment:
       # URLs e caminhos base
-      - BASE_URL=http://localhost:8080
-      - BASE_URL_INTERNAL=http://localhost
-      
+      - BASE_URL=http://172.16.20.237:8089
+      - BASE_URL_INTERNAL=http://172.16.20.237:8089
+
       # Configurações do Dify
-      - DIFY_API_URL=http://api:5001/v1
-      - DIFY_API_KEY=app-jHgWk5y5rooraLNm3N4bD7FP
-      
+      - DIFY_API_URL=https://dify-dev.etheriumtech.com.br/v1
+      - DIFY_API_KEY=app-uwl036ZPjVe9Gwkdv7H7X9yW
+
       # Chaves de API e credenciais
       - OPENAI_API_KEY=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
       - TRELLO_API_KEY=eede912d114a15aacb161506dd170cf5
@@ -35,22 +36,22 @@ services:
       - TRELLO_BOARD_ID=669eaa63f0fde49eefa7381a
       - TRELLO_LIST_ID=669eaa743dce7b9bf018a635
       - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
-      
+
       # Configurações do serviço de fala
       - SPEECH_MODEL=tts-1
       - SPEECH_VOICE=shimmer
-      
+
       # Configurações de diretórios
       - OUTPUT_DIR=/var/www/html/speech/output/
       - LOGS_DIR=/var/www/html/logs/
       - PENDING_DIR=/var/www/html/dify/pending/
       - COMPLETED_DIR=/var/www/html/dify/completed/
-      
+
       # Flags para habilitar/desabilitar funcionalidades
       - ENABLE_TRELLO=true
       - ENABLE_SLACK=true
       - ENABLE_AUDIO=true
-      
+
       # Configurações de estilo
       - CSS_THEME=default.css
     healthcheck:
