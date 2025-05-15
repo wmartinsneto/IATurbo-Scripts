@@ -33,7 +33,7 @@
 include 'helpers.php';
 
 // Configurações
-$api_key = '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';
+$api_key = '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';
 $save_dir = './output/';
 $log_dir = './logs/';
 
