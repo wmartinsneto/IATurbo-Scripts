@@ -23,6 +23,7 @@ RUN mkdir -p /var/www/html/logs \
     /var/www/html/dify/pending \
     /var/www/html/speech/output \
     /var/www/html/speech/input \
+    /var/www/html/speech/logs \
     /var/www/html/public/images \
     && chmod -R 775 /var/www/html \
     && chown -R www-data:www-data /var/www/html
