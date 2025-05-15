@@ -402,7 +402,7 @@ async function getResponse(requestId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id: requestId,
-                chatflow_url: 'https://dify-dev.etheriumtech.com.br//v1',
+                chatflow_url: 'http://172.16.20.237:8080/v1',
                 chatflow_key: 'app-uwl036ZPjVe9Gwkdv7H7X9yW' //IARA CB LandingPage
             })
         });
