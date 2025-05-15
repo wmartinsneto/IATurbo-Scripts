@@ -59,7 +59,7 @@ function loadDefaultConfigurations() {
     $_CONFIG['base_url'] = getenv('BASE_URL') ?: 'http://172.16.20.237:8089';
     
     // Configurações do Dify
-    $_CONFIG['dify_api_url'] = getenv('DIFY_API_URL') ?: 'http://172.16.20.237:8080/';
+    $_CONFIG['dify_api_url'] = getenv('DIFY_API_URL') ?: 'https://dify-dev.etheriumtech.com.br/';
     $_CONFIG['dify_api_key'] = getenv('DIFY_API_KEY') ?: 'app-uwl036ZPjVe9Gwkdv7H7X9yW';
     
     // Chaves de API e credenciais
