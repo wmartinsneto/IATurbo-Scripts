@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../dify"
+		},
+		{
+			"path": "../iptu-demo"
 		}
 	],
 	"settings": {}
