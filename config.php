@@ -59,8 +59,8 @@ function loadDefaultConfigurations() {
     $_CONFIG['base_url'] = getenv('BASE_URL') ?: 'https://iaturbo.com.br/wp-content/uploads/scripts';
     
     // Configurações do Dify
-    $_CONFIG['dify_api_url'] = getenv('DIFY_API_URL') ?: 'http://api:5001/v1';
-    $_CONFIG['dify_api_key'] = getenv('DIFY_API_KEY') ?: 'app-jHgWk5y5rooraLNm3N4bD7FP';
+    $_CONFIG['dify_api_url'] = getenv('DIFY_API_URL') ?: 'https://dify-dev.etheriumtech.com.br/';
+    $_CONFIG['dify_api_key'] = getenv('DIFY_API_KEY') ?: 'app-uwl036ZPjVe9Gwkdv7H7X9yW';
     
     // Chaves de API e credenciais
     $_CONFIG['openai_api_key'] = getenv('OPENAI_API_KEY') ?: '';

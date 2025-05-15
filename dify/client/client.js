@@ -402,8 +402,8 @@ async function getResponse(requestId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id: requestId,
-                chatflow_url: 'http://host.docker.internal:8082/v1',
-                chatflow_key: 'app-jHgWk5y5rooraLNm3N4bD7FP' //IARA CB LandingPage
+                chatflow_url: 'https://dify-dev.etheriumtech.com.br//v1',
+                chatflow_key: 'app-uwl036ZPjVe9Gwkdv7H7X9yW' //IARA CB LandingPage
             })
         });
         let responseText = 'Aguarde...';
