@@ -56,7 +56,7 @@ function loadDefaultConfigurations() {
     global $_CONFIG;
     
     // URLs e caminhos base
-    $_CONFIG['base_url'] = getenv('BASE_URL') ?: 'https://iaturbo.com.br/wp-content/uploads/scripts';
+    $_CONFIG['base_url'] = getenv('BASE_URL') ?: 'http://172.16.20.237:8089';
     
     // Configurações do Dify
     $_CONFIG['dify_api_url'] = getenv('DIFY_API_URL') ?: 'http://172.16.20.237:8080/';

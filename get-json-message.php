@@ -35,7 +35,7 @@
  */
 
  // Definindo a chave da API como uma constante
-define('OPENAI_API_KEY', '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');
+define('OPENAI_API_KEY', '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');
 
 /**
  * Função para logar mensagens em um arquivo

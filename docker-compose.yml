@@ -30,7 +30,7 @@ services:
       - DIFY_API_KEY=app-uwl036ZPjVe9Gwkdv7H7X9yW
 
       # Chaves de API e credenciais
-      - OPENAI_API_KEY=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
+      - OPENAI_API_KEY=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
       - TRELLO_API_KEY=eede912d114a15aacb161506dd170cf5
       - TRELLO_API_TOKEN=ATTA3176dbbbc3c0e5a22bdb3fcba706ac35c9b4b96e930098e562d153b0a5758d6718848C8E
       - TRELLO_BOARD_ID=669eaa63f0fde49eefa7381a
