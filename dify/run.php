@@ -36,7 +36,7 @@ if (isset($data['chatflow_key']) && !empty($data['chatflow_key'])) {
     $dify_key = $data['chatflow_key'];
 }
 
-log_message('run', 'info', "Requisição recebida. ID: $id, Dify URL: $dify_url, Dify Key: [PROTECTED]");
+log_message('run', 'info', "Requisição recebida. ID: $id, Dify URL: $dify_url, Dify Key: $dify_key");
 
 if (!$id) {
     log_message('run', 'error', "Parâmetro ID faltando.");
